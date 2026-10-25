@@ -16,10 +16,17 @@ TOOLS: dict[str, Tool] = {t.name: t for t in (
     resolve_customer.TOOL, propose_allocation.TOOL, request_evidence.TOOL, record_hypothesis.TOOL, finish.TOOL)}
 
 
+def _slim(node):
+    """Drop Pydantic's 'title' noise (same schema, fewer tokens per call: matters on small TPM tiers)."""
+    if isinstance(node, dict):
+        return {k: _slim(v) for k, v in node.items() if k != "title" or not isinstance(v, str)}
+    return [_slim(v) for v in node] if isinstance(node, list) else node
+
+
 def schemas() -> list[dict]:
     """OpenAI-style tool schemas generated from the Pydantic input models (no drift possible)."""
     return [{"type": "function", "function": {"name": t.name, "description": t.description,
-                                              "parameters": t.input.model_json_schema()}}
+                                              "parameters": _slim(t.input.model_json_schema())}}
             for t in TOOLS.values()]
 
 

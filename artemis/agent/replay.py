@@ -16,7 +16,7 @@ class Replayer:
     def __init__(self, run: AgentRun, calls: list[ToolCall]):
         self.run = run
         self._steps: list[list[ToolCall]] = []
-        for c in sorted(calls, key=lambda c: c.step):
+        for c in sorted((c for c in calls if c.tool_name != "(rejected)"), key=lambda c: c.step):
             if not self._steps or self._steps[-1][0].step != c.step:
                 self._steps.append([])
             self._steps[-1].append(c)

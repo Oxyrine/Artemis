@@ -19,6 +19,7 @@ class LLMResponse:
     tool_calls: list[ToolCallReq] = field(default_factory=list)
     tokens_in: int = 0
     tokens_out: int = 0
+    error: str | None = None  # provider rejected the tool call; fed back to the model, not fatal
 
 
 class LLMClient(Protocol):
@@ -32,6 +33,15 @@ class LLMError(Exception):
     pass
 
 
+def _seconds(v) -> float | None:
+    """'29.9s' | '1m2.5s' | '12' -> seconds."""
+    import re
+    if v is None:
+        return None
+    m = re.fullmatch(r"(?:(\d+)m)?(?:([\d.]+)s?)?", str(v).strip())
+    return (int(m.group(1) or 0) * 60 + float(m.group(2) or 0)) if m and (m.group(1) or m.group(2)) else None
+
+
 class OpenAICompatClient:
     """temperature 0, fixed max tokens, 30 s timeout, one retry on timeout/5xx/429 (the SDK honours
     retry-after). The API key comes from the environment and is never logged."""
@@ -40,8 +50,31 @@ class OpenAICompatClient:
         if not api_key or not model:
             raise LLMError("set LLM_API_KEY and LLM_MODEL (see .env.example)")
         from openai import OpenAI
-        self._c = OpenAI(base_url=base_url, api_key=api_key, timeout=30.0, max_retries=1)
+        self._c = OpenAI(base_url=base_url, api_key=api_key, timeout=30.0, max_retries=0)
         self.model, self._max_tokens = model, max_tokens
+        self.throttled_seconds = 0.0  # time spent waiting out 429s; the loop's wall-time bound excludes it
+
+    def _create_with_backoff(self, kw: dict, attempts: int = 8):
+        """Small TPM tiers (e.g. 8k/min) 429 constantly: sleep for the server's reset hint and try again."""
+        import time
+
+        from openai import APIConnectionError, InternalServerError, RateLimitError
+        retried = False
+        for i in range(attempts):
+            try:
+                return self._c.chat.completions.create(**kw)
+            except (APIConnectionError, InternalServerError):  # timeout / 5xx: exactly one retry
+                if retried:
+                    raise
+                retried = True
+            except RateLimitError as e:
+                if i == attempts - 1:
+                    raise
+                h = getattr(getattr(e, "response", None), "headers", {}) or {}
+                wait = _seconds(h.get("retry-after") or h.get("x-ratelimit-reset-tokens")) or 15.0
+                wait = min(wait + 1.0, 65.0)
+                self.throttled_seconds += wait
+                time.sleep(wait)
 
     def chat(self, messages, tools=None, *, json_mode=False) -> LLMResponse:
         kw: dict[str, Any] = {"model": self.model, "messages": messages, "temperature": 0,
@@ -51,8 +84,12 @@ class OpenAICompatClient:
         if json_mode:
             kw["response_format"] = {"type": "json_object"}
         try:
-            r = self._c.chat.completions.create(**kw)
+            r = self._create_with_backoff(kw)
         except Exception as e:  # surface as data-free error; never include request/headers
+            body = getattr(e, "body", None)
+            err = body.get("error", body) if isinstance(body, dict) else {}
+            if err.get("code") == "tool_use_failed" or "tool_use_failed" in str(e):  # invalid call: let it retry
+                return LLMResponse(error=str(err.get("message") or e)[:700])
             raise LLMError(f"{type(e).__name__}: {e}") from None
         m, calls = r.choices[0].message, []
         for tc in m.tool_calls or []:

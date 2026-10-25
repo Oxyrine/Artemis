@@ -72,3 +72,40 @@ def test_narrative_validator_rejects_invented_figures():
         text, src = build_narrative(tpl, ScriptedLLM([LLMResponse(text=lie)]))
         assert (text, src) == (tpl, "template")
     assert figures("INR 26,000.00") == figures("INR 26000")
+
+
+def test_provider_rejected_call_is_fed_back_and_retried(deps):
+    seen = []
+
+    def script(messages):
+        seen.append(messages[-1]["content"])
+        if len(seen) == 1:
+            return LLMResponse(error="/kind: value must be one of 'tds', ...")
+        return tool_msg("finish", case_id=CASE, summary="x") if len(seen) > 3 else ledger(len(seen))
+    run_case(CASE, deps, ScriptedLLM(script), limits=Limits(max_steps=6))
+    assert "rejected" in seen[1] and "kind" in seen[1]  # the model was told what was wrong
+
+
+def test_real_client_turns_a_rejected_tool_call_into_feedback(monkeypatch):
+    from artemis.agent.llm import OpenAICompatClient
+
+    class Rejected(Exception):  # shaped like openai.BadRequestError for Groq's tool_use_failed
+        def __init__(self, body):
+            super().__init__(f"Error code: 400 - {body}")
+            self.body = body
+
+    c = OpenAICompatClient("http://x", "key", "m")
+    for body in ({"error": {"code": "tool_use_failed", "message": "bad enum"}},
+                 {"code": "tool_use_failed", "message": "bad enum"}):
+        def boom(kw, body=body):
+            raise Rejected(body)
+        monkeypatch.setattr(c, "_create_with_backoff", boom)
+        r = c.chat([{"role": "user", "content": "x"}], [])
+        assert r.error == "bad enum" and not r.tool_calls
+
+
+def test_opening_context_carries_the_financial_quarter(deps):
+    seen = []
+    run_case(CASE, deps, ScriptedLLM(lambda m: (seen.append(m[1]["content"]), tool_msg("finish", case_id=CASE, summary="x"))[1]),
+             limits=Limits(max_steps=1))
+    assert '"financial_quarter": 2' in seen[0]  # value date 2026-09-12 -> Jul-Sep = Q2
