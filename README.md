@@ -8,14 +8,14 @@ This branch is **Lane B (agent and investigation)**. Lanes A and C plug in throu
 
 ```bash
 uv sync
-make test            # offline, no API key
-make eval            # 3 benchmark runs (needs LLM_* env), writes eval/report.{json,md}
+uv run pytest            # offline, no API key (or: make test)
+uv run --env-file .env python -m eval.run --runs 3   # live benchmark, writes eval/report.{json,md}
 PYTHONPATH=. uv run python -m eval.run --runs 3 --scripted   # same pipeline, no key (golden agent, not an LLM score)
 PYTHONPATH=. uv run python -m artemis.agent.batch --scripted --save runs/batch.json
 PYTHONPATH=. uv run python -m artemis.agent.batch --replay runs/batch.json   # zero LLM calls
 ```
 
-LLM: any OpenAI-compatible endpoint, Groq by default. Copy `.env.example` to `.env` and set `LLM_API_KEY` and `LLM_MODEL` (pick a current tool-calling model; the name is config, never code). `make test-live` runs the golden hero-case acceptance test against it.
+LLM: any OpenAI-compatible endpoint, Groq by default. Copy `.env.example` to `.env` and set `LLM_API_KEY` and `LLM_MODEL` (pick a current tool-calling model; the name is config, never code). `uv run --env-file .env pytest -m live -s` runs the golden hero-case acceptance test against it (`.env` is not auto-loaded; `--env-file` does it).
 
 ## Plugging in the other lanes
 
@@ -28,7 +28,7 @@ B's code does not change. The tests in `tests/` run against whichever backend `b
 
 ## For UI work (Lane C)
 
-Everything the UI reads from B is a versioned view-model in `artemis/views.py` (`TraceView`, `BatchStatus`, `MetricsReport`) or `CaseOutcome` in `artemis/models.py`: raw paise, enums and ids only, never formatted strings. JSON Schemas are committed in `contracts/` (`make schemas` regenerates; a test fails on drift). Generate TypeScript types from those and restyle freely; nothing in the agent depends on how it is displayed.
+Everything the UI reads from B is a versioned view-model in `artemis/views.py` (`TraceView`, `BatchStatus`, `MetricsReport`) or `CaseOutcome` in `artemis/models.py`: raw paise, enums and ids only, never formatted strings. JSON Schemas are committed in `contracts/` (`uv run python -m scripts.export_schemas` regenerates; a test fails on drift). Generate TypeScript types from those and restyle freely; nothing in the agent depends on how it is displayed.
 
 ## Notes for Lane A (found while building B)
 

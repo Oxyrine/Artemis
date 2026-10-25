@@ -1,8 +1,8 @@
 test:
 	uv run pytest
 test-live:
-	uv run pytest -m live
+	uv run --env-file .env pytest -m live -s
 schemas:
-	uv run python scripts/export_schemas.py
+	uv run python -m scripts.export_schemas
 eval:
-	uv run python -m eval.run --runs 3
+	uv run --env-file .env python -m eval.run --runs 3

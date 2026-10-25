@@ -24,7 +24,7 @@ def test_committed_contracts_match_the_models():
     from artemis.views import BatchStatus, MetricsReport, NarrativeView, TraceView
     for m in (TraceView, BatchStatus, MetricsReport, NarrativeView, CaseOutcome):
         committed = json.loads((ROOT / "contracts" / f"{m.__name__}.schema.json").read_text(encoding="utf-8"))
-        assert committed == m.model_json_schema(), f"{m.__name__} changed: run `make schemas`"
+        assert committed == m.model_json_schema(), f"{m.__name__} changed: run `uv run python -m scripts.export_schemas`"
 
 
 def test_no_float_money_in_models():
