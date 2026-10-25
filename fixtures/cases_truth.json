@@ -1,0 +1,74 @@
+{
+  "CASE-0007": {
+    "adjustments": [
+      {
+        "amount_paise": 2600000,
+        "kind": "tds"
+      }
+    ],
+    "allocations": [
+      {
+        "amount_paise": 118000000,
+        "invoice_id": "INV-1042"
+      },
+      {
+        "amount_paise": 35400000,
+        "invoice_id": "INV-1043"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839201"
+    ],
+    "state": "PENDING_APPROVAL",
+    "status": "VERIFIED"
+  },
+  "CASE-0008": {
+    "adjustments": [
+      {
+        "amount_paise": 2600000,
+        "kind": "tds"
+      }
+    ],
+    "allocations": [
+      {
+        "amount_paise": 118000000,
+        "invoice_id": "INV-1052"
+      },
+      {
+        "amount_paise": 35400000,
+        "invoice_id": "INV-1053"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839202"
+    ],
+    "state": "AWAITING_EVIDENCE",
+    "status": "PROBABLE"
+  },
+  "CASE-0009": {
+    "adjustments": [
+      {
+        "amount_paise": 2600000,
+        "kind": "tds"
+      }
+    ],
+    "allocations": [
+      {
+        "amount_paise": 118000000,
+        "invoice_id": "INV-1062"
+      },
+      {
+        "amount_paise": 35400000,
+        "invoice_id": "INV-1063"
+      }
+    ],
+    "is_red_team": true,
+    "receipts": [
+      "UTR839203"
+    ],
+    "state": "NEEDS_REVIEW",
+    "status": "CONFLICTING"
+  }
+}

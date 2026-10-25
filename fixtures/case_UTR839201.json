@@ -1,0 +1,75 @@
+{
+  "bank_receipts": [
+    {
+      "amount": 150800000,
+      "bank_charges": 0,
+      "narration": "NEFT-UTR839201-ABC INFRA PVT L",
+      "payer_name_raw": "ABC INFRA PVT L",
+      "resolved_customer_id": "CUST-014",
+      "utr": "UTR839201",
+      "value_date": "2026-09-12"
+    }
+  ],
+  "case_id": "CASE-0007",
+  "credit_notes": [],
+  "customer_id": "CUST-014",
+  "customers": [
+    {
+      "gstin": "27ABCDE134F1Z5",
+      "id": "CUST-014",
+      "legal_name": "ABC Infra Private Limited",
+      "pan": "ABCDE134F",
+      "tan": "MUMA1345B",
+      "tds_applicable": true,
+      "tds_category": "contractor",
+      "tds_rate_bp": 200
+    }
+  ],
+  "invoices": [
+    {
+      "customer_id": "CUST-014",
+      "due_date": "2026-09-03",
+      "gross_amount": 118000000,
+      "gst_amount": 18000000,
+      "id": "INV-1042",
+      "invoice_date": "2026-08-04",
+      "po_ref": "PO-1042",
+      "status": "open",
+      "taxable_value": 100000000
+    },
+    {
+      "customer_id": "CUST-014",
+      "due_date": "2026-09-03",
+      "gross_amount": 35400000,
+      "gst_amount": 5400000,
+      "id": "INV-1043",
+      "invoice_date": "2026-08-04",
+      "po_ref": "PO-1043",
+      "status": "open",
+      "taxable_value": 30000000
+    }
+  ],
+  "remittance_emails": [
+    {
+      "body_text": "Dear Sir, payment of Rs 15,08,000 made vide UTR839201 against INV-1042 and INV-1043. TDS deducted @2%. Regards, Accounts",
+      "customer_id": "CUST-014",
+      "from_addr": "accounts@cust-014.example.in",
+      "id": "EML-0031",
+      "received_at": "2026-09-12T10:41:00+05:30",
+      "subject": "Payment advice UTR839201"
+    }
+  ],
+  "tax_credits": [
+    {
+      "amount_credited": 2600000,
+      "deductor_name": "ABC Infra Private Limited",
+      "deductor_tan": "MUMA1345B",
+      "id": "TC-0019",
+      "our_pan": "AAACO1234Z",
+      "quarter": 2,
+      "tds_section_ref": "393",
+      "transaction_date": "2026-09-12"
+    }
+  ],
+  "utr": "UTR839201"
+}

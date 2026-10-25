@@ -1,0 +1,283 @@
+{
+  "$defs": {
+    "AgentRun": {
+      "properties": {
+        "case_id": {
+          "title": "Case Id",
+          "type": "string"
+        },
+        "ended_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ended At"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "model": {
+          "title": "Model",
+          "type": "string"
+        },
+        "model_version": {
+          "default": "",
+          "title": "Model Version",
+          "type": "string"
+        },
+        "prompt_version": {
+          "title": "Prompt Version",
+          "type": "string"
+        },
+        "replay_of": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Replay Of"
+        },
+        "started_at": {
+          "title": "Started At",
+          "type": "string"
+        },
+        "steps": {
+          "default": 0,
+          "title": "Steps",
+          "type": "integer"
+        },
+        "stop_reason": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/StopReason"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "tokens_in": {
+          "default": 0,
+          "title": "Tokens In",
+          "type": "integer"
+        },
+        "tokens_out": {
+          "default": 0,
+          "title": "Tokens Out",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id",
+        "case_id",
+        "model",
+        "prompt_version",
+        "started_at"
+      ],
+      "title": "AgentRun",
+      "type": "object"
+    },
+    "Hypothesis": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/HypothesisKind"
+        },
+        "reason": {
+          "default": "",
+          "title": "Reason",
+          "type": "string"
+        },
+        "run_id": {
+          "title": "Run Id",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/HypothesisStatus"
+        },
+        "step": {
+          "title": "Step",
+          "type": "integer"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "run_id",
+        "step",
+        "text",
+        "kind",
+        "status"
+      ],
+      "title": "Hypothesis",
+      "type": "object"
+    },
+    "HypothesisKind": {
+      "enum": [
+        "tds",
+        "split_payment",
+        "multi_invoice",
+        "credit_note",
+        "bank_charge",
+        "rounding",
+        "timing",
+        "wrong_customer",
+        "duplicate",
+        "unexplained"
+      ],
+      "title": "HypothesisKind",
+      "type": "string"
+    },
+    "HypothesisStatus": {
+      "enum": [
+        "open",
+        "supported",
+        "rejected"
+      ],
+      "title": "HypothesisStatus",
+      "type": "string"
+    },
+    "StopReason": {
+      "enum": [
+        "finished",
+        "max_steps",
+        "timeout",
+        "token_cap",
+        "loop",
+        "error"
+      ],
+      "title": "StopReason",
+      "type": "string"
+    },
+    "ToolCall": {
+      "properties": {
+        "args_json": {
+          "additionalProperties": true,
+          "title": "Args Json",
+          "type": "object"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "latency_ms": {
+          "default": 0,
+          "title": "Latency Ms",
+          "type": "integer"
+        },
+        "result_json": {
+          "additionalProperties": true,
+          "title": "Result Json",
+          "type": "object"
+        },
+        "run_id": {
+          "title": "Run Id",
+          "type": "string"
+        },
+        "step": {
+          "title": "Step",
+          "type": "integer"
+        },
+        "tool_name": {
+          "title": "Tool Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "run_id",
+        "step",
+        "tool_name",
+        "args_json",
+        "result_json"
+      ],
+      "title": "ToolCall",
+      "type": "object"
+    },
+    "TraceStep": {
+      "properties": {
+        "hypotheses": {
+          "items": {
+            "$ref": "#/$defs/Hypothesis"
+          },
+          "title": "Hypotheses",
+          "type": "array"
+        },
+        "step": {
+          "title": "Step",
+          "type": "integer"
+        },
+        "tool_calls": {
+          "items": {
+            "$ref": "#/$defs/ToolCall"
+          },
+          "title": "Tool Calls",
+          "type": "array"
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "title": "TraceStep",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "replay": {
+      "default": false,
+      "title": "Replay",
+      "type": "boolean"
+    },
+    "run": {
+      "$ref": "#/$defs/AgentRun"
+    },
+    "schema_version": {
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "steps": {
+      "items": {
+        "$ref": "#/$defs/TraceStep"
+      },
+      "title": "Steps",
+      "type": "array"
+    },
+    "tool_path": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Tool Path",
+      "type": "array"
+    }
+  },
+  "required": [
+    "case_id",
+    "run",
+    "tool_path",
+    "steps"
+  ],
+  "title": "TraceView",
+  "type": "object"
+}

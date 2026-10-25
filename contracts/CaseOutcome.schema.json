@@ -1,0 +1,327 @@
+{
+  "$defs": {
+    "AdjustmentKind": {
+      "enum": [
+        "tds",
+        "credit_note",
+        "bank_charge",
+        "rounding"
+      ],
+      "title": "AdjustmentKind",
+      "type": "string"
+    },
+    "AdjustmentResult": {
+      "properties": {
+        "amount_paise": {
+          "title": "Amount Paise",
+          "type": "integer"
+        },
+        "credit_note_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Credit Note Id"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "kind": {
+          "$ref": "#/$defs/AdjustmentKind"
+        },
+        "validated": {
+          "title": "Validated",
+          "type": "boolean"
+        },
+        "validated_by_rule": {
+          "default": "",
+          "title": "Validated By Rule",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "amount_paise",
+        "validated"
+      ],
+      "title": "AdjustmentResult",
+      "type": "object"
+    },
+    "AllocationLine": {
+      "properties": {
+        "amount_paise": {
+          "title": "Amount Paise",
+          "type": "integer"
+        },
+        "invoice_id": {
+          "title": "Invoice Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "invoice_id",
+        "amount_paise"
+      ],
+      "title": "AllocationLine",
+      "type": "object"
+    },
+    "AllocationResult": {
+      "properties": {
+        "adjustments": {
+          "items": {
+            "$ref": "#/$defs/AdjustmentResult"
+          },
+          "title": "Adjustments",
+          "type": "array"
+        },
+        "allocations": {
+          "items": {
+            "$ref": "#/$defs/AllocationLine"
+          },
+          "title": "Allocations",
+          "type": "array"
+        },
+        "case_id": {
+          "title": "Case Id",
+          "type": "string"
+        },
+        "invoiced_paise": {
+          "title": "Invoiced Paise",
+          "type": "integer"
+        },
+        "received_paise": {
+          "title": "Received Paise",
+          "type": "integer"
+        },
+        "unexplained_paise": {
+          "title": "Unexplained Paise",
+          "type": "integer"
+        },
+        "utrs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Utrs",
+          "type": "array"
+        },
+        "variance_paise": {
+          "title": "Variance Paise",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "case_id",
+        "utrs",
+        "allocations",
+        "adjustments",
+        "invoiced_paise",
+        "received_paise",
+        "variance_paise",
+        "unexplained_paise"
+      ],
+      "title": "AllocationResult",
+      "type": "object"
+    },
+    "CaseState": {
+      "enum": [
+        "NEW",
+        "AUTO_CLOSED",
+        "INVESTIGATING",
+        "GRADED",
+        "PENDING_APPROVAL",
+        "AWAITING_EVIDENCE",
+        "NEEDS_REVIEW",
+        "APPLIED",
+        "REJECTED",
+        "MERGED"
+      ],
+      "title": "CaseState",
+      "type": "string"
+    },
+    "ContradictionFlag": {
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "integer"
+        },
+        "detail": {
+          "title": "Detail",
+          "type": "string"
+        },
+        "evidence_a": {
+          "title": "Evidence A",
+          "type": "string"
+        },
+        "evidence_b": {
+          "title": "Evidence B",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "detail",
+        "evidence_a",
+        "evidence_b"
+      ],
+      "title": "ContradictionFlag",
+      "type": "object"
+    },
+    "EvidenceStatus": {
+      "enum": [
+        "VERIFIED",
+        "PROBABLE",
+        "INSUFFICIENT",
+        "CONFLICTING"
+      ],
+      "title": "EvidenceStatus",
+      "type": "string"
+    },
+    "Grade": {
+      "properties": {
+        "duplicate": {
+          "default": false,
+          "title": "Duplicate",
+          "type": "boolean"
+        },
+        "flags": {
+          "items": {
+            "$ref": "#/$defs/ContradictionFlag"
+          },
+          "title": "Flags",
+          "type": "array"
+        },
+        "recommendation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Recommendation"
+        },
+        "status": {
+          "$ref": "#/$defs/EvidenceStatus"
+        },
+        "unexplained_paise": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Unexplained Paise"
+        }
+      },
+      "required": [
+        "status",
+        "unexplained_paise"
+      ],
+      "title": "Grade",
+      "type": "object"
+    },
+    "StopReason": {
+      "enum": [
+        "finished",
+        "max_steps",
+        "timeout",
+        "token_cap",
+        "loop",
+        "error"
+      ],
+      "title": "StopReason",
+      "type": "string"
+    }
+  },
+  "description": "What B hands to the API/UI per investigated case (stored via RunStore).",
+  "properties": {
+    "allocation": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AllocationResult"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "final_state": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CaseState"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "grade": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Grade"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "narrative": {
+      "default": "",
+      "title": "Narrative",
+      "type": "string"
+    },
+    "narrative_source": {
+      "default": "template",
+      "title": "Narrative Source",
+      "type": "string"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "stop_reason": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/StopReason"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "tool_path": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Tool Path",
+      "type": "array"
+    }
+  },
+  "required": [
+    "case_id",
+    "run_id",
+    "grade"
+  ],
+  "title": "CaseOutcome",
+  "type": "object"
+}

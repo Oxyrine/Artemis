@@ -1,0 +1,162 @@
+{
+  "properties": {
+    "abstention_accuracy": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Abstention Accuracy"
+    },
+    "allocation_accuracy": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Allocation Accuracy"
+    },
+    "autonomous_completion": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Autonomous Completion"
+    },
+    "cases": {
+      "title": "Cases",
+      "type": "integer"
+    },
+    "confusion": {
+      "additionalProperties": {
+        "additionalProperties": {
+          "type": "integer"
+        },
+        "type": "object"
+      },
+      "title": "Confusion",
+      "type": "object"
+    },
+    "estimated_cost_paise": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Estimated Cost Paise"
+    },
+    "evidence_coverage": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Evidence Coverage"
+    },
+    "false_clears": {
+      "items": {
+        "type": "string"
+      },
+      "title": "False Clears",
+      "type": "array"
+    },
+    "mean_seconds": {
+      "title": "Mean Seconds",
+      "type": "number"
+    },
+    "mean_steps": {
+      "title": "Mean Steps",
+      "type": "number"
+    },
+    "mean_tokens": {
+      "title": "Mean Tokens",
+      "type": "number"
+    },
+    "red_team_applied": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Red Team Applied",
+      "type": "array"
+    },
+    "runs": {
+      "title": "Runs",
+      "type": "integer"
+    },
+    "schema_version": {
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "spread": {
+      "additionalProperties": {
+        "items": {
+          "type": "number"
+        },
+        "type": "array"
+      },
+      "title": "Spread",
+      "type": "object"
+    },
+    "status_accuracy": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Status Accuracy"
+    },
+    "tool_path_diversity": {
+      "title": "Tool Path Diversity",
+      "type": "integer"
+    },
+    "verified_precision": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Verified Precision"
+    }
+  },
+  "required": [
+    "runs",
+    "cases",
+    "verified_precision",
+    "evidence_coverage",
+    "abstention_accuracy",
+    "autonomous_completion",
+    "status_accuracy",
+    "allocation_accuracy",
+    "confusion",
+    "tool_path_diversity",
+    "mean_steps",
+    "mean_tokens",
+    "mean_seconds"
+  ],
+  "title": "MetricsReport",
+  "type": "object"
+}

@@ -1,0 +1,17 @@
+[project]
+name = "artemis"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = ["pydantic>=2.7", "openai>=1.40", "pyyaml>=6"]
+
+[dependency-groups]
+dev = ["pytest>=8", "pytest-asyncio>=0.23"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+pythonpath = ["."]
+markers = ["live: needs LLM_API_KEY, run via make test-live"]
+addopts = "-m 'not live'"
+
+[tool.setuptools.packages.find]
+include = ["artemis*", "eval*"]

@@ -1,0 +1,75 @@
+{
+  "bank_receipts": [
+    {
+      "amount": 150800000,
+      "bank_charges": 0,
+      "narration": "NEFT-UTR839203-ORION CIVIL LTD",
+      "payer_name_raw": "ORION CIVIL LTD",
+      "resolved_customer_id": "CUST-016",
+      "utr": "UTR839203",
+      "value_date": "2026-09-12"
+    }
+  ],
+  "case_id": "CASE-0009",
+  "credit_notes": [],
+  "customer_id": "CUST-016",
+  "customers": [
+    {
+      "gstin": "27ABCDE334F1Z5",
+      "id": "CUST-016",
+      "legal_name": "Orion Civil Limited",
+      "pan": "ABCDE334F",
+      "tan": "MUMA3345B",
+      "tds_applicable": true,
+      "tds_category": "contractor",
+      "tds_rate_bp": 200
+    }
+  ],
+  "invoices": [
+    {
+      "customer_id": "CUST-016",
+      "due_date": "2026-09-03",
+      "gross_amount": 118000000,
+      "gst_amount": 18000000,
+      "id": "INV-1062",
+      "invoice_date": "2026-08-04",
+      "po_ref": "PO-1062",
+      "status": "open",
+      "taxable_value": 100000000
+    },
+    {
+      "customer_id": "CUST-016",
+      "due_date": "2026-09-03",
+      "gross_amount": 35400000,
+      "gst_amount": 5400000,
+      "id": "INV-1063",
+      "invoice_date": "2026-08-04",
+      "po_ref": "PO-1063",
+      "status": "open",
+      "taxable_value": 30000000
+    }
+  ],
+  "remittance_emails": [
+    {
+      "body_text": "Dear Sir, payment of Rs 15,08,000 made vide UTR839203 against INV-1062 and INV-1063. TDS deducted @2%. Regards, Accounts",
+      "customer_id": "CUST-016",
+      "from_addr": "accounts@cust-016.example.in",
+      "id": "EML-0033",
+      "received_at": "2026-09-12T10:41:00+05:30",
+      "subject": "Payment advice UTR839203"
+    }
+  ],
+  "tax_credits": [
+    {
+      "amount_credited": 2000000,
+      "deductor_name": "Orion Civil Limited",
+      "deductor_tan": "MUMA3345B",
+      "id": "TC-0021",
+      "our_pan": "AAACO1234Z",
+      "quarter": 2,
+      "tds_section_ref": "393",
+      "transaction_date": "2026-09-12"
+    }
+  ],
+  "utr": "UTR839203"
+}

@@ -1,0 +1,64 @@
+{
+  "bank_receipts": [
+    {
+      "amount": 150800000,
+      "bank_charges": 0,
+      "narration": "NEFT-UTR839202-DELTA BUILD WORKS",
+      "payer_name_raw": "DELTA BUILD WORKS",
+      "resolved_customer_id": "CUST-015",
+      "utr": "UTR839202",
+      "value_date": "2026-09-12"
+    }
+  ],
+  "case_id": "CASE-0008",
+  "credit_notes": [],
+  "customer_id": "CUST-015",
+  "customers": [
+    {
+      "gstin": "27ABCDE234F1Z5",
+      "id": "CUST-015",
+      "legal_name": "Delta Build Works Private Limited",
+      "pan": "ABCDE234F",
+      "tan": "MUMA2345B",
+      "tds_applicable": true,
+      "tds_category": "contractor",
+      "tds_rate_bp": 200
+    }
+  ],
+  "invoices": [
+    {
+      "customer_id": "CUST-015",
+      "due_date": "2026-09-03",
+      "gross_amount": 118000000,
+      "gst_amount": 18000000,
+      "id": "INV-1052",
+      "invoice_date": "2026-08-04",
+      "po_ref": "PO-1052",
+      "status": "open",
+      "taxable_value": 100000000
+    },
+    {
+      "customer_id": "CUST-015",
+      "due_date": "2026-09-03",
+      "gross_amount": 35400000,
+      "gst_amount": 5400000,
+      "id": "INV-1053",
+      "invoice_date": "2026-08-04",
+      "po_ref": "PO-1053",
+      "status": "open",
+      "taxable_value": 30000000
+    }
+  ],
+  "remittance_emails": [
+    {
+      "body_text": "Dear Sir, payment of Rs 15,08,000 made vide UTR839202 against INV-1052 and INV-1053. TDS deducted @2%. Regards, Accounts",
+      "customer_id": "CUST-015",
+      "from_addr": "accounts@cust-015.example.in",
+      "id": "EML-0032",
+      "received_at": "2026-09-12T10:41:00+05:30",
+      "subject": "Payment advice UTR839202"
+    }
+  ],
+  "tax_credits": [],
+  "utr": "UTR839202"
+}

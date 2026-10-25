@@ -1,0 +1,66 @@
+{
+  "properties": {
+    "batch_id": {
+      "title": "Batch Id",
+      "type": "string"
+    },
+    "counts_by_state": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Counts By State",
+      "type": "object"
+    },
+    "counts_by_status": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Counts By Status",
+      "type": "object"
+    },
+    "done": {
+      "default": 0,
+      "title": "Done",
+      "type": "integer"
+    },
+    "errors": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Errors",
+      "type": "object"
+    },
+    "replay": {
+      "default": false,
+      "title": "Replay",
+      "type": "boolean"
+    },
+    "run_ids": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Run Ids",
+      "type": "object"
+    },
+    "running": {
+      "default": true,
+      "title": "Running",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "total": {
+      "default": 0,
+      "title": "Total",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "batch_id"
+  ],
+  "title": "BatchStatus",
+  "type": "object"
+}
