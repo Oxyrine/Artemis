@@ -109,3 +109,15 @@ def test_opening_context_carries_the_financial_quarter(deps):
     run_case(CASE, deps, ScriptedLLM(lambda m: (seen.append(m[1]["content"]), tool_msg("finish", case_id=CASE, summary="x"))[1]),
              limits=Limits(max_steps=1))
     assert '"financial_quarter": 2' in seen[0]  # value date 2026-09-12 -> Jul-Sep = Q2
+
+
+def test_negative_adjustment_is_refused_as_data(deps):
+    ctx = ToolContext(deps=deps, llm=None, case_id=CASE, run_id="RUN-1")
+    r = registry.execute("propose_allocation", dict(utrs=["UTR839201"], allocations=[
+        dict(invoice_id="INV-1042", amount_paise=118_000_000)],
+        adjustments=[dict(kind="tds", amount_paise=-2_600_000)]), ctx)
+    assert r["error"] == "invalid_input" and "positive" in r["detail"] and ctx.state.allocation is None
+    ok = registry.execute("propose_allocation", dict(utrs=["UTR839201"], allocations=[
+        dict(invoice_id="INV-1042", amount_paise=118_000_000)],
+        adjustments=[dict(kind="rounding", amount_paise=-50)]), ctx)
+    assert "error" not in ok  # rounding may legitimately be negative
