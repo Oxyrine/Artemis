@@ -23,15 +23,22 @@ def _alloc_key(allocs) -> set[tuple[str, int]]:
 
 
 def compute(outcomes: list[CaseOutcome], runs: dict[str, AgentRun], truth: dict[str, dict],
-            *, price_in: int = 0, price_out: int = 0) -> MetricsReport:
+            *, price_in: int = 0, price_out: int = 0, auto_closed: frozenset[str] = frozenset()) -> MetricsReport:
+    """auto_closed: cases the deterministic matcher closed (never seen by the agent); they fill the AUTO_CLOSED column,
+    and closing a case the key says is not an exact match counts as a false clear."""
     os_ = [o for o in outcomes if o.case_id in truth]
+    auto = [c for c in auto_closed if c in truth]
     conf: dict[str, dict[str, int]] = {}
     for o in os_:
         row = conf.setdefault(truth[o.case_id]["status"], {})
         row[_graded(o)] = row.get(_graded(o), 0) + 1
+    for c in auto:
+        row = conf.setdefault(truth[c]["status"], {})
+        row["AUTO_CLOSED"] = row.get("AUTO_CLOSED", 0) + 1
 
     verified = [o for o in os_ if _graded(o) == "VERIFIED"]
-    false_clears = [o.case_id for o in verified if truth[o.case_id]["status"] != "VERIFIED"]
+    wrong_verified = [o.case_id for o in verified if truth[o.case_id]["status"] != "VERIFIED"]
+    false_clears = wrong_verified + [c for c in auto if truth[c]["status"] != "AUTO_CLOSED"]
     covered = [o for o in verified if o.allocation and all(a.evidence_ids for a in o.allocation.adjustments)]
     abstain = [o for o in os_ if truth[o.case_id].get("is_red_team")
                or truth[o.case_id]["status"] in ("PROBABLE", "INSUFFICIENT", "CONFLICTING")]
@@ -44,12 +51,13 @@ def compute(outcomes: list[CaseOutcome], runs: dict[str, AgentRun], truth: dict[
     n = len(rr) or 1
     priced = bool(price_in or price_out)
     return MetricsReport(
-        runs=1, cases=len(os_),
-        verified_precision=_ratio(len(verified) - len(false_clears), len(verified)),
+        runs=1, cases=len(os_) + len(auto),
+        verified_precision=_ratio(len(verified) - len(wrong_verified), len(verified)),
         evidence_coverage=_ratio(len(covered), len(verified)),
         abstention_accuracy=_ratio(len(abstain) - len(applied), len(abstain)),
         autonomous_completion=_ratio(sum(o.stop_reason == StopReason.FINISHED for o in os_), len(os_)),
-        status_accuracy=_ratio(sum(_graded(o) == truth[o.case_id]["status"] for o in os_), len(os_)),
+        status_accuracy=_ratio(sum(_graded(o) == truth[o.case_id]["status"] for o in os_)
+                               + sum(truth[c]["status"] == "AUTO_CLOSED" for c in auto), len(os_) + len(auto)),
         allocation_accuracy=_ratio(sum(bool(o.allocation) and _alloc_key(o.allocation.allocations)
                                        == _alloc_key(truth[o.case_id]["allocations"]) for o in os_), len(os_)),
         confusion=conf, tool_path_diversity=len({tuple(o.tool_path) for o in os_}),

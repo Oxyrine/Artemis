@@ -117,7 +117,11 @@ def _is_duplicate(s: Session, case_id: str, cust: Customer | None, receipts: lis
     """The receipt's only matching invoice is already applied (by something other than this case)."""
     if cust is None:
         return False
-    mine = {a.invoice_id for a in s.scalars(select(Allocation).where(Allocation.case_id == case_id))}
+    case = s.get(Case, case_id)
+    # An invoice a case itself applied is not a duplicate of itself; but a PROPOSED allocation (which is also stored as an
+    # allocation row) onto an invoice that is already applied is exactly the duplicate we must not clear.
+    mine = ({a.invoice_id for a in s.scalars(select(Allocation).where(Allocation.case_id == case_id))}
+            if case and case.state in ("APPLIED", "AUTO_CLOSED") else set())
     amounts = {r.amount for r in receipts} | {sum(r.amount for r in receipts)}
     for amt in amounts:
         match = [i for i in s.scalars(select(Invoice).where(Invoice.customer_id == cust.id, Invoice.gross_amount == amt))

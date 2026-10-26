@@ -69,11 +69,16 @@ class SqlCore:
             open_inv = [_row(i, *_INV) for i in s.scalars(select(Invoice).where(
                 Invoice.customer_id == top, Invoice.status.in_(("open", "partially_applied"))).order_by(Invoice.id))]
             total = sum(r.amount for r in receipts)
-            combos = [c for n in (1, 2, 3) for c in itertools.combinations(open_inv, n)]
-            best = min(combos, key=lambda c: abs(sum(i["gross_amount"] for i in c) - total), default=())
+            cited = sorted({x for r in receipts for x in INV_REF.findall(r.narration)})
+            by_id = {i["id"]: i for i in open_inv}
+            if cited and all(c in by_id for c in cited):  # the payer's own narration names open invoices: use those
+                best = tuple(by_id[c] for c in cited)
+            else:  # otherwise the open invoices (up to three) whose gross is nearest the receipt
+                combos = [c for n in (1, 2, 3) for c in itertools.combinations(open_inv, n)]
+                best = min(combos, key=lambda c: abs(sum(i["gross_amount"] for i in c) - total), default=())
             return {"case_id": case_id, "receipt": _row(first, *_RCPT),
                     "receipts": [_row(r, *_RCPT) for r in receipts], "customer_candidates": res.candidates,
-                    "narration_invoice_refs": sorted({x for r in receipts for x in INV_REF.findall(r.narration)}),
+                    "narration_invoice_refs": cited,
                     "open_invoices": open_inv,
                     "best_combination": {"invoice_ids": [i["id"] for i in best],
                                          "variance_paise": sum(i["gross_amount"] for i in best) - total}}
