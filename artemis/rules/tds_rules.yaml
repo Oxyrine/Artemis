@@ -1,0 +1,23 @@
+# TDS rule table: versioned, config not code. CONFIGURED, NOT ADVISED.
+# Before the demo, check labels and thresholds against the Income Tax Department's published guidance.
+# rate_bp: null means "use the customer's configured rate" (customers.tds_rate_bp, 200 = 2% for a company payee).
+# threshold_paise: null means no threshold is applied (to be confirmed against the guidance, then set here).
+rules:
+  - id: contractor-legacy
+    category: contractor
+    effective_from: "2000-01-01"
+    effective_to: "2026-03-31"
+    rate_bp: null
+    base: taxable_value          # GST shown separately is excluded from the base
+    threshold_paise: null
+    rule_ref: "Sec 194C, Income-tax Act 1961"
+    rule_version: legacy
+  - id: contractor-2025-act
+    category: contractor
+    effective_from: "2026-04-01"
+    effective_to: null
+    rate_bp: null
+    base: taxable_value
+    threshold_paise: null
+    rule_ref: "Sec 393, Income-tax Act 2025"
+    rule_version: "2026-04-01"

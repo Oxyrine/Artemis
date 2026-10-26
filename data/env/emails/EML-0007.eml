@@ -1,0 +1,24 @@
+From: Accounts <accounts@gangapolymers.example.in>
+To: ar@ourcompany.example.in
+Subject: Payment advice UTR839213
+Message-ID: <eml-0007@artemis.example.in>
+Date: Wed, 09 Sep 2026 10:41:00 +0530
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="===artemis-eml-0007==="
+
+--===artemis-eml-0007===
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Dear Sir, payment of Rs 2,23,240 vide UTR839213 against INV-1117 after TDS an=
+d credit note CN-0001. Regards, Accounts
+
+--===artemis-eml-0007===
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<html><body><p>Dear Sir, payment of Rs 2,23,240 vide UTR839213 against INV-11=
+17 after TDS and credit note CN-0001. Regards, Accounts</p></body></html>
+
+--===artemis-eml-0007===--

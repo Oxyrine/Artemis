@@ -1,0 +1,24 @@
+From: Accounts <accounts@pinnaclecement.example.in>
+To: ar@ourcompany.example.in
+Subject: Remittance UTR839218
+Message-ID: <eml-0012@artemis.example.in>
+Date: Mon, 31 Aug 2026 10:41:00 +0530
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="===artemis-eml-0012==="
+
+--===artemis-eml-0012===
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Dear Sir, we have remitted Rs 17,72,360 vide UTR839218 towards INV-1123, INV-=
+1124, INV-1125. Regards, Accounts
+
+--===artemis-eml-0012===
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<html><body><p>Dear Sir, we have remitted Rs 17,72,360 vide UTR839218 towards=
+ INV-1123, INV-1124, INV-1125. Regards, Accounts</p></body></html>
+
+--===artemis-eml-0012===--

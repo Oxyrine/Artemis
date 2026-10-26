@@ -34,16 +34,27 @@ class Deps:
     settings: Settings = field(default_factory=Settings)
 
 
-def build_deps(backend: str | None = None, *, store: RunStore | None = None,
-               fixtures_dir: str = "fixtures") -> Deps:
+def build_deps(backend: str | None = None, *, store: RunStore | None = None, fixtures_dir: str = "fixtures",
+               prepare: bool = True) -> Deps:
+    """fixtures = Lane B's fakes. real = Lane A's SQL core (in-memory SQLite unless DATABASE_URL is set); with
+    prepare=True it reloads data/env and runs the matcher, so cases exist and the exact matches are closed."""
     backend = backend or os.environ.get("ARTEMIS_BACKEND", "fixtures")
-    if backend != "fixtures":
-        raise NotImplementedError("real backend: implement CoreService/PolicyEngine (Lane A) and AuditSink "
-                                  "(Lane C) against artemis/ports.py, then wire them here")
     from artemis.fakes.audit import ListAudit
+    from artemis.fakes.store import InMemoryRunStore
+    audit = ListAudit()  # swap for Lane C's hash-chained ledger when it lands
+    if backend == "real":
+        from artemis.core import SqlCore
+        from artemis.db import Db
+        from artemis.grading.policy import SqlPolicy
+        db = Db(os.environ.get("DATABASE_URL") or "sqlite://")
+        policy = SqlPolicy(db, audit)
+        core = SqlCore(db, policy, audit)
+        if prepare:
+            core.reset()
+            core.auto_close()
+        return Deps(core, policy, audit, store or InMemoryRunStore(), Settings.from_env())
+    if backend != "fixtures":
+        raise ValueError(f"unknown backend {backend!r} (fixtures | real)")
     from artemis.fakes.core import FixtureCore
     from artemis.fakes.policy import FakePolicy
-    from artemis.fakes.store import InMemoryRunStore
-    audit = ListAudit()
-    return Deps(FixtureCore(fixtures_dir), FakePolicy(audit), audit, store or InMemoryRunStore(),
-                Settings.from_env())
+    return Deps(FixtureCore(fixtures_dir), FakePolicy(audit), audit, store or InMemoryRunStore(), Settings.from_env())

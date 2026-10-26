@@ -5,24 +5,30 @@ from __future__ import annotations
 
 import json
 import re
+from datetime import date
 
 from artemis.agent.llm import LLMResponse, ToolCallReq
+from artemis.money import quarter_of
 
 
 def golden_agent(core, case_id: str):
-    c = core.cases[case_id]
-    cust, rec = c["customer_id"], core.receipts[c["utr"]]
-    inv_ids = sorted(i["id"] for i in core.invoices.values() if i["customer_id"] == cust)
-    email_id = next(e["id"] for e in core.emails.values() if e["customer_id"] == cust)
+    """Reads only what the CoreService port exposes, so it drives the fixture fake and Lane A's SQL core alike."""
+    oc = core.opening_context(case_id)
+    rec = oc["receipt"]
+    cust = oc["customer_candidates"][0]["customer_id"]
+    inv_ids = sorted(oc["best_combination"]["invoice_ids"])
+    gross = {i["id"]: i["gross_amount"] for i in oc["open_invoices"]}
+    email_id = core.search_remittance_email(utr=rec["utr"]).data["emails"][0]["id"]
+    quarter = quarter_of(date.fromisoformat(rec["value_date"]))
     plan: list[tuple[str, dict]] = [
         ("record_hypothesis", dict(text="Short payment is explained by TDS", kind="tds", status="open")),
         ("search_ledger", dict(customer_id=cust)),
         ("search_remittance_email", dict(customer_id=cust)),
         ("parse_remittance", dict(email_id=email_id)),
         ("compute_withholding", dict(customer_id=cust, invoice_ids=inv_ids, transaction_date=rec["value_date"])),
-        ("get_authorized_tax_credit_extract", dict(customer_id=cust, quarter=2))]
+        ("get_authorized_tax_credit_extract", dict(customer_id=cust, quarter=quarter))]
     seen: dict[str, dict] = {}
-    alloc = [dict(invoice_id=i, amount_paise=core.invoices[i]["gross_amount"]) for i in inv_ids]
+    alloc = [dict(invoice_id=i, amount_paise=gross[i]) for i in inv_ids]
 
     def propose(ev: list[str], amount: int) -> tuple[str, dict]:
         return ("propose_allocation", dict(utrs=[rec["utr"]], allocations=alloc,

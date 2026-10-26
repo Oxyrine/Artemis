@@ -1,0 +1,24 @@
+From: Accounts <accounts@zenithelectricals.example.in>
+To: ar@ourcompany.example.in
+Subject: Payment for INV-1139
+Message-ID: <eml-0016@artemis.example.in>
+Date: Tue, 11 Aug 2026 10:41:00 +0530
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="===artemis-eml-0016==="
+
+--===artemis-eml-0016===
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Dear Sir, INV-1139 has been paid in full in two transfers: UTR839234 and UTR8=
+39635. Regards, Accounts
+
+--===artemis-eml-0016===
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<html><body><p>Dear Sir, INV-1139 has been paid in full in two transfers: UTR=
+839234 and UTR839635. Regards, Accounts</p></body></html>
+
+--===artemis-eml-0016===--

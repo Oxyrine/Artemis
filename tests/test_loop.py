@@ -29,9 +29,8 @@ def test_token_cap_and_timeout(deps):
     n = iter(range(100))
     out = run_case(CASE, deps, ScriptedLLM(lambda m: ledger(next(n))), limits=Limits(max_tokens=250))
     assert out.stop_reason == SR.TOKEN_CAP
-    d2 = type(deps)(deps.core, type(deps.policy)(deps.audit), deps.audit, deps.store, deps.settings)
     ticks = iter(range(0, 1000, 100))
-    out = run_case(CASE, d2, ScriptedLLM(lambda m: ledger(next(n))), limits=Limits(max_seconds=150),
+    out = run_case("CASE-0008", deps, ScriptedLLM(lambda m: ledger(next(n))), limits=Limits(max_seconds=150),
                    clock=lambda: next(ticks))
     assert out.stop_reason == SR.TIMEOUT
 
