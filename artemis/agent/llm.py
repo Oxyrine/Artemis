@@ -68,6 +68,9 @@ class OpenAICompatClient:
                     raise
                 retried = True
             except RateLimitError as e:
+                if "per day" in str(e).lower():  # a daily cap will not clear in a minute: fail fast, say why
+                    raise LLMError("provider daily token limit reached (tokens per day); retry after it resets, "
+                                   "or use a plan/model with a higher limit") from None
                 if i == attempts - 1:
                     raise
                 h = getattr(getattr(e, "response", None), "headers", {}) or {}

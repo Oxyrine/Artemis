@@ -37,7 +37,7 @@ def test_three_different_tool_paths(deps):
 
 def test_every_step_is_audited_and_money_is_ints(deps):
     go(deps, "CASE-0007")
-    kinds = [e["event_type"] for e in deps.audit.events]
+    kinds = [e["event_type"] for e in deps.audit.events if e["case_id"] == "CASE-0007"]
     for k in ("INVESTIGATION_STARTED", "HYPOTHESIS_RECORDED", "TOOL_CALLED", "ALLOCATION_PROPOSED", "GRADED",
               "STATE_CHANGED", "NARRATIVE_GENERATED"):
         assert k in kinds

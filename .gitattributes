@@ -1,0 +1,3 @@
+data/env/** -text
+data/cases_truth.json -text
+fixtures/** -text

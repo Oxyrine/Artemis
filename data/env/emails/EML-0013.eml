@@ -1,0 +1,27 @@
+From: Accounts <accounts@lotuspharma.example.in>
+To: ar@ourcompany.example.in
+Subject: Re: Credit note for INV-1128
+Message-ID: <eml-0013@artemis.example.in>
+Date: Tue, 15 Sep 2026 10:41:00 +0530
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="===artemis-eml-0013==="
+
+--===artemis-eml-0013===
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Dear Sir, as agreed we are paying Rs 3,33,800 vide UTR839223 for INV-1128, ne=
+t of the agreed credit note of Rs 32,000 (to be issued). Regards, Accounts
+
+On Tue, you wrote: > We will raise the credit note in the next billing cycle.
+
+--===artemis-eml-0013===
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<html><body><p>Dear Sir, as agreed we are paying Rs 3,33,800 vide UTR839223 f=
+or INV-1128, net of the agreed credit note of Rs 32,000 (to be issued). Regar=
+ds, Accounts</p></body></html>
+
+--===artemis-eml-0013===--

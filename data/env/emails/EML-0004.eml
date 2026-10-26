@@ -1,0 +1,25 @@
+From: Accounts <accounts@gangapolymers.example.in>
+To: ar@ourcompany.example.in
+Subject: Payment advice UTR839210
+Message-ID: <eml-0004@artemis.example.in>
+Date: Tue, 22 Sep 2026 10:41:00 +0530
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="===artemis-eml-0004==="
+
+--===artemis-eml-0004===
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Dear Sir, please find payment of Rs 11,29,840 made vide UTR839210 against INV=
+-1113 and INV-1114. TDS deducted @2% on the taxable value. Regards, Accounts
+
+--===artemis-eml-0004===
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<html><body><p>Dear Sir, please find payment of Rs 11,29,840 made vide UTR839=
+210 against INV-1113 and INV-1114. TDS deducted @2% on the taxable value. Reg=
+ards, Accounts</p></body></html>
+
+--===artemis-eml-0004===--

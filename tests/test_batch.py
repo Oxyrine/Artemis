@@ -6,8 +6,7 @@ from artemis.agent.trace import build_trace
 from artemis.fakes.scripted import golden_agent
 from artemis.fakes.store import InMemoryRunStore
 from artemis.models import CaseState
-from artemis.wiring import build_deps
-from tests.conftest import FIXTURES
+from tests.conftest import HERO, make
 
 
 def scripted(deps):
@@ -15,12 +14,12 @@ def scripted(deps):
 
 
 def test_batch_counts_and_progress(deps):
-    b = asyncio.run(run_batch(deps, scripted(deps), concurrency=2))
+    b = asyncio.run(run_batch(deps, scripted(deps), concurrency=2, case_ids=HERO))
     assert b.counts_by_status == {"VERIFIED": 1, "PROBABLE": 1, "CONFLICTING": 1}
     assert b.done == b.total == 3 and not b.running and not b.replay
     assert deps.store.get_batch(b.batch_id).done == 3
     kinds = [e["event_type"] for e in deps.audit.events]
-    assert kinds[0] == "BATCH_STARTED" and kinds[-1] == "BATCH_COMPLETED"
+    assert kinds.index("BATCH_STARTED") < kinds.index("BATCH_COMPLETED") == len(kinds) - 1
 
 
 def test_one_failure_does_not_stop_the_batch(deps):
@@ -28,7 +27,7 @@ def test_one_failure_does_not_stop_the_batch(deps):
         if case_id == "CASE-0008":
             raise RuntimeError("provider exploded")
         return ScriptedLLM(golden_agent(deps.core, case_id))
-    b = asyncio.run(run_batch(deps, factory))
+    b = asyncio.run(run_batch(deps, factory, case_ids=HERO))
     assert b.counts_by_status == {"VERIFIED": 1, "CONFLICTING": 1, "ERROR": 1}
     assert deps.policy.state_of("CASE-0008") == CaseState.NEEDS_REVIEW and "CASE-0008" in b.errors
     assert deps.policy.state_of("CASE-0007") == CaseState.PENDING_APPROVAL
@@ -43,12 +42,12 @@ class CountingLLM:  # fails the test if replay ever touches an LLM
         raise AssertionError("replay must not call the LLM")
 
 
-def test_replay_matches_recorded_with_zero_llm_calls(deps, tmp_path):
-    first = asyncio.run(run_batch(deps, scripted(deps)))
+def test_replay_matches_recorded_with_zero_llm_calls(deps, backend, tmp_path):
+    first = asyncio.run(run_batch(deps, scripted(deps), case_ids=HERO))
     path = tmp_path / "batch.json"
     deps.store.save(path)
     store = InMemoryRunStore.load(path)  # survives the process
-    fresh = build_deps("fixtures", store=store, fixtures_dir=FIXTURES)  # reset environment, same recordings
+    fresh = make(backend, store)  # reset environment, same recordings
     second = asyncio.run(run_batch(fresh, lambda c: CountingLLM(), replay_of=first.batch_id))
     assert CountingLLM.calls == 0 and second.replay
     assert second.counts_by_status == first.counts_by_status and second.counts_by_state == first.counts_by_state
@@ -61,7 +60,7 @@ def test_replay_matches_recorded_with_zero_llm_calls(deps, tmp_path):
 
 
 def test_trace_view_is_raw_data_only(deps):
-    asyncio.run(run_batch(deps, scripted(deps)))
+    asyncio.run(run_batch(deps, scripted(deps), case_ids=HERO))
     t = build_trace(deps.store, "CASE-0007")
     assert t.schema_version == 1 and t.steps and isinstance(t.steps[0].tool_calls[0].args_json, dict)
     alloc = next(c for s in t.steps for c in s.tool_calls if c.tool_name == "propose_allocation").result_json

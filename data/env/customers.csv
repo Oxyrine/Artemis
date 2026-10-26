@@ -1,0 +1,16 @@
+id,legal_name,gstin,pan,tan,contact_domain,tds_applicable,tds_rate_bp,tds_category
+CUST-001,Sunrise Textiles Private Limited,27AAACB0001K1Z5,AAACB0001K,MUMX00001B,sunrisetextiles.example.in,Y,200,contractor
+CUST-002,Bharat Logistics Limited,27AAACC0002K1Z5,AAACC0002K,MUMX00002B,bharatlogistics.example.in,Y,200,contractor
+CUST-003,Kaveri Agro Foods Private Limited,27AAACD0003K1Z5,AAACD0003K,MUMX00003B,kaveriagro.example.in,N,0,contractor
+CUST-004,Metro Steel Industries Limited,27AAACE0004K1Z5,AAACE0004K,MUMX00004B,metrosteel.example.in,Y,200,contractor
+CUST-005,Lotus Pharma Private Limited,27AAACF0005K1Z5,AAACF0005K,MUMX00005B,lotuspharma.example.in,N,0,contractor
+CUST-006,Ganga Polymers LLP,27AAACG0006K1Z5,AAACG0006K,MUMX00006B,gangapolymers.example.in,Y,200,contractor
+CUST-007,Zenith Electricals Private Limited,27AAACH0007K1Z5,AAACH0007K,MUMX00007B,zenithelectricals.example.in,Y,200,contractor
+CUST-008,Orchid Hospitality Private Limited,27AAACI0008K1Z5,AAACI0008K,MUMX00008B,orchidhospitality.example.in,N,0,contractor
+CUST-009,Himalaya Paper Mills Limited,27AAACJ0009K1Z5,AAACJ0009K,MUMX00009B,himalayapaper.example.in,Y,200,contractor
+CUST-010,Coastal Marine Services Private Limited,27AAACK0010K1Z5,AAACK0010K,MUMX00010B,coastalmarine.example.in,Y,200,contractor
+CUST-011,Vertex Software Solutions Private Limited,27AAACL0011K1Z5,AAACL0011K,MUMX00011B,vertexsoft.example.in,N,0,contractor
+CUST-012,Pinnacle Cement Company Limited,27AAACM0012K1Z5,AAACM0012K,MUMX00012B,pinnaclecement.example.in,Y,200,contractor
+CUST-014,ABC Infra Private Limited,27AAACO0014K1Z5,AAACO0014K,MUMX00014B,abcinfra.example.in,Y,200,contractor
+CUST-015,Delta Build Works Private Limited,27AAACP0015K1Z5,AAACP0015K,MUMX00015B,deltabuild.example.in,Y,200,contractor
+CUST-016,Orion Civil Limited,27AAACQ0016K1Z5,AAACQ0016K,MUMX00016B,orioncivil.example.in,Y,200,contractor

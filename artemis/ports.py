@@ -16,6 +16,9 @@ class IllegalTransition(Exception):
 
 class CoreService(Protocol):  # Lane A. Money in paise; raises models.CoreError on expected failures.
     def new_case_ids(self) -> list[str]: ...
+    def reset(self) -> dict: ...  # reload the environment to its seed state (POST /reset)
+    def auto_close(self) -> list[str]: ...  # run the matcher; returns the AUTO_CLOSED case ids
+    def save_parsed_email(self, email_id: str, parsed: dict) -> None: ...  # Lane B's parse_remittance output
     def opening_context(self, case_id: str) -> dict: ...
     def search_ledger(self, customer_id: str, amount_paise: int | None = None,
                       date_from: str | None = None, date_to: str | None = None,

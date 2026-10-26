@@ -43,6 +43,7 @@ def _run(ctx, i: Input) -> dict:
                                      for d in p.stated_deductions]}
     except (ValueError, ValidationError) as e:  # json errors and bad amounts are both ValueErrors
         return {"error": "unparseable", "detail": f"model output rejected: {type(e).__name__}"}
+    ctx.deps.core.save_parsed_email(i.email_id, out)  # Lane A: contradiction flags + email-only credit notes
     return {**out, "evidence_ids": ctx.save_refs(res.refs)}
 
 

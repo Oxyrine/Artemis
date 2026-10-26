@@ -18,7 +18,7 @@ from artemis.ports import IllegalTransition
 from artemis.tools import registry
 from artemis.tools.base import ToolContext
 
-PROMPT_VERSION = "investigate_v3"
+PROMPT_VERSION = "investigate_v4"
 SYSTEM_PROMPT = (Path(__file__).parent / "prompts" / f"{PROMPT_VERSION}.md").read_text(encoding="utf-8")
 _NEXT = {EvidenceStatus.VERIFIED: CaseState.PENDING_APPROVAL, EvidenceStatus.PROBABLE: CaseState.AWAITING_EVIDENCE,
          EvidenceStatus.INSUFFICIENT: CaseState.NEEDS_REVIEW, EvidenceStatus.CONFLICTING: CaseState.NEEDS_REVIEW}

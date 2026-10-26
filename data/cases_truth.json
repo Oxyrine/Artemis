@@ -1,0 +1,711 @@
+{
+  "CASE-0001": {
+    "adjustments": [],
+    "allocations": [
+      {
+        "amount_paise": 52864000,
+        "invoice_id": "INV-1101"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839195"
+    ],
+    "state": "AUTO_CLOSED",
+    "status": "AUTO_CLOSED"
+  },
+  "CASE-0002": {
+    "adjustments": [],
+    "allocations": [
+      {
+        "amount_paise": 60652000,
+        "invoice_id": "INV-1102"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839196"
+    ],
+    "state": "AUTO_CLOSED",
+    "status": "AUTO_CLOSED"
+  },
+  "CASE-0003": {
+    "adjustments": [],
+    "allocations": [
+      {
+        "amount_paise": 99592000,
+        "invoice_id": "INV-1103"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839197"
+    ],
+    "state": "AUTO_CLOSED",
+    "status": "AUTO_CLOSED"
+  },
+  "CASE-0004": {
+    "adjustments": [],
+    "allocations": [
+      {
+        "amount_paise": 60298000,
+        "invoice_id": "INV-1104"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839198"
+    ],
+    "state": "AUTO_CLOSED",
+    "status": "AUTO_CLOSED"
+  },
+  "CASE-0005": {
+    "adjustments": [],
+    "allocations": [
+      {
+        "amount_paise": 82246000,
+        "invoice_id": "INV-1105"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839199"
+    ],
+    "state": "AUTO_CLOSED",
+    "status": "AUTO_CLOSED"
+  },
+  "CASE-0006": {
+    "adjustments": [],
+    "allocations": [
+      {
+        "amount_paise": 78942000,
+        "invoice_id": "INV-1106"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839200"
+    ],
+    "state": "AUTO_CLOSED",
+    "status": "AUTO_CLOSED"
+  },
+  "CASE-0007": {
+    "adjustments": [
+      {
+        "amount_paise": 2600000,
+        "kind": "tds"
+      }
+    ],
+    "allocations": [
+      {
+        "amount_paise": 118000000,
+        "invoice_id": "INV-1042"
+      },
+      {
+        "amount_paise": 35400000,
+        "invoice_id": "INV-1043"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839201"
+    ],
+    "state": "PENDING_APPROVAL",
+    "status": "VERIFIED"
+  },
+  "CASE-0008": {
+    "adjustments": [
+      {
+        "amount_paise": 2600000,
+        "kind": "tds"
+      }
+    ],
+    "allocations": [
+      {
+        "amount_paise": 118000000,
+        "invoice_id": "INV-1052"
+      },
+      {
+        "amount_paise": 35400000,
+        "invoice_id": "INV-1053"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839202"
+    ],
+    "state": "AWAITING_EVIDENCE",
+    "status": "PROBABLE"
+  },
+  "CASE-0009": {
+    "adjustments": [
+      {
+        "amount_paise": 2600000,
+        "kind": "tds"
+      }
+    ],
+    "allocations": [
+      {
+        "amount_paise": 118000000,
+        "invoice_id": "INV-1062"
+      },
+      {
+        "amount_paise": 35400000,
+        "invoice_id": "INV-1063"
+      }
+    ],
+    "is_red_team": true,
+    "receipts": [
+      "UTR839203"
+    ],
+    "state": "NEEDS_REVIEW",
+    "status": "CONFLICTING"
+  },
+  "CASE-0010": {
+    "adjustments": [],
+    "allocations": [
+      {
+        "amount_paise": 33394000,
+        "invoice_id": "INV-1107"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839204"
+    ],
+    "state": "AUTO_CLOSED",
+    "status": "AUTO_CLOSED"
+  },
+  "CASE-0011": {
+    "adjustments": [],
+    "allocations": [
+      {
+        "amount_paise": 34574000,
+        "invoice_id": "INV-1108"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839205"
+    ],
+    "state": "AUTO_CLOSED",
+    "status": "AUTO_CLOSED"
+  },
+  "CASE-0012": {
+    "adjustments": [],
+    "allocations": [
+      {
+        "amount_paise": 77998000,
+        "invoice_id": "INV-1109"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839206"
+    ],
+    "state": "AUTO_CLOSED",
+    "status": "AUTO_CLOSED"
+  },
+  "CASE-0013": {
+    "adjustments": [],
+    "allocations": [
+      {
+        "amount_paise": 62186000,
+        "invoice_id": "INV-1110"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839207"
+    ],
+    "state": "AUTO_CLOSED",
+    "status": "AUTO_CLOSED"
+  },
+  "CASE-0014": {
+    "adjustments": [],
+    "allocations": [
+      {
+        "amount_paise": 42126000,
+        "invoice_id": "INV-1111"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839208"
+    ],
+    "state": "PENDING_APPROVAL",
+    "status": "VERIFIED"
+  },
+  "CASE-0015": {
+    "adjustments": [],
+    "allocations": [
+      {
+        "amount_paise": 26904000,
+        "invoice_id": "INV-1112"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839209"
+    ],
+    "state": "PENDING_APPROVAL",
+    "status": "VERIFIED"
+  },
+  "CASE-0016": {
+    "adjustments": [
+      {
+        "amount_paise": 1948000,
+        "kind": "tds"
+      }
+    ],
+    "allocations": [
+      {
+        "amount_paise": 74340000,
+        "invoice_id": "INV-1113"
+      },
+      {
+        "amount_paise": 40592000,
+        "invoice_id": "INV-1114"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839210"
+    ],
+    "state": "PENDING_APPROVAL",
+    "status": "VERIFIED"
+  },
+  "CASE-0017": {
+    "adjustments": [
+      {
+        "amount_paise": 1522000,
+        "kind": "tds"
+      }
+    ],
+    "allocations": [
+      {
+        "amount_paise": 89798000,
+        "invoice_id": "INV-1115"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839211"
+    ],
+    "state": "PENDING_APPROVAL",
+    "status": "VERIFIED"
+  },
+  "CASE-0018": {
+    "adjustments": [
+      {
+        "amount_paise": 366000,
+        "kind": "tds"
+      }
+    ],
+    "allocations": [
+      {
+        "amount_paise": 21594000,
+        "invoice_id": "INV-1116"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839212"
+    ],
+    "state": "PENDING_APPROVAL",
+    "status": "VERIFIED"
+  },
+  "CASE-0019": {
+    "adjustments": [
+      {
+        "amount_paise": 428000,
+        "kind": "tds"
+      },
+      {
+        "amount_paise": 2500000,
+        "kind": "credit_note"
+      }
+    ],
+    "allocations": [
+      {
+        "amount_paise": 25252000,
+        "invoice_id": "INV-1117"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839213"
+    ],
+    "state": "PENDING_APPROVAL",
+    "status": "VERIFIED"
+  },
+  "CASE-0020": {
+    "adjustments": [
+      {
+        "amount_paise": 1172000,
+        "kind": "tds"
+      }
+    ],
+    "allocations": [
+      {
+        "amount_paise": 69148000,
+        "invoice_id": "INV-1118"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839214"
+    ],
+    "state": "AWAITING_EVIDENCE",
+    "status": "PROBABLE"
+  },
+  "CASE-0021": {
+    "adjustments": [
+      {
+        "amount_paise": 494000,
+        "kind": "tds"
+      }
+    ],
+    "allocations": [
+      {
+        "amount_paise": 29146000,
+        "invoice_id": "INV-1119"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839215"
+    ],
+    "state": "AWAITING_EVIDENCE",
+    "status": "PROBABLE"
+  },
+  "CASE-0022": {
+    "adjustments": [
+      {
+        "amount_paise": 918000,
+        "kind": "tds"
+      }
+    ],
+    "allocations": [
+      {
+        "amount_paise": 54162000,
+        "invoice_id": "INV-1120"
+      }
+    ],
+    "is_red_team": true,
+    "receipts": [
+      "UTR839216"
+    ],
+    "state": "NEEDS_REVIEW",
+    "status": "CONFLICTING"
+  },
+  "CASE-0023": {
+    "adjustments": [],
+    "allocations": [
+      {
+        "amount_paise": 98294000,
+        "invoice_id": "INV-1121"
+      },
+      {
+        "amount_paise": 31860000,
+        "invoice_id": "INV-1122"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839217"
+    ],
+    "state": "PENDING_APPROVAL",
+    "status": "VERIFIED"
+  },
+  "CASE-0024": {
+    "adjustments": [],
+    "allocations": [
+      {
+        "amount_paise": 95226000,
+        "invoice_id": "INV-1123"
+      },
+      {
+        "amount_paise": 41890000,
+        "invoice_id": "INV-1124"
+      },
+      {
+        "amount_paise": 83898000,
+        "invoice_id": "INV-1125"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839218"
+    ],
+    "state": "PENDING_APPROVAL",
+    "status": "VERIFIED"
+  },
+  "CASE-0025": {
+    "adjustments": [],
+    "allocations": [
+      {
+        "amount_paise": 80948000,
+        "invoice_id": "INV-1126"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839219",
+      "UTR839220"
+    ],
+    "state": "PENDING_APPROVAL",
+    "status": "VERIFIED"
+  },
+  "CASE-0026": {
+    "adjustments": [],
+    "allocations": [
+      {
+        "amount_paise": 101716000,
+        "invoice_id": "INV-1127"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839221",
+      "UTR839222"
+    ],
+    "state": "PENDING_APPROVAL",
+    "status": "VERIFIED"
+  },
+  "CASE-0027": {
+    "adjustments": [
+      {
+        "amount_paise": 3200000,
+        "kind": "credit_note"
+      }
+    ],
+    "allocations": [
+      {
+        "amount_paise": 36580000,
+        "invoice_id": "INV-1128"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839223"
+    ],
+    "state": "AWAITING_EVIDENCE",
+    "status": "PROBABLE"
+  },
+  "CASE-0028": {
+    "adjustments": [
+      {
+        "amount_paise": 1700000,
+        "kind": "credit_note"
+      }
+    ],
+    "allocations": [
+      {
+        "amount_paise": 31034000,
+        "invoice_id": "INV-1129"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839224"
+    ],
+    "state": "AWAITING_EVIDENCE",
+    "status": "PROBABLE"
+  },
+  "CASE-0029": {
+    "adjustments": [
+      {
+        "amount_paise": 2500000,
+        "kind": "credit_note"
+      }
+    ],
+    "allocations": [
+      {
+        "amount_paise": 26668000,
+        "invoice_id": "INV-1130"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839225"
+    ],
+    "state": "AWAITING_EVIDENCE",
+    "status": "PROBABLE"
+  },
+  "CASE-0030": {
+    "adjustments": [
+      {
+        "amount_paise": 1800000,
+        "kind": "credit_note"
+      }
+    ],
+    "allocations": [
+      {
+        "amount_paise": 52156000,
+        "invoice_id": "INV-1131"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839226"
+    ],
+    "state": "PENDING_APPROVAL",
+    "status": "VERIFIED"
+  },
+  "CASE-0031": {
+    "adjustments": [],
+    "allocations": [
+      {
+        "amount_paise": 94046000,
+        "invoice_id": "INV-1132"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839227"
+    ],
+    "state": "PENDING_APPROVAL",
+    "status": "VERIFIED"
+  },
+  "CASE-0032": {
+    "adjustments": [],
+    "allocations": [
+      {
+        "amount_paise": 59944000,
+        "invoice_id": "INV-1133"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839228"
+    ],
+    "state": "PENDING_APPROVAL",
+    "status": "VERIFIED"
+  },
+  "CASE-0033": {
+    "adjustments": [
+      {
+        "amount_paise": 59000,
+        "kind": "bank_charge"
+      }
+    ],
+    "allocations": [
+      {
+        "amount_paise": 10030000,
+        "invoice_id": "INV-1134"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839229"
+    ],
+    "state": "PENDING_APPROVAL",
+    "status": "VERIFIED"
+  },
+  "CASE-0034": {
+    "adjustments": [
+      {
+        "amount_paise": 50,
+        "kind": "rounding"
+      }
+    ],
+    "allocations": [
+      {
+        "amount_paise": 24544000,
+        "invoice_id": "INV-1135"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839230"
+    ],
+    "state": "PENDING_APPROVAL",
+    "status": "VERIFIED"
+  },
+  "CASE-0035": {
+    "adjustments": [],
+    "allocations": [
+      {
+        "amount_paise": 45076000,
+        "invoice_id": "INV-1136"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839231"
+    ],
+    "state": "NEEDS_REVIEW",
+    "status": "INSUFFICIENT"
+  },
+  "CASE-0036": {
+    "adjustments": [],
+    "allocations": [
+      {
+        "amount_paise": 52274000,
+        "invoice_id": "INV-1137"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839232"
+    ],
+    "state": "NEEDS_REVIEW",
+    "status": "INSUFFICIENT"
+  },
+  "CASE-0037": {
+    "adjustments": [],
+    "allocations": [
+      {
+        "amount_paise": 89090000,
+        "invoice_id": "INV-1138"
+      }
+    ],
+    "is_red_team": false,
+    "receipts": [
+      "UTR839233"
+    ],
+    "state": "NEEDS_REVIEW",
+    "status": "INSUFFICIENT"
+  },
+  "CASE-0038": {
+    "adjustments": [],
+    "allocations": [
+      {
+        "amount_paise": 16520000,
+        "invoice_id": "INV-1139"
+      }
+    ],
+    "is_red_team": true,
+    "receipts": [
+      "UTR839234"
+    ],
+    "state": "NEEDS_REVIEW",
+    "status": "CONFLICTING"
+  },
+  "CASE-0039": {
+    "adjustments": [],
+    "allocations": [
+      {
+        "amount_paise": 75638000,
+        "invoice_id": "INV-2210"
+      }
+    ],
+    "is_red_team": true,
+    "receipts": [
+      "UTR839235"
+    ],
+    "state": "NEEDS_REVIEW",
+    "status": "CONFLICTING"
+  },
+  "CASE-0040": {
+    "adjustments": [],
+    "allocations": [],
+    "is_red_team": true,
+    "receipts": [
+      "UTR839236"
+    ],
+    "state": "NEEDS_REVIEW",
+    "status": "INSUFFICIENT"
+  }
+}

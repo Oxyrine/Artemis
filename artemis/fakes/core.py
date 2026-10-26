@@ -48,6 +48,15 @@ class FixtureCore:
     def new_case_ids(self) -> list[str]:
         return sorted(self.cases)
 
+    def reset(self) -> dict:
+        return {}
+
+    def auto_close(self) -> list[str]:
+        return []
+
+    def save_parsed_email(self, email_id: str, parsed: dict) -> None:
+        pass
+
     def opening_context(self, case_id: str) -> dict:
         if case_id not in self.cases:
             raise CoreError("not_found", f"case {case_id}")
