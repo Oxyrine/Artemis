@@ -120,3 +120,21 @@ def test_negative_adjustment_is_refused_as_data(deps):
         dict(invoice_id="INV-1042", amount_paise=118_000_000)],
         adjustments=[dict(kind="rounding", amount_paise=-50)]), ctx)
     assert "error" not in ok  # rounding may legitimately be negative
+
+
+def test_daily_token_limit_fails_fast_instead_of_sleeping(monkeypatch):
+    import openai
+    from artemis.agent.llm import LLMError, OpenAICompatClient
+    c = OpenAICompatClient("http://x", "key", "m")
+
+    class Resp:
+        status_code, headers, request = 429, {"retry-after": "3600"}, None
+
+    err = openai.RateLimitError("Rate limit reached ... on tokens per day (TPD): Limit 200000", response=Resp(), body=None)
+    monkeypatch.setattr(c._c.chat.completions, "create", lambda **kw: (_ for _ in ()).throw(err))
+    slept = []
+    monkeypatch.setattr("time.sleep", lambda s: slept.append(s))
+    import pytest
+    with pytest.raises(LLMError, match="daily token limit"):
+        c.chat([{"role": "user", "content": "x"}], [])
+    assert slept == []  # did not wait an hour per attempt
