@@ -22,7 +22,8 @@ def figures(text: str) -> set[str]:
 def template_narrative(alloc: AllocationResult | None, grade: Grade, rule_refs: list[str],
                        evidence_ids: list[str]) -> str:
     if alloc is None:
-        return (f"No allocation could be proposed for this receipt. Grade: {grade.status.value}. "
+        extra = f" Duplicate payment of an applied invoice; {grade.recommendation}." if grade.duplicate else ""
+        return (f"No allocation could be proposed for this receipt. Grade: {grade.status.value}.{extra} "
                 "Needs manual review.")
     inv = ", ".join(a.invoice_id for a in alloc.allocations)
     parts = [f"Receipt {', '.join(alloc.utrs)} of INR {format_inr(alloc.received_paise)} was matched to {inv}, "

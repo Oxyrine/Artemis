@@ -178,3 +178,17 @@ def test_an_email_only_credit_note_becomes_supporting_evidence_after_parsing(rea
     assert found.refs[0].tier.value == "supporting"  # never primary: caps the case at PROBABLE
     r = real.core.propose_allocation(cid, [utr], t["allocations"], [adj("credit_note", amt, credit_note_id=row["id"])])
     assert r.adjustments[0].validated and r.unexplained_paise == 0
+
+
+def test_one_invoice_paid_by_two_receipts_is_counted_once(real):
+    cid = next(c for c, t in TRUTH.items() if len(t["receipts"]) == 2)
+    t = TRUTH[cid]
+    inv = t["allocations"][0]
+    with real.core.db.tx() as s:
+        gross = s.get(Invoice, inv["invoice_id"]).gross_amount
+    half = gross // 2
+    # an agent may list the invoice once per receipt; the gross must still count once, and the amounts add up per invoice
+    r = real.core.propose_allocation(cid, t["receipts"], [dict(invoice_id=inv["invoice_id"], amount_paise=half),
+                                                           dict(invoice_id=inv["invoice_id"], amount_paise=gross - half)], [])
+    assert r.invoiced_paise == gross and r.unexplained_paise == 0
+    assert [(a.invoice_id, a.amount_paise) for a in r.allocations] == [(inv["invoice_id"], gross)]

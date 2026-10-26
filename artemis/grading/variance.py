@@ -20,13 +20,16 @@ def propose(s: Session, case_id: str, utrs: list[str], allocations: list[dict], 
         if r is None:
             raise CoreError("not_found", f"receipt {u} does not exist")
         receipts.append(r)
-    lines = [AllocationLine(**a) for a in allocations]
+    merged: dict[str, int] = {}  # one invoice paid by several receipts may arrive as several lines: sum them per invoice
+    for a in (AllocationLine(**x) for x in allocations):
+        merged[a.invoice_id] = merged.get(a.invoice_id, 0) + a.amount_paise
+    lines = [AllocationLine(invoice_id=i, amount_paise=amt) for i, amt in merged.items()]
     invoices = []
     for a in lines:
         inv = s.get(Invoice, a.invoice_id)
         if inv is None:
             raise CoreError("not_found", f"invoice {a.invoice_id} does not exist")
-        invoices.append(inv)
+        invoices.append(inv)  # distinct invoices: their gross is counted once
     invoiced, received = sum(i.gross_amount for i in invoices), sum(r.amount for r in receipts)
     variance = invoiced - received
     remaining, results = variance, []
