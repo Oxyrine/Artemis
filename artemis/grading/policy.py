@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from artemis.db import BankReceipt, Case, Db, Reviewer
+from artemis.db import Adjustment, Case, Db, Reviewer
 from artemis.models import CaseState as S
 from artemis.ports import AuditSink, IllegalTransition
 
@@ -66,9 +66,12 @@ class SqlPolicy:
         if cur != S.PENDING_APPROVAL:
             raise IllegalTransition(_BLOCKED.get(cur, f"cannot {decision} a case in {cur.value}"))
         if decision == "approve":
-            amount = s.scalar(select(func.sum(BankReceipt.amount)).where(BankReceipt.case_id == case_id)) or 0
+            # The limit applies to what the approval books as adjustments (e.g. the 26,000 TDS on the hero case), not to
+            # the cash received: the spec has the analyst approve the 15,08,000 hero case under a 10,00,000 limit.
+            booked = s.scalar(select(func.sum(Adjustment.amount_paise)).where(
+                Adjustment.case_id == case_id, Adjustment.validated.is_(True))) or 0
             limit = reviewer.approval_limit_paise
-            if limit is not None and amount > limit:
+            if limit is not None and booked > limit:
                 raise IllegalTransition(f"Above {reviewer.name}'s approval limit: a controller must approve this.")
             if case.duplicate and reviewer.role != "controller":
                 raise IllegalTransition("Duplicate-payment refund recommendations need a controller.")

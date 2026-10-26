@@ -1,8 +1,8 @@
-From: Accounts <accounts@coastalmarine.example.in>
+From: Accounts <accounts@sunrisetextiles.example.in>
 To: ar@ourcompany.example.in
 Subject: Remittance UTR839217
 Message-ID: <eml-0011@artemis.example.in>
-Date: Sun, 30 Aug 2026 10:41:00 +0530
+Date: Sun, 13 Sep 2026 10:41:00 +0530
 MIME-Version: 1.0
 Content-Type: multipart/alternative; boundary="===artemis-eml-0011==="
 
@@ -10,7 +10,7 @@ Content-Type: multipart/alternative; boundary="===artemis-eml-0011==="
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-Dear Sir, we have remitted Rs 13,68,800 vide UTR839217 towards INV-1121, INV-=
+Dear Sir, we have remitted Rs 13,01,540 vide UTR839217 towards INV-1121, INV-=
 1122. Regards, Accounts
 
 --===artemis-eml-0011===
@@ -18,7 +18,7 @@ Content-Type: text/html; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 
-<html><body><p>Dear Sir, we have remitted Rs 13,68,800 vide UTR839217 towards=
+<html><body><p>Dear Sir, we have remitted Rs 13,01,540 vide UTR839217 towards=
  INV-1121, INV-1122. Regards, Accounts</p></body></html>
 
 --===artemis-eml-0011===--

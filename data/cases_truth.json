@@ -18,7 +18,7 @@
     "adjustments": [],
     "allocations": [
       {
-        "amount_paise": 93928000,
+        "amount_paise": 60652000,
         "invoice_id": "INV-1102"
       }
     ],
@@ -33,7 +33,7 @@
     "adjustments": [],
     "allocations": [
       {
-        "amount_paise": 50976000,
+        "amount_paise": 99592000,
         "invoice_id": "INV-1103"
       }
     ],
@@ -48,7 +48,7 @@
     "adjustments": [],
     "allocations": [
       {
-        "amount_paise": 13216000,
+        "amount_paise": 60298000,
         "invoice_id": "INV-1104"
       }
     ],
@@ -63,7 +63,7 @@
     "adjustments": [],
     "allocations": [
       {
-        "amount_paise": 98530000,
+        "amount_paise": 82246000,
         "invoice_id": "INV-1105"
       }
     ],
@@ -78,7 +78,7 @@
     "adjustments": [],
     "allocations": [
       {
-        "amount_paise": 16992000,
+        "amount_paise": 78942000,
         "invoice_id": "INV-1106"
       }
     ],
@@ -122,11 +122,11 @@
     ],
     "allocations": [
       {
-        "amount_paise": 83544000,
+        "amount_paise": 118000000,
         "invoice_id": "INV-1052"
       },
       {
-        "amount_paise": 14396000,
+        "amount_paise": 35400000,
         "invoice_id": "INV-1053"
       }
     ],
@@ -140,17 +140,17 @@
   "CASE-0009": {
     "adjustments": [
       {
-        "amount_paise": 830000,
+        "amount_paise": 2600000,
         "kind": "tds"
       }
     ],
     "allocations": [
       {
-        "amount_paise": 10856000,
+        "amount_paise": 118000000,
         "invoice_id": "INV-1062"
       },
       {
-        "amount_paise": 38114000,
+        "amount_paise": 35400000,
         "invoice_id": "INV-1063"
       }
     ],
@@ -180,7 +180,7 @@
     "adjustments": [],
     "allocations": [
       {
-        "amount_paise": 46256000,
+        "amount_paise": 34574000,
         "invoice_id": "INV-1108"
       }
     ],
@@ -195,7 +195,7 @@
     "adjustments": [],
     "allocations": [
       {
-        "amount_paise": 40002000,
+        "amount_paise": 77998000,
         "invoice_id": "INV-1109"
       }
     ],
@@ -210,7 +210,7 @@
     "adjustments": [],
     "allocations": [
       {
-        "amount_paise": 63484000,
+        "amount_paise": 62186000,
         "invoice_id": "INV-1110"
       }
     ],
@@ -342,13 +342,13 @@
   "CASE-0020": {
     "adjustments": [
       {
-        "amount_paise": 842000,
+        "amount_paise": 1172000,
         "kind": "tds"
       }
     ],
     "allocations": [
       {
-        "amount_paise": 49678000,
+        "amount_paise": 69148000,
         "invoice_id": "INV-1118"
       }
     ],
@@ -362,13 +362,13 @@
   "CASE-0021": {
     "adjustments": [
       {
-        "amount_paise": 1472000,
+        "amount_paise": 494000,
         "kind": "tds"
       }
     ],
     "allocations": [
       {
-        "amount_paise": 86848000,
+        "amount_paise": 29146000,
         "invoice_id": "INV-1119"
       }
     ],
@@ -382,13 +382,13 @@
   "CASE-0022": {
     "adjustments": [
       {
-        "amount_paise": 1538000,
+        "amount_paise": 918000,
         "kind": "tds"
       }
     ],
     "allocations": [
       {
-        "amount_paise": 90742000,
+        "amount_paise": 54162000,
         "invoice_id": "INV-1120"
       }
     ],
@@ -403,11 +403,11 @@
     "adjustments": [],
     "allocations": [
       {
-        "amount_paise": 31860000,
+        "amount_paise": 98294000,
         "invoice_id": "INV-1121"
       },
       {
-        "amount_paise": 105020000,
+        "amount_paise": 31860000,
         "invoice_id": "INV-1122"
       }
     ],
@@ -422,7 +422,7 @@
     "adjustments": [],
     "allocations": [
       {
-        "amount_paise": 51448000,
+        "amount_paise": 95226000,
         "invoice_id": "INV-1123"
       },
       {
@@ -445,7 +445,7 @@
     "adjustments": [],
     "allocations": [
       {
-        "amount_paise": 98294000,
+        "amount_paise": 80948000,
         "invoice_id": "INV-1126"
       }
     ],
@@ -516,13 +516,13 @@
   "CASE-0029": {
     "adjustments": [
       {
-        "amount_paise": 1500000,
+        "amount_paise": 2500000,
         "kind": "credit_note"
       }
     ],
     "allocations": [
       {
-        "amount_paise": 13688000,
+        "amount_paise": 26668000,
         "invoice_id": "INV-1130"
       }
     ],
@@ -542,7 +542,7 @@
     ],
     "allocations": [
       {
-        "amount_paise": 31978000,
+        "amount_paise": 52156000,
         "invoice_id": "INV-1131"
       }
     ],
@@ -557,7 +557,7 @@
     "adjustments": [],
     "allocations": [
       {
-        "amount_paise": 13924000,
+        "amount_paise": 94046000,
         "invoice_id": "INV-1132"
       }
     ],
@@ -572,7 +572,7 @@
     "adjustments": [],
     "allocations": [
       {
-        "amount_paise": 32686000,
+        "amount_paise": 59944000,
         "invoice_id": "INV-1133"
       }
     ],
@@ -592,7 +592,7 @@
     ],
     "allocations": [
       {
-        "amount_paise": 84370000,
+        "amount_paise": 10030000,
         "invoice_id": "INV-1134"
       }
     ],
@@ -642,7 +642,7 @@
     "adjustments": [],
     "allocations": [
       {
-        "amount_paise": 67614000,
+        "amount_paise": 52274000,
         "invoice_id": "INV-1137"
       }
     ],
@@ -657,7 +657,7 @@
     "adjustments": [],
     "allocations": [
       {
-        "amount_paise": 88028000,
+        "amount_paise": 89090000,
         "invoice_id": "INV-1138"
       }
     ],
@@ -672,7 +672,7 @@
     "adjustments": [],
     "allocations": [
       {
-        "amount_paise": 30208000,
+        "amount_paise": 16520000,
         "invoice_id": "INV-1139"
       }
     ],
@@ -687,7 +687,7 @@
     "adjustments": [],
     "allocations": [
       {
-        "amount_paise": 8142000,
+        "amount_paise": 75638000,
         "invoice_id": "INV-2210"
       }
     ],

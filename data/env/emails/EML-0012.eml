@@ -1,4 +1,4 @@
-From: Accounts <accounts@pinnaclecement.example.in>
+From: Accounts <accounts@orchidhospitality.example.in>
 To: ar@ourcompany.example.in
 Subject: Remittance UTR839218
 Message-ID: <eml-0012@artemis.example.in>
@@ -10,7 +10,7 @@ Content-Type: multipart/alternative; boundary="===artemis-eml-0012==="
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-Dear Sir, we have remitted Rs 17,72,360 vide UTR839218 towards INV-1123, INV-=
+Dear Sir, we have remitted Rs 22,10,140 vide UTR839218 towards INV-1123, INV-=
 1124, INV-1125. Regards, Accounts
 
 --===artemis-eml-0012===
@@ -18,7 +18,7 @@ Content-Type: text/html; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 
-<html><body><p>Dear Sir, we have remitted Rs 17,72,360 vide UTR839218 towards=
+<html><body><p>Dear Sir, we have remitted Rs 22,10,140 vide UTR839218 towards=
  INV-1123, INV-1124, INV-1125. Regards, Accounts</p></body></html>
 
 --===artemis-eml-0012===--

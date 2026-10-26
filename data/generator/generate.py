@@ -167,14 +167,20 @@ def pan(cust: str) -> str:
     return f"AAAC{chr(64 + int(cust[5:]) % 26 + 1)}{int(cust[5:]):04d}K"
 
 
+SPECIAL = {"CUST-014", "CUST-015", "CUST-016"} | set(MEDIUM_PAYERS)  # hero + twins; medium-confidence payers
+# The two medium-confidence customers appear nowhere else: the matcher learns an alias from every resolved payer, so
+# another receipt from them could teach it a closer spelling and quietly turn scenario 3 into an auto-close.
+
+
 def tds_customers(e: Env) -> list[str]:
-    return [c[0] for c in CUSTOMERS if c[3] and c[0] not in ("CUST-014", "CUST-015", "CUST-016")]
+    return [c[0] for c in CUSTOMERS if c[3] and c[0] not in SPECIAL]
 
 
 def tds_case(e: Env, cust: str, n_inv: int, *, credit: str, utr: str | None = None, ids=(), when: date | None = None,
              inv_date: date | None = None, taxes: tuple[int, ...] | None = None) -> tuple:
     """Receipt = gross of n invoices minus 2% TDS on the taxable value. credit: 'equal'|'none'|'other'."""
-    invs = [e.invoice(cust, (taxes[i] if taxes else None), id=(ids[i] if i < len(ids) else None), inv_date=inv_date)
+    invs = [e.invoice(cust, (taxes[i] if taxes else None), id=(ids[i] if i < len(ids) else None), inv_date=inv_date,
+                  dup_ok=bool(taxes))  # the twins deliberately repeat the hero's amounts
             for i in range(n_inv)]
     tds = sum(i["taxable_value"] for i in invs) * TDS_BP // 10_000
     vd = when or e.pay_date(invs[0], 35, 58)
@@ -193,7 +199,7 @@ def tds_case(e: Env, cust: str, n_inv: int, *, credit: str, utr: str | None = No
 def build() -> Env:
     e = Env()
     rng = e.rng
-    plain = [c[0] for c in CUSTOMERS if c[0] not in ("CUST-014", "CUST-015", "CUST-016")]
+    plain = [c[0] for c in CUSTOMERS if c[0] not in SPECIAL]
 
     def exact(n: int) -> None:  # scenario 1 (and 2 with alias): amount, customer and invoice ref all agree
         for _ in range(n):

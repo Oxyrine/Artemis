@@ -1,6 +1,6 @@
-From: Accounts <accounts@vertexsoft.example.in>
+From: Accounts <accounts@orchidhospitality.example.in>
 To: ar@ourcompany.example.in
-Subject: Query on INV-1156
+Subject: Query on INV-1138
 Message-ID: <eml-0020@artemis.example.in>
 Date: Tue, 08 Sep 2026 10:41:00 +0530
 MIME-Version: 1.0
@@ -10,14 +10,14 @@ Content-Type: multipart/alternative; boundary="===artemis-eml-0020==="
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-Dear Sir, please confirm the PO reference for INV-1156. Regards, Accounts
+Dear Sir, please confirm the PO reference for INV-1138. Regards, Accounts
 
 --===artemis-eml-0020===
 Content-Type: text/html; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 
-<html><body><p>Dear Sir, please confirm the PO reference for INV-1156. Regard=
+<html><body><p>Dear Sir, please confirm the PO reference for INV-1138. Regard=
 s, Accounts</p></body></html>
 
 --===artemis-eml-0020===--
