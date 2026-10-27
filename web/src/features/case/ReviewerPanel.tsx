@@ -48,6 +48,7 @@ export function ReviewerPanel({ detail }: { detail: CaseDetail }) {
 
   if (!ACTIVE.includes(detail.state)) {
     return <Section title="Review"><p className="text-sm text-muted-foreground">This case is {humanize(detail.state)}; no review action is available.</p>
+      {message && <p role="status" className="mt-2 rounded-md bg-[var(--status-verified-soft)] p-2 text-sm text-[var(--status-verified-fg)]">{message}</p>}
       {audit.data && <div className="mt-3"><AuditTable compact events={[...audit.data.events].reverse().slice(0, 6)} /></div>}</Section>
   }
 

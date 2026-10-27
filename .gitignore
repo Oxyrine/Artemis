@@ -10,3 +10,4 @@ data/checkpoints/
 exports/
 web/node_modules/
 web/dist/
+web/e2e/failure.png

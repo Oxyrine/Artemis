@@ -17,6 +17,31 @@ PYTHONPATH=. uv run python -m artemis.agent.batch --replay runs/batch.json   # z
 
 LLM: any OpenAI-compatible endpoint, Groq by default. Copy `.env.example` to `.env` and set `LLM_API_KEY` and `LLM_MODEL` (pick a current tool-calling model; the name is config, never code). `uv run --env-file .env pytest -m live -s` runs the golden hero-case acceptance test against it (`.env` is not auto-loaded; `--env-file` does it).
 
+## Architecture
+
+```mermaid
+flowchart LR
+  subgraph A[Lane A: deterministic core, no LLM]
+    ENV[data/env + generator] --> ING[ingest] --> DB[(SQLite / Postgres 16)]
+    DB --> MAT[matcher: resolve, group, auto-close]
+    DB --> VAR[variance engine + TDS rules]
+    VAR --> GRD[grader: 4 grades, 7 flags]
+    GRD --> POL[policy engine: only writer of cases.state]
+  end
+  subgraph B[Lane B: agent]
+    LOOP[investigation loop] --> TOOLS[12 tools]
+    LOOP --> LLM[LLM client]
+  end
+  subgraph C[Lane C: product]
+    API[FastAPI /api] --> UI[React UI]
+    LED[(hash-chained ledger)]
+  end
+  TOOLS -->|ports.CoreService| VAR
+  POL -->|ports.AuditSink| LED
+  API --> LOOP
+  API -->|review| POL
+```
+
 ## How the lanes meet
 
 | Lane | Implements (in `artemis/ports.py`) | Wired in |
@@ -51,6 +76,18 @@ uv run python -m scripts.tamper [seq]            # edit one audit event as the D
 - **Settings:** `DATABASE_URL` (the server defaults to `sqlite:///data/artemis.db`; `artemis.api.main` alone uses in-memory SQLite), `ARTEMIS_API_TOKEN` (when set, write routes need `Authorization: Bearer <token>`), `DEMO_MODE` (default `1`; `0` disables `POST /reset`), `FORCE_HTTPS`, `REPLAY_FILE`, `RUNS_DIR`, `EXPORTS_DIR`.
 - **UI** (`web/`): dashboard, case detail (evidence graph, trace, reviewer panel) and audit view. It reads raw paise, enums and ids from the API and formats them itself.
 
+## Deploy and demo
+
+```bash
+make demo        # docker compose: postgres 16 + api + web (nginx). Migrates, seeds, serves on http://localhost:8080
+make demo-down   # stop and delete the volumes
+make demo-local  # no Docker: build the UI, seed SQLite, serve everything on http://localhost:8000 (set DATABASE_URL for Postgres)
+make seed        # just the migrate + seed step (DATABASE_URL, SIGNING_KEY_PATH)
+make smoke       # build the UI and run the Playwright smoke test (BASE_URL, default http://localhost:8000)
+```
+
+`deploy/docker-compose.yml` starts the three services. The api container runs `scripts/seed.py` (Alembic to head, create the Ed25519 signing key if it is missing, load `data/env` and run the matcher if the database is empty) and then one uvicorn worker with `ARTEMIS_PREPARE=0`, so a restart keeps the database and the ledger. `.env.example` lists every variable. The images build and the stack runs: the smoke test passes through nginx on :8080, data and the ledger survive an api restart, and `docker exec <api> python -m scripts.tamper 5` turns Verify chain red at event 5. The smoke test (`web/e2e/smoke.mjs`) resets the environment, runs the batch, opens the hero case, approves it as the analyst and verifies the chain; it needs a server in demo mode without `ARTEMIS_API_TOKEN`.
+
 ## Database and migrations
 
 SQLite is the default (in-memory for tests, a file for the server). Postgres 16 is supported through psycopg 3: set `DATABASE_URL=postgresql+psycopg://user@host:5432/artemis`. The suite and the 40-case scripted pipeline pass on both.
@@ -60,7 +97,7 @@ uv run alembic upgrade head                       # DATABASE_URL, else sqlite://
 uv run alembic revision --autogenerate -m "..."   # after changing a model; a test fails when the models and migrations disagree
 ```
 
-`0001` creates every table, including the ledger's, and installs the append-only triggers. `Db.reset()` (what `POST /reset` and the tests use) still drops and recreates tables; it is for the demo and tests, not for a database that holds data to keep.
+`0001` creates every table, including the ledger's, and installs the append-only triggers. `Db.reset()` (what `POST /reset` and the tests use) still drops and recreates tables; it is for the demo and tests, not for a database that holds data to keep. With `ARTEMIS_PREPARE=0` the API does not call it on start.
 
 ## Lane A (data and deterministic core)
 
@@ -86,6 +123,11 @@ ARTEMIS_BACKEND=real uv run --env-file .env python -m scripts.debug_case CASE-00
 ### Hand-offs to Lane C
 `SqlPolicy.decide(case_id, reviewer_id, decision)` validates a reviewer's action (Probable and Conflicting cases cannot be approved, limits, duplicate refunds need a controller) and makes the transition; it returns the refusal reason for the UI. Applying allocations to invoices on approve (same transaction) is the API's job. `SqlCore.reset()` is what `POST /reset` calls. The audit sink is the hash-chained `SqlAudit` ledger (Lane C); the in-memory `ListAudit` remains for Lane B's fixtures backend.
 
+### Merging cases
+If the agent links a receipt that sits in another case (`propose_allocation` with a UTR from elsewhere), the receipt moves to the proposing case and a case left with no receipts becomes `MERGED` with `merged_into` pointing at the absorber (through the policy engine, so it is audited). Only a case that is still `NEW` can be absorbed; a receipt in an investigated, applied or closed case is refused with a `conflict` error. A merged case still queued in a running batch fails its start-up transition and stays `MERGED`; the batch counts it as one error.
+
 ### Not done yet
-- Evidence rows for the matcher's own entity matches (they live in `customer_aliases`). Evidence belongs to Lane B's `RunStore`, so writing it from the matcher changes the shared ports.
 - Dispute flags: no dispute data exists in the environment, and adding some changes the generator's answer key. The hook is `matcher.DISPUTED`.
+- The matcher's own entity resolutions write `customer_aliases` rows but no evidence row (the spec's derived item with the score): evidence belongs to Lane B's `RunStore`, so today the derived row appears when the agent calls `resolve_customer`.
+- Lane B's records (`agent_runs`, `tool_calls`, `hypotheses`, `evidence`, batches) are in memory (`InMemoryRunStore`, recorded to `runs/*.json` for replay), not tables, so they are not in the migrations and do not survive a restart.
+- Not done here: the hosted copy, the backup video, and the analyst-effort stopwatch figures.

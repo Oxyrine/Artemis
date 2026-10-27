@@ -13,6 +13,8 @@ uv run python -m scripts.export_schemas         # regenerate contracts/*.schema.
 uv run python -m scripts.export_openapi         # regenerate contracts/openapi.json (a test fails on drift)
 uv run alembic revision --autogenerate -m "..." # after any model change (a test fails when models and migrations disagree)
 uv run python -m scripts.serve                  # API on :8000 (+ web/dist if built); cd web && npm test / npm run dev for the UI
+uv run python -m scripts.seed                   # migrate + signing key + load data/env into DATABASE_URL (idempotent); `make demo` = compose stack, `make demo-local` = same without Docker
+make smoke                                      # Playwright smoke (needs a server in demo mode: BASE_URL)
 uv run python -m eval.run --backend real --scripted --runs 3   # full 40-case pipeline with the offline oracle agent
 ARTEMIS_BACKEND=real uv run --env-file .env python -m scripts.debug_case CASE-0033     # trace one live case
 ```
@@ -25,7 +27,7 @@ ARTEMIS_BACKEND=real uv run --env-file .env python -m scripts.debug_case CASE-00
 - `artemis/wiring.py:build_deps("fixtures"|"real")` is the only place a backend is chosen. `fixtures` = Lane B's fakes in `artemis/fakes/` (3 hero cases); `real` = `SqlCore` + `SqlPolicy` on SQLite (`DATABASE_URL` to override).
 - Lane B: `artemis/agent/` (loop, llm client, batch, replay, narrative, trace), `artemis/tools/` (12 tools, one file each, schemas generated from the Pydantic input models), `eval/`, prompts in `artemis/agent/prompts/` (versioned; `PROMPT_VERSION` in `loop.py`).
 - Lane A: `artemis/db.py`, `ingest/`, `matching/`, `rules/`, `grading/`, `core.py`; the generator is `data/generator/generate.py`.
-- Lane C: `artemis/api/` (FastAPI, routes under `/api`, single worker), `artemis/audit/` (`SqlAudit`: hash chain, append-only triggers, signed checkpoints; `build_deps("real")` wires it), `web/` (React + Vite, types generated from `contracts/openapi.json`), `migrations/` (Alembic, `0001` is the full schema incl. ledger triggers).
+- Lane C: `artemis/api/` (FastAPI, routes under `/api`, single worker), `artemis/audit/` (`SqlAudit`: hash chain, append-only triggers, signed checkpoints; `build_deps("real")` wires it), `web/` (React + Vite, types generated from `contracts/openapi.json`), `migrations/` (Alembic, `0001` is the full schema incl. ledger triggers), `deploy/` (compose: postgres + api + web; `scripts/seed.py` is the api entrypoint's first step; `ARTEMIS_PREPARE=0` stops the API wiping the DB on start).
 - UI-facing view-models are in `artemis/views.py` (raw paise/enums/ids only, versioned); JSON Schemas are committed in `contracts/`.
 - `artemis/fakes/scripted.py` is the offline "oracle" agent: it uses only the tool port, so it drives both backends and lets the whole pipeline run free.
 

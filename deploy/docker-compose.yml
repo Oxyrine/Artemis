@@ -1,0 +1,37 @@
+# make demo  =  docker compose -f deploy/docker-compose.yml up --build
+# postgres 16 + api (migrates, seeds, serves) + web (nginx). Open http://localhost:8080
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: artemis
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-artemis}
+      POSTGRES_DB: artemis
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U artemis"]
+      interval: 3s
+      retries: 20
+
+  api:
+    build: {context: .., dockerfile: deploy/Dockerfile.api}
+    depends_on: {db: {condition: service_healthy}}
+    environment:
+      DATABASE_URL: postgresql+psycopg://artemis:${POSTGRES_PASSWORD:-artemis}@db:5432/artemis
+      SIGNING_KEY_PATH: /keys/signing_key.pem
+      DEMO_MODE: ${DEMO_MODE:-1}
+      ARTEMIS_API_TOKEN: ${ARTEMIS_API_TOKEN:-}
+      LLM_BASE_URL: ${LLM_BASE_URL:-https://api.groq.com/openai/v1}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      LLM_MODEL: ${LLM_MODEL:-}
+      REPLAY_FILE: ${REPLAY_FILE:-/app/runs/latest-demo.json}
+      RUNS_DIR: /app/runs
+      EXPORTS_DIR: /app/exports
+    volumes: [keys:/keys, runs:/app/runs, exports:/app/exports]
+
+  web:
+    build: {context: .., dockerfile: deploy/Dockerfile.web}
+    depends_on: [api]
+    ports: ["${WEB_PORT:-8080}:80"]
+
+volumes: {pgdata: {}, keys: {}, runs: {}, exports: {}}

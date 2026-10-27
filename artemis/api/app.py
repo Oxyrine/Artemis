@@ -45,7 +45,8 @@ def _now() -> str:
 
 def create_app(deps: Deps | None = None, *, static_dir: Path | str | None = None, runs_dir: Path | str | None = None,
                exports_dir: Path | str | None = None) -> FastAPI:
-    deps = deps or build_deps("real")
+    # ARTEMIS_PREPARE=0: the database is already migrated and seeded (scripts/seed.py), so do not wipe it on start
+    deps = deps or build_deps("real", prepare=os.environ.get("ARTEMIS_PREPARE", "1") != "0")
     runs = Path(runs_dir or os.environ.get("RUNS_DIR") or ROOT / "runs")
     exports = Path(exports_dir or os.environ.get("EXPORTS_DIR") or ROOT / "exports")
     app = FastAPI(title="Artemis", docs_url=None, redoc_url=None, openapi_url="/api/openapi.json")
