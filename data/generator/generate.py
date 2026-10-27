@@ -383,12 +383,12 @@ def _write_xlsx(path: Path, header: list[str], rows: list[list]) -> None:
     src = zipfile.ZipFile(path)  # zip entries carry the build time: rewrite with a fixed one for byte-identical output
     entries = [(i.filename, src.read(i.filename)) for i in src.infolist()]
     src.close()
-    with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as out:
+    with zipfile.ZipFile(path, "w", zipfile.ZIP_STORED) as out:  # stored, not deflated: deflate bytes vary with the zlib build
         for name, data in entries:
             if name == "docProps/core.xml":  # openpyxl stamps 'modified' with the current time on save
                 data = re.sub(rb"(<dcterms:modified[^>]*>)[^<]*", rb"\g<1>2026-10-01T00:00:00Z", data)
             zi = zipfile.ZipInfo(name, (2026, 10, 1, 0, 0, 0))
-            zi.compress_type = zipfile.ZIP_DEFLATED
+            zi.compress_type = zipfile.ZIP_STORED
             out.writestr(zi, data)
 
 
@@ -433,7 +433,8 @@ def write(e: Env) -> dict:
     truth = {}
     for n, g in enumerate(sorted(e.groups, key=lambda g: min(g["receipts"])), 1):
         truth[f"CASE-{n:04d}"] = g
-    TRUTH.write_text(json.dumps(truth, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    # CRLF written explicitly: write_text would translate \n by platform and the file must be byte-identical everywhere
+    TRUTH.write_bytes((json.dumps(truth, indent=2, sort_keys=True) + "\n").replace("\n", "\r\n").encode("utf-8"))
     return truth
 
 
