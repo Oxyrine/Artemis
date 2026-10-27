@@ -13,3 +13,4 @@ web/dist/
 .taste-skill/
 .impeccable/review/
 output/playwright/
+web/e2e/failure.png

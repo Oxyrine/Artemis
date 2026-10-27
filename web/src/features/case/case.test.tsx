@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react'
+import { act, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { CaseDetail } from '@/api/types'
@@ -92,6 +92,14 @@ describe('ReviewerPanel', () => {
     expect(mutate).not.toHaveBeenCalled() // nothing is sent until the reviewer confirms
     await userEvent.click(within(dialog).getByRole('button', { name: 'Reject case' }))
     expect(mutate).toHaveBeenCalledWith(expect.objectContaining({ decision: 'reject' }), expect.anything())
+  })
+
+  it('keeps the confirmation visible after the approval moves the case out of the reviewable states', async () => {
+    const { rerender } = render(<ReviewerPanel detail={heroDetail} />)
+    await userEvent.click(screen.getByRole('button', { name: 'Approve' }))
+    act(() => mutate.mock.calls[0][1].onSuccess({ state: 'APPLIED', audit_seq: 573 }))
+    rerender(<ReviewerPanel detail={{ ...heroDetail, state: 'APPLIED' }} />)
+    expect(screen.getByRole('status')).toHaveTextContent(/recorded by Asha Analyst.*audit event #573/)
   })
 
   it('offers no actions once the case is applied', () => {
