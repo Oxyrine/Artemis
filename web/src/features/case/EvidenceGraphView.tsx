@@ -52,20 +52,24 @@ export function EvidenceGraphView({ caseId }: { caseId: string }) {
   return (
     <Section title="Evidence graph" aside={<span className="text-xs text-muted-foreground">solid border = primary · dashed = supporting · dashed red edge = contradicts</span>}>
       {q.isLoading || !flow ? <Skeleton className="h-72 w-full" /> : (
-        <>
+        <div className="evidence-graph-content">
           <div className="h-[440px] rounded-md border" role="img" aria-label={`Evidence graph with ${q.data!.nodes.length} nodes and ${q.data!.edges.length} edges. A text version follows.`}>
             <ReactFlow colorMode={theme} nodes={flow.nodes} edges={flow.edges} fitView fitViewOptions={{ padding: 0.15 }} nodesDraggable={false}
               nodesConnectable={false} elementsSelectable={false} minZoom={0.3}>
               <Background /><Controls showInteractive={false} />
             </ReactFlow>
           </div>
-          <details className="mt-2 text-sm">
+          <details open className="graph-text mt-2 text-sm">
             <summary className="cursor-pointer text-muted-foreground">Graph as text</summary>
             <ul className="mt-1 list-disc pl-5">
-              {q.data!.edges.map((e) => <li key={e.id}>{e.source} → {e.target}: {e.kind}{e.amount_paise != null ? ` ₹${amount(e.amount_paise)}` : e.label ? ` (${e.label})` : ''}</li>)}
+              {q.data!.edges.map((e) => {
+                const source = q.data!.nodes.find((n) => n.id === e.source)
+                const target = q.data!.nodes.find((n) => n.id === e.target)
+                return <li key={e.id}>{source ? `${humanize(source.kind)} ${source.label}` : e.source} → {target ? `${humanize(target.kind)} ${target.label}` : e.target}: {e.kind}{e.amount_paise != null ? ` ₹${amount(e.amount_paise)}` : e.label ? ` (${e.label})` : ''}</li>
+              })}
             </ul>
           </details>
-        </>
+        </div>
       )}
     </Section>
   )

@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowDownLeft, ArrowUpRight, Search, SlidersHorizontal, X } from 'lucide-react'
+import { ArrowDownLeft, ArrowUpRight, Search, SlidersHorizontal, X, MoveUpRight, CircleCheck, CircleDashed } from 'lucide-react'
 import { useCases, useMetrics } from '@/api/hooks'
 import type { CaseSummary } from '@/api/types'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -22,6 +22,8 @@ export function DashboardPage() {
   const [search, setSearch] = useState('')
   const cases = useCases({ status, state })
   const d = cases.data
+  const allCases = useCases()
+  const totals = allCases.data
   const rows = filterCases(d?.cases ?? [], search)
   const filtered = !!(search || status || state)
 
@@ -29,24 +31,30 @@ export function DashboardPage() {
     <div className="dashboard-page flex flex-col gap-6">
       <div className="page-heading">
         <div><h1>Reconciliation</h1>
-        <p>From receipt to resolution. Every adjustment accounted for.</p></div>
+        <p>Bring every receipt into balance.</p></div>
         <span className="page-heading-note"><ArrowDownLeft size={15} />Accounts receivable · INR</span>
       </div>
       <RunBar />
       <ErrorBanner error={cases.error} />
 
-      <div className="financial-summary">
-        <Summary label="Apparent variance investigated" paise={d?.rupees.investigated_variance_paise} note="Variance examined by the agent" />
-        <Summary label="Explained by verified cases" paise={d?.rupees.explained_verified_paise} note="Supported by validated evidence" />
-        <Summary label="Held for evidence or review" paise={d?.rupees.held_paise} note="Further evidence or a decision needed" />
-      </div>
-
-      <div className="outcome-section"><div className="section-intro"><h2>Investigation outcomes</h2><span>Select an outcome to filter the queue</span></div>
+      <div className="reconciliation-overview">
+      <section className="balance-panel" aria-label="Variance overview">
+        <div className="balance-panel-top"><h2>The reconciliation balance</h2><MoveUpRight size={20} strokeWidth={1.5} /></div>
+        <div className="balance-total"><span>Apparent variance investigated</span><Money paise={totals?.rupees.investigated_variance_paise} /></div>
+        <VarianceBridge investigated={totals?.rupees.investigated_variance_paise} explained={totals?.rupees.explained_verified_paise} held={totals?.rupees.held_paise} />
+        <div className="balance-breakdown">
+          <Summary label="Explained by verified cases" paise={totals?.rupees.explained_verified_paise} note="Validated evidence" icon={<CircleCheck size={15} />} />
+          <Summary label="Held for evidence or review" paise={totals?.rupees.held_paise} note="Requires attention" icon={<CircleDashed size={15} />} />
+        </div>
+        <div className="balance-caption">Receipt differences, traced back to their source.</div>
+      </section>
+      <div className="outcome-section"><div className="section-intro"><h2>Investigation outcomes</h2><span>{totals?.cases.length ?? '—'} receipts</span></div>
       <div className="outcome-strip" aria-label="Cases by status" aria-busy={cases.isLoading}>
         {STATUSES.map((s) => (
-          <Tile key={s} status={s} count={d?.counts_by_status[s] ?? 0} active={status === s} onClick={() => setStatus(status === s ? '' : s)} />
+          <Tile key={s} status={s} count={totals?.counts_by_status[s] ?? 0} active={status === s} onClick={() => setStatus(status === s ? '' : s)} />
         ))}
-      </div></div>
+      </div><p className="outcome-caption">Select an outcome to focus your review.</p></div>
+      </div>
 
       <Section title="Receipt queue" aside={<span className="text-xs text-muted-foreground" aria-live="polite">{cases.isLoading ? 'Loading receipts…' : `${rows.length} ${rows.length === 1 ? 'case' : 'cases'}${filtered ? ' matching filters' : ' in this workspace'}`}</span>}>
         <div className="queue-toolbar">
@@ -77,13 +85,22 @@ export function filterCases(rows: CaseSummary[], query: string) {
   return rows.filter((c) => [c.case_id, c.customer_name ?? '', ...c.utrs].some((v) => v.toLowerCase().includes(needle)))
 }
 
-const Summary = ({ label, paise, note }: { label: string; paise: number | undefined; note: string }) => (
+const Summary = ({ label, paise, note, icon }: { label: string; paise: number | undefined; note: string; icon: ReactNode }) => (
   <div className="financial-summary-cell">
-    <p>{label}</p>
+    <p>{icon}{label}</p>
     <strong><Money paise={paise ?? null} /></strong>
     <span>{note}</span>
   </div>
 )
+
+export function VarianceBridge({ investigated, explained, held }: { investigated?: number; explained?: number; held?: number }) {
+  const total = (explained ?? 0) + (held ?? 0)
+  const share = total > 0 ? (explained ?? 0) / total : 0
+  return <div className="variance-bridge" role="img" aria-label={investigated == null ? 'Variance data unavailable' : total > 0 ? `${Math.round(share * 100)}% of reported variance explained; ${100 - Math.round(share * 100)}% held for evidence or review` : 'No variance investigated yet'}>
+    <div className="bridge-labels"><span>Explained</span><span>Held for review</span></div>
+    <div className={`bridge-track ${total === 0 ? 'bridge-empty' : ''}`}><span className="bridge-explained" style={{ width: `${share * 100}%` }} /><span className="bridge-held" style={{ width: `${(1 - share) * 100}%` }} /></div>
+  </div>
+}
 
 function CaseTable({ rows }: { rows: CaseSummary[] }) {
   if (!rows.length) return <div className="queue-empty"><Search size={24} strokeWidth={1.5} /><h3>No receipts found</h3><p>Clear your search or filters to return to the receipt queue.</p></div>

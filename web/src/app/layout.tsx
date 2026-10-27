@@ -29,7 +29,7 @@ export function Layout() {
             <NavLink to="/" end className={link}><Files size={17} />Reconciliation<ArrowUpRight className="nav-arrow" size={14} /></NavLink>
             <NavLink to="/audit" className={link}><ShieldCheck size={17} />Audit ledger<ArrowUpRight className="nav-arrow" size={14} /></NavLink>
           </nav>
-          <div className="sidebar-method"><GitBranch size={19} strokeWidth={1.5} /><p>Every decision,<br /><strong>backed by evidence.</strong></p><span>Investigate. Reconcile. Review.</span></div>
+          <div className="sidebar-method"><GitBranch size={22} strokeWidth={1.3} /><p>Clarity.<br /><strong>Down to the<br />last rupee.</strong></p><div className="method-chain" aria-label="Workflow: receipt, evidence, decision"><i /><span /><i /><span /><i /></div><div className="method-chain-labels"><span>Receipt</span><span>Evidence</span><span>Decision</span></div></div>
           <div className="sidebar-bottom">
           <details className="workspace-help"><summary><CircleHelp size={16} />About this workspace</summary><p>Synthetic Indian receivables. Run an investigation, inspect the evidence, then record a named reviewer’s decision.</p></details>
           <div className="reviewer-identity"><span className="reviewer-initial">{reviewerId === 'controller-1' ? 'CC' : 'AA'}</span><div><strong>{reviewerId === 'controller-1' ? 'Chandra Controller' : 'Asha Analyst'}</strong><span>Demo reviewer</span></div>

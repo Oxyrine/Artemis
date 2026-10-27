@@ -1,37 +1,37 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-27T15:41:58.995Z",
+  "generatedAt": "2026-10-27T15:54:28.609Z",
   "title": "Design System: Artemis",
   "extensions": {
     "colorMeta": {
       "background": {
         "role": "neutral",
         "displayName": "Background",
-        "canonical": "#f5f5f2",
+        "canonical": "#f1f3f7",
         "tonalRamp": [
-          "oklch(0.15 0.00397 106.47)",
-          "oklch(0.27 0.00397 106.47)",
-          "oklch(0.39 0.00397 106.47)",
-          "oklch(0.51 0.00397 106.47)",
-          "oklch(0.63 0.00397 106.47)",
-          "oklch(0.75 0.00397 106.47)",
-          "oklch(0.87 0.00397 106.47)",
-          "oklch(0.95 0.00397 106.47)"
+          "oklch(0.15 0.00576 264.53)",
+          "oklch(0.27 0.00576 264.53)",
+          "oklch(0.39 0.00576 264.53)",
+          "oklch(0.51 0.00576 264.53)",
+          "oklch(0.63 0.00576 264.53)",
+          "oklch(0.75 0.00576 264.53)",
+          "oklch(0.87 0.00576 264.53)",
+          "oklch(0.95 0.00576 264.53)"
         ]
       },
       "foreground": {
         "role": "neutral",
         "displayName": "Foreground",
-        "canonical": "#242720",
+        "canonical": "#19283e",
         "tonalRamp": [
-          "oklch(0.15 0.01338 126.23)",
-          "oklch(0.27 0.01338 126.23)",
-          "oklch(0.39 0.01338 126.23)",
-          "oklch(0.51 0.01338 126.23)",
-          "oklch(0.63 0.01338 126.23)",
-          "oklch(0.75 0.01338 126.23)",
-          "oklch(0.87 0.01338 126.23)",
-          "oklch(0.95 0.01338 126.23)"
+          "oklch(0.15 0.04591 257.84)",
+          "oklch(0.27 0.04591 257.84)",
+          "oklch(0.39 0.04591 257.84)",
+          "oklch(0.51 0.04591 257.84)",
+          "oklch(0.63 0.04591 257.84)",
+          "oklch(0.75 0.04591 257.84)",
+          "oklch(0.87 0.04591 257.84)",
+          "oklch(0.95 0.04591 257.84)"
         ]
       },
       "card": {
@@ -52,16 +52,16 @@
       "card-foreground": {
         "role": "neutral",
         "displayName": "Card Foreground",
-        "canonical": "#242720",
+        "canonical": "#19283e",
         "tonalRamp": [
-          "oklch(0.15 0.01338 126.23)",
-          "oklch(0.27 0.01338 126.23)",
-          "oklch(0.39 0.01338 126.23)",
-          "oklch(0.51 0.01338 126.23)",
-          "oklch(0.63 0.01338 126.23)",
-          "oklch(0.75 0.01338 126.23)",
-          "oklch(0.87 0.01338 126.23)",
-          "oklch(0.95 0.01338 126.23)"
+          "oklch(0.15 0.04591 257.84)",
+          "oklch(0.27 0.04591 257.84)",
+          "oklch(0.39 0.04591 257.84)",
+          "oklch(0.51 0.04591 257.84)",
+          "oklch(0.63 0.04591 257.84)",
+          "oklch(0.75 0.04591 257.84)",
+          "oklch(0.87 0.04591 257.84)",
+          "oklch(0.95 0.04591 257.84)"
         ]
       },
       "popover": {
@@ -82,31 +82,31 @@
       "popover-foreground": {
         "role": "neutral",
         "displayName": "Popover Foreground",
-        "canonical": "#242720",
+        "canonical": "#19283e",
         "tonalRamp": [
-          "oklch(0.15 0.01338 126.23)",
-          "oklch(0.27 0.01338 126.23)",
-          "oklch(0.39 0.01338 126.23)",
-          "oklch(0.51 0.01338 126.23)",
-          "oklch(0.63 0.01338 126.23)",
-          "oklch(0.75 0.01338 126.23)",
-          "oklch(0.87 0.01338 126.23)",
-          "oklch(0.95 0.01338 126.23)"
+          "oklch(0.15 0.04591 257.84)",
+          "oklch(0.27 0.04591 257.84)",
+          "oklch(0.39 0.04591 257.84)",
+          "oklch(0.51 0.04591 257.84)",
+          "oklch(0.63 0.04591 257.84)",
+          "oklch(0.75 0.04591 257.84)",
+          "oklch(0.87 0.04591 257.84)",
+          "oklch(0.95 0.04591 257.84)"
         ]
       },
       "primary": {
         "role": "primary",
         "displayName": "Primary",
-        "canonical": "#30362b",
+        "canonical": "#315cdd",
         "tonalRamp": [
-          "oklch(0.15 0.02067 130.89)",
-          "oklch(0.27 0.02067 130.89)",
-          "oklch(0.39 0.02067 130.89)",
-          "oklch(0.51 0.02067 130.89)",
-          "oklch(0.63 0.02067 130.89)",
-          "oklch(0.75 0.02067 130.89)",
-          "oklch(0.87 0.02067 130.89)",
-          "oklch(0.95 0.02067 130.89)"
+          "oklch(0.15 0.20283 265.61)",
+          "oklch(0.27 0.20283 265.61)",
+          "oklch(0.39 0.20283 265.61)",
+          "oklch(0.51 0.20283 265.61)",
+          "oklch(0.63 0.20283 265.61)",
+          "oklch(0.75 0.20283 265.61)",
+          "oklch(0.87 0.20283 265.61)",
+          "oklch(0.95 0.20283 265.61)"
         ]
       },
       "primary-foreground": {
@@ -127,196 +127,346 @@
       "secondary": {
         "role": "neutral",
         "displayName": "Secondary",
-        "canonical": "#eeefe9",
+        "canonical": "#e9edf5",
         "tonalRamp": [
-          "oklch(0.15 0.00803 114.22)",
-          "oklch(0.27 0.00803 114.22)",
-          "oklch(0.39 0.00803 114.22)",
-          "oklch(0.51 0.00803 114.22)",
-          "oklch(0.63 0.00803 114.22)",
-          "oklch(0.75 0.00803 114.22)",
-          "oklch(0.87 0.00803 114.22)",
-          "oklch(0.95 0.00803 114.22)"
+          "oklch(0.15 0.01159 264.51)",
+          "oklch(0.27 0.01159 264.51)",
+          "oklch(0.39 0.01159 264.51)",
+          "oklch(0.51 0.01159 264.51)",
+          "oklch(0.63 0.01159 264.51)",
+          "oklch(0.75 0.01159 264.51)",
+          "oklch(0.87 0.01159 264.51)",
+          "oklch(0.95 0.01159 264.51)"
         ]
       },
       "secondary-foreground": {
         "role": "neutral",
         "displayName": "Secondary Foreground",
-        "canonical": "#30362b",
+        "canonical": "#263f6c",
         "tonalRamp": [
-          "oklch(0.15 0.02067 130.89)",
-          "oklch(0.27 0.02067 130.89)",
-          "oklch(0.39 0.02067 130.89)",
-          "oklch(0.51 0.02067 130.89)",
-          "oklch(0.63 0.02067 130.89)",
-          "oklch(0.75 0.02067 130.89)",
-          "oklch(0.87 0.02067 130.89)",
-          "oklch(0.95 0.02067 130.89)"
+          "oklch(0.15 0.08367 261.30)",
+          "oklch(0.27 0.08367 261.30)",
+          "oklch(0.39 0.08367 261.30)",
+          "oklch(0.51 0.08367 261.30)",
+          "oklch(0.63 0.08367 261.30)",
+          "oklch(0.75 0.08367 261.30)",
+          "oklch(0.87 0.08367 261.30)",
+          "oklch(0.95 0.08367 261.30)"
         ]
       },
       "muted": {
         "role": "neutral",
         "displayName": "Muted",
-        "canonical": "#eeefe9",
+        "canonical": "#edf1f7",
         "tonalRamp": [
-          "oklch(0.15 0.00803 114.22)",
-          "oklch(0.27 0.00803 114.22)",
-          "oklch(0.39 0.00803 114.22)",
-          "oklch(0.51 0.00803 114.22)",
-          "oklch(0.63 0.00803 114.22)",
-          "oklch(0.75 0.00803 114.22)",
-          "oklch(0.87 0.00803 114.22)",
-          "oklch(0.95 0.00803 114.22)"
+          "oklch(0.15 0.00912 258.34)",
+          "oklch(0.27 0.00912 258.34)",
+          "oklch(0.39 0.00912 258.34)",
+          "oklch(0.51 0.00912 258.34)",
+          "oklch(0.63 0.00912 258.34)",
+          "oklch(0.75 0.00912 258.34)",
+          "oklch(0.87 0.00912 258.34)",
+          "oklch(0.95 0.00912 258.34)"
         ]
       },
       "muted-foreground": {
         "role": "neutral",
         "displayName": "Muted Foreground",
-        "canonical": "#666b61",
+        "canonical": "#5c6a80",
         "tonalRamp": [
-          "oklch(0.15 0.01656 128.82)",
-          "oklch(0.27 0.01656 128.82)",
-          "oklch(0.39 0.01656 128.82)",
-          "oklch(0.51 0.01656 128.82)",
-          "oklch(0.63 0.01656 128.82)",
-          "oklch(0.75 0.01656 128.82)",
-          "oklch(0.87 0.01656 128.82)",
-          "oklch(0.95 0.01656 128.82)"
+          "oklch(0.15 0.03885 259.37)",
+          "oklch(0.27 0.03885 259.37)",
+          "oklch(0.39 0.03885 259.37)",
+          "oklch(0.51 0.03885 259.37)",
+          "oklch(0.63 0.03885 259.37)",
+          "oklch(0.75 0.03885 259.37)",
+          "oklch(0.87 0.03885 259.37)",
+          "oklch(0.95 0.03885 259.37)"
         ]
       },
       "accent": {
         "role": "neutral",
         "displayName": "Accent",
-        "canonical": "#e8eae3",
+        "canonical": "#e6edff",
         "tonalRamp": [
-          "oklch(0.15 0.00956 119.58)",
-          "oklch(0.27 0.00956 119.58)",
-          "oklch(0.39 0.00956 119.58)",
-          "oklch(0.51 0.00956 119.58)",
-          "oklch(0.63 0.00956 119.58)",
-          "oklch(0.75 0.00956 119.58)",
-          "oklch(0.87 0.00956 119.58)",
-          "oklch(0.95 0.00956 119.58)"
+          "oklch(0.15 0.02543 268.85)",
+          "oklch(0.27 0.02543 268.85)",
+          "oklch(0.39 0.02543 268.85)",
+          "oklch(0.51 0.02543 268.85)",
+          "oklch(0.63 0.02543 268.85)",
+          "oklch(0.75 0.02543 268.85)",
+          "oklch(0.87 0.02543 268.85)",
+          "oklch(0.95 0.02543 268.85)"
         ]
       },
       "accent-foreground": {
         "role": "neutral",
         "displayName": "Accent Foreground",
-        "canonical": "#242720",
+        "canonical": "#234cbf",
         "tonalRamp": [
-          "oklch(0.15 0.01338 126.23)",
-          "oklch(0.27 0.01338 126.23)",
-          "oklch(0.39 0.01338 126.23)",
-          "oklch(0.51 0.01338 126.23)",
-          "oklch(0.63 0.01338 126.23)",
-          "oklch(0.75 0.01338 126.23)",
-          "oklch(0.87 0.01338 126.23)",
-          "oklch(0.95 0.01338 126.23)"
+          "oklch(0.15 0.18630 264.84)",
+          "oklch(0.27 0.18630 264.84)",
+          "oklch(0.39 0.18630 264.84)",
+          "oklch(0.51 0.18630 264.84)",
+          "oklch(0.63 0.18630 264.84)",
+          "oklch(0.75 0.18630 264.84)",
+          "oklch(0.87 0.18630 264.84)",
+          "oklch(0.95 0.18630 264.84)"
         ]
       },
       "border": {
         "role": "neutral",
         "displayName": "Border",
-        "canonical": "#e1e3db",
+        "canonical": "#dce2ec",
         "tonalRamp": [
-          "oklch(0.15 0.01093 118.04)",
-          "oklch(0.27 0.01093 118.04)",
-          "oklch(0.39 0.01093 118.04)",
-          "oklch(0.51 0.01093 118.04)",
-          "oklch(0.63 0.01093 118.04)",
-          "oklch(0.75 0.01093 118.04)",
-          "oklch(0.87 0.01093 118.04)",
-          "oklch(0.95 0.01093 118.04)"
+          "oklch(0.15 0.01508 260.73)",
+          "oklch(0.27 0.01508 260.73)",
+          "oklch(0.39 0.01508 260.73)",
+          "oklch(0.51 0.01508 260.73)",
+          "oklch(0.63 0.01508 260.73)",
+          "oklch(0.75 0.01508 260.73)",
+          "oklch(0.87 0.01508 260.73)",
+          "oklch(0.95 0.01508 260.73)"
         ]
       },
       "input": {
         "role": "neutral",
         "displayName": "Input",
-        "canonical": "#d6d9cf",
+        "canonical": "#c8d2e2",
         "tonalRamp": [
-          "oklch(0.15 0.01389 120.30)",
-          "oklch(0.27 0.01389 120.30)",
-          "oklch(0.39 0.01389 120.30)",
-          "oklch(0.51 0.01389 120.30)",
-          "oklch(0.63 0.01389 120.30)",
-          "oklch(0.75 0.01389 120.30)",
-          "oklch(0.87 0.01389 120.30)",
-          "oklch(0.95 0.01389 120.30)"
+          "oklch(0.15 0.02472 259.82)",
+          "oklch(0.27 0.02472 259.82)",
+          "oklch(0.39 0.02472 259.82)",
+          "oklch(0.51 0.02472 259.82)",
+          "oklch(0.63 0.02472 259.82)",
+          "oklch(0.75 0.02472 259.82)",
+          "oklch(0.87 0.02472 259.82)",
+          "oklch(0.95 0.02472 259.82)"
         ]
       },
       "ring": {
         "role": "neutral",
         "displayName": "Ring",
-        "canonical": "#737e5b",
+        "canonical": "#4168dc",
         "tonalRamp": [
-          "oklch(0.15 0.05295 122.24)",
-          "oklch(0.27 0.05295 122.24)",
-          "oklch(0.39 0.05295 122.24)",
-          "oklch(0.51 0.05295 122.24)",
-          "oklch(0.63 0.05295 122.24)",
-          "oklch(0.75 0.05295 122.24)",
-          "oklch(0.87 0.05295 122.24)",
-          "oklch(0.95 0.05295 122.24)"
+          "oklch(0.15 0.18280 266.42)",
+          "oklch(0.27 0.18280 266.42)",
+          "oklch(0.39 0.18280 266.42)",
+          "oklch(0.51 0.18280 266.42)",
+          "oklch(0.63 0.18280 266.42)",
+          "oklch(0.75 0.18280 266.42)",
+          "oklch(0.87 0.18280 266.42)",
+          "oklch(0.95 0.18280 266.42)"
         ]
       },
       "brand-ink": {
         "role": "primary",
         "displayName": "Brand Ink",
-        "canonical": "#63704c",
+        "canonical": "#315cdd",
         "tonalRamp": [
-          "oklch(0.15 0.05600 124.43)",
-          "oklch(0.27 0.05600 124.43)",
-          "oklch(0.39 0.05600 124.43)",
-          "oklch(0.51 0.05600 124.43)",
-          "oklch(0.63 0.05600 124.43)",
-          "oklch(0.75 0.05600 124.43)",
-          "oklch(0.87 0.05600 124.43)",
-          "oklch(0.95 0.05600 124.43)"
+          "oklch(0.15 0.20283 265.61)",
+          "oklch(0.27 0.20283 265.61)",
+          "oklch(0.39 0.20283 265.61)",
+          "oklch(0.51 0.20283 265.61)",
+          "oklch(0.63 0.20283 265.61)",
+          "oklch(0.75 0.20283 265.61)",
+          "oklch(0.87 0.20283 265.61)",
+          "oklch(0.95 0.20283 265.61)"
         ]
       },
       "sidebar-ground": {
         "role": "neutral",
         "displayName": "Sidebar Ground",
-        "canonical": "#f0f1ec",
+        "canonical": "#142338",
         "tonalRamp": [
-          "oklch(0.15 0.00671 115.71)",
-          "oklch(0.27 0.00671 115.71)",
-          "oklch(0.39 0.00671 115.71)",
-          "oklch(0.51 0.00671 115.71)",
-          "oklch(0.63 0.00671 115.71)",
-          "oklch(0.75 0.00671 115.71)",
-          "oklch(0.87 0.00671 115.71)",
-          "oklch(0.95 0.00671 115.71)"
+          "oklch(0.15 0.04500 256.96)",
+          "oklch(0.27 0.04500 256.96)",
+          "oklch(0.39 0.04500 256.96)",
+          "oklch(0.51 0.04500 256.96)",
+          "oklch(0.63 0.04500 256.96)",
+          "oklch(0.75 0.04500 256.96)",
+          "oklch(0.87 0.04500 256.96)",
+          "oklch(0.95 0.04500 256.96)"
         ]
       },
       "sidebar-active": {
         "role": "neutral",
         "displayName": "Sidebar Active",
-        "canonical": "#e3e6dc",
+        "canonical": "#2a3e5c",
         "tonalRamp": [
-          "oklch(0.15 0.01373 120.29)",
-          "oklch(0.27 0.01373 120.29)",
-          "oklch(0.39 0.01373 120.29)",
-          "oklch(0.51 0.01373 120.29)",
-          "oklch(0.63 0.01373 120.29)",
-          "oklch(0.75 0.01373 120.29)",
-          "oklch(0.87 0.01373 120.29)",
-          "oklch(0.95 0.01373 120.29)"
+          "oklch(0.15 0.05828 258.28)",
+          "oklch(0.27 0.05828 258.28)",
+          "oklch(0.39 0.05828 258.28)",
+          "oklch(0.51 0.05828 258.28)",
+          "oklch(0.63 0.05828 258.28)",
+          "oklch(0.75 0.05828 258.28)",
+          "oklch(0.87 0.05828 258.28)",
+          "oklch(0.95 0.05828 258.28)"
         ]
       },
       "table-rule": {
         "role": "neutral",
         "displayName": "Table Rule",
-        "canonical": "#eceee7",
+        "canonical": "#e8edf4",
         "tonalRamp": [
-          "oklch(0.15 0.00953 119.58)",
-          "oklch(0.27 0.00953 119.58)",
-          "oklch(0.39 0.00953 119.58)",
-          "oklch(0.51 0.00953 119.58)",
-          "oklch(0.63 0.00953 119.58)",
-          "oklch(0.75 0.00953 119.58)",
-          "oklch(0.87 0.00953 119.58)",
-          "oklch(0.95 0.00953 119.58)"
+          "oklch(0.15 0.01086 256.70)",
+          "oklch(0.27 0.01086 256.70)",
+          "oklch(0.39 0.01086 256.70)",
+          "oklch(0.51 0.01086 256.70)",
+          "oklch(0.63 0.01086 256.70)",
+          "oklch(0.75 0.01086 256.70)",
+          "oklch(0.87 0.01086 256.70)",
+          "oklch(0.95 0.01086 256.70)"
+        ]
+      },
+      "sidebar-ink": {
+        "role": "neutral",
+        "displayName": "Sidebar Ink",
+        "canonical": "#edf2fc",
+        "tonalRamp": [
+          "oklch(0.15 0.01444 264.50)",
+          "oklch(0.27 0.01444 264.50)",
+          "oklch(0.39 0.01444 264.50)",
+          "oklch(0.51 0.01444 264.50)",
+          "oklch(0.63 0.01444 264.50)",
+          "oklch(0.75 0.01444 264.50)",
+          "oklch(0.87 0.01444 264.50)",
+          "oklch(0.95 0.01444 264.50)"
+        ]
+      },
+      "sidebar-muted": {
+        "role": "neutral",
+        "displayName": "Sidebar Muted",
+        "canonical": "#b0bdd0",
+        "tonalRamp": [
+          "oklch(0.15 0.03057 257.77)",
+          "oklch(0.27 0.03057 257.77)",
+          "oklch(0.39 0.03057 257.77)",
+          "oklch(0.51 0.03057 257.77)",
+          "oklch(0.63 0.03057 257.77)",
+          "oklch(0.75 0.03057 257.77)",
+          "oklch(0.87 0.03057 257.77)",
+          "oklch(0.95 0.03057 257.77)"
+        ]
+      },
+      "sidebar-rule": {
+        "role": "neutral",
+        "displayName": "Sidebar Rule",
+        "canonical": "#34455d",
+        "tonalRamp": [
+          "oklch(0.15 0.04660 257.04)",
+          "oklch(0.27 0.04660 257.04)",
+          "oklch(0.39 0.04660 257.04)",
+          "oklch(0.51 0.04660 257.04)",
+          "oklch(0.63 0.04660 257.04)",
+          "oklch(0.75 0.04660 257.04)",
+          "oklch(0.87 0.04660 257.04)",
+          "oklch(0.95 0.04660 257.04)"
+        ]
+      },
+      "balance-ground": {
+        "role": "semantic",
+        "displayName": "Balance Ground",
+        "canonical": "#203a60",
+        "tonalRamp": [
+          "oklch(0.15 0.07415 257.85)",
+          "oklch(0.27 0.07415 257.85)",
+          "oklch(0.39 0.07415 257.85)",
+          "oklch(0.51 0.07415 257.85)",
+          "oklch(0.63 0.07415 257.85)",
+          "oklch(0.75 0.07415 257.85)",
+          "oklch(0.87 0.07415 257.85)",
+          "oklch(0.95 0.07415 257.85)"
+        ]
+      },
+      "balance-ink": {
+        "role": "semantic",
+        "displayName": "Balance Ink",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "oklch(0.15 0.00000 89.88)",
+          "oklch(0.27 0.00000 89.88)",
+          "oklch(0.39 0.00000 89.88)",
+          "oklch(0.51 0.00000 89.88)",
+          "oklch(0.63 0.00000 89.88)",
+          "oklch(0.75 0.00000 89.88)",
+          "oklch(0.87 0.00000 89.88)",
+          "oklch(0.95 0.00000 89.88)"
+        ]
+      },
+      "balance-muted": {
+        "role": "semantic",
+        "displayName": "Balance Muted",
+        "canonical": "#c2cfe2",
+        "tonalRamp": [
+          "oklch(0.15 0.03004 257.77)",
+          "oklch(0.27 0.03004 257.77)",
+          "oklch(0.39 0.03004 257.77)",
+          "oklch(0.51 0.03004 257.77)",
+          "oklch(0.63 0.03004 257.77)",
+          "oklch(0.75 0.03004 257.77)",
+          "oklch(0.87 0.03004 257.77)",
+          "oklch(0.95 0.03004 257.77)"
+        ]
+      },
+      "balance-rule": {
+        "role": "semantic",
+        "displayName": "Balance Rule",
+        "canonical": "#506580",
+        "tonalRamp": [
+          "oklch(0.15 0.05026 254.93)",
+          "oklch(0.27 0.05026 254.93)",
+          "oklch(0.39 0.05026 254.93)",
+          "oklch(0.51 0.05026 254.93)",
+          "oklch(0.63 0.05026 254.93)",
+          "oklch(0.75 0.05026 254.93)",
+          "oklch(0.87 0.05026 254.93)",
+          "oklch(0.95 0.05026 254.93)"
+        ]
+      },
+      "balance-explained": {
+        "role": "semantic",
+        "displayName": "Balance Explained",
+        "canonical": "#a9d8cb",
+        "tonalRamp": [
+          "oklch(0.15 0.05221 176.22)",
+          "oklch(0.27 0.05221 176.22)",
+          "oklch(0.39 0.05221 176.22)",
+          "oklch(0.51 0.05221 176.22)",
+          "oklch(0.63 0.05221 176.22)",
+          "oklch(0.75 0.05221 176.22)",
+          "oklch(0.87 0.05221 176.22)",
+          "oklch(0.95 0.05221 176.22)"
+        ]
+      },
+      "balance-held": {
+        "role": "semantic",
+        "displayName": "Balance Held",
+        "canonical": "#7795cb",
+        "tonalRamp": [
+          "oklch(0.15 0.08760 261.83)",
+          "oklch(0.27 0.08760 261.83)",
+          "oklch(0.39 0.08760 261.83)",
+          "oklch(0.51 0.08760 261.83)",
+          "oklch(0.63 0.08760 261.83)",
+          "oklch(0.75 0.08760 261.83)",
+          "oklch(0.87 0.08760 261.83)",
+          "oklch(0.95 0.08760 261.83)"
+        ]
+      },
+      "balance-highlight": {
+        "role": "semantic",
+        "displayName": "Balance Highlight",
+        "canonical": "#dce8ff",
+        "tonalRamp": [
+          "oklch(0.15 0.03385 263.58)",
+          "oklch(0.27 0.03385 263.58)",
+          "oklch(0.39 0.03385 263.58)",
+          "oklch(0.51 0.03385 263.58)",
+          "oklch(0.63 0.03385 263.58)",
+          "oklch(0.75 0.03385 263.58)",
+          "oklch(0.87 0.03385 263.58)",
+          "oklch(0.95 0.03385 263.58)"
         ]
       },
       "status-verified": {
@@ -667,8 +817,8 @@
     },
     "typographyMeta": {
       "headline": {
-        "displayName": "Page heading",
-        "purpose": "Operational page titles."
+        "displayName": "Editorial page heading",
+        "purpose": "Self-hosted Instrument Serif titles above Geist records."
       },
       "financial": {
         "displayName": "Financial summary",
@@ -697,6 +847,11 @@
         "name": "reduced-motion",
         "value": ".01ms",
         "purpose": "Shorten animation/transition durations and use auto scrolling."
+      },
+      {
+        "name": "variance-bridge",
+        "value": "width 300ms cubic-bezier(.16,1,.3,1)",
+        "purpose": "Explain actual changes in explained/held paise proportions."
       }
     ],
     "breakpoints": [
@@ -717,12 +872,20 @@
         "value": "760px"
       },
       {
-        "name": "receipt-cards",
-        "value": "600px"
-      },
-      {
         "name": "stacked-summary",
         "value": "440px"
+      },
+      {
+        "name": "stacked-overview",
+        "value": "1000px"
+      },
+      {
+        "name": "receipt-cards-and-grouped-toolbar",
+        "value": "1000px"
+      },
+      {
+        "name": "graph-text-first",
+        "value": "760px"
       }
     ]
   },
@@ -733,7 +896,7 @@
       "refersTo": "button-primary",
       "description": "primary compact action.",
       "html": "<button class=\"ds-button-primary\">Run batch</button>",
-      "css": ".ds-button-primary{font-family:'Geist Variable',sans-serif;font-size:13px;display:inline-flex;align-items:center;justify-content:center;height:32px;padding:0 10px;border:1px solid transparent;border-radius:8px;font-weight:500;background:var(--primary);color:var(--primary-foreground);cursor:pointer;transition:background-color 160ms ease,color 160ms ease,border-color 160ms ease;} .ds-button-primary:hover{background:color-mix(in oklch,var(--primary) 80%,transparent);} .ds-button-primary:focus-visible{outline:2px solid var(--ring);outline-offset:3px;} .ds-button-primary:active{transform:translateY(1px);}"
+      "css": ".ds-button-primary{font-family:'Geist Variable',sans-serif;font-size:13px;display:inline-flex;align-items:center;justify-content:center;height:37px;padding:0 10px;border:1px solid transparent;border-radius:6px;font-weight:500;background:var(--primary);color:var(--primary-foreground);cursor:pointer;transition:background-color 160ms ease,color 160ms ease,border-color 160ms ease;} .ds-button-primary:hover{background:color-mix(in oklch,var(--primary) 80%,transparent);} .ds-button-primary:focus-visible{outline:2px solid var(--ring);outline-offset:3px;} .ds-button-primary:active{transform:translateY(1px);}"
     },
     {
       "name": "Reset demo",
@@ -741,7 +904,7 @@
       "refersTo": "button-outline",
       "description": "outline compact action.",
       "html": "<button class=\"ds-button-outline\">Reset demo</button>",
-      "css": ".ds-button-outline{font-family:'Geist Variable',sans-serif;font-size:13px;display:inline-flex;align-items:center;justify-content:center;height:32px;padding:0 10px;border:1px solid var(--border);border-radius:8px;font-weight:500;background:var(--background);color:var(--foreground);cursor:pointer;transition:background-color 160ms ease,color 160ms ease,border-color 160ms ease;} .ds-button-outline:hover{background:var(--muted);} .ds-button-outline:focus-visible{outline:2px solid var(--ring);outline-offset:3px;} .ds-button-outline:active{transform:translateY(1px);}"
+      "css": ".ds-button-outline{font-family:'Geist Variable',sans-serif;font-size:13px;display:inline-flex;align-items:center;justify-content:center;height:37px;padding:0 10px;border:1px solid var(--border);border-radius:6px;font-weight:500;background:var(--background);color:var(--foreground);cursor:pointer;transition:background-color 160ms ease,color 160ms ease,border-color 160ms ease;} .ds-button-outline:hover{background:var(--muted);} .ds-button-outline:focus-visible{outline:2px solid var(--ring);outline-offset:3px;} .ds-button-outline:active{transform:translateY(1px);}"
     },
     {
       "name": "View audit",
@@ -749,7 +912,7 @@
       "refersTo": "button-ghost",
       "description": "ghost compact action.",
       "html": "<button class=\"ds-button-ghost\">View audit</button>",
-      "css": ".ds-button-ghost{font-family:'Geist Variable',sans-serif;font-size:13px;display:inline-flex;align-items:center;justify-content:center;height:32px;padding:0 10px;border:1px solid transparent;border-radius:8px;font-weight:500;background:transparent;color:var(--foreground);cursor:pointer;transition:background-color 160ms ease,color 160ms ease,border-color 160ms ease;} .ds-button-ghost:hover{background:var(--muted);} .ds-button-ghost:focus-visible{outline:2px solid var(--ring);outline-offset:3px;} .ds-button-ghost:active{transform:translateY(1px);}"
+      "css": ".ds-button-ghost{font-family:'Geist Variable',sans-serif;font-size:13px;display:inline-flex;align-items:center;justify-content:center;height:37px;padding:0 10px;border:1px solid transparent;border-radius:6px;font-weight:500;background:transparent;color:var(--foreground);cursor:pointer;transition:background-color 160ms ease,color 160ms ease,border-color 160ms ease;} .ds-button-ghost:hover{background:var(--muted);} .ds-button-ghost:focus-visible{outline:2px solid var(--ring);outline-offset:3px;} .ds-button-ghost:active{transform:translateY(1px);}"
     },
     {
       "name": "Queue search",
@@ -757,7 +920,7 @@
       "refersTo": "input-search",
       "description": "Compact receipt/customer search.",
       "html": "<label class=\"ds-search\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21-4.35-4.35\"/></svg><input aria-label=\"Search receipts\" placeholder=\"Search receipts or customers\"/></label>",
-      "css": ".ds-search{display:block;position:relative;max-width:340px;color:var(--muted-foreground);} .ds-search svg{position:absolute;left:10px;top:9px;width:16px;height:16px;} .ds-search input{font-family:'Geist Variable',sans-serif;font-size:13px;box-sizing:border-box;width:100%;height:34px;padding:4px 10px 4px 33px;font-size:12px;background:transparent;color:var(--foreground);border:1px solid var(--input);border-radius:8px;} .ds-search input:focus-visible{outline:2px solid var(--ring);outline-offset:3px;border-color:var(--ring);}"
+      "css": ".ds-search{display:block;position:relative;max-width:340px;color:var(--muted-foreground);} .ds-search svg{position:absolute;left:10px;top:9px;width:16px;height:16px;} .ds-search input{font-family:'Geist Variable',sans-serif;font-size:13px;box-sizing:border-box;width:100%;height:36px;padding:4px 10px 4px 33px;font-size:12px;background:var(--background);color:var(--foreground);border:1px solid var(--input);border-radius:6px;} .ds-search input:focus-visible{outline:2px solid var(--ring);outline-offset:3px;border-color:var(--ring);}"
     },
     {
       "name": "Selected destination",
@@ -765,7 +928,7 @@
       "refersTo": "navigation-active",
       "description": "Active operational destination.",
       "html": "<a class=\"ds-nav\" href=\"#reconciliation\" aria-current=\"page\">Reconciliation <span aria-hidden=\"true\">→</span></a>",
-      "css": ".ds-nav{font-family:'Geist Variable',sans-serif;font-size:13px;display:flex;align-items:center;gap:10px;padding:11px 12px;background:var(--sidebar-active);color:var(--foreground);border-radius:6px;text-decoration:none;font-weight:550;} .ds-nav span{margin-left:auto;} .ds-nav:hover{background:var(--sidebar-active);} .ds-nav:focus-visible{outline:2px solid var(--ring);outline-offset:3px;}"
+      "css": ".ds-nav{font-family:'Geist Variable',sans-serif;font-size:13px;display:flex;align-items:center;gap:10px;padding:13px 12px;background:var(--sidebar-active);color:var(--sidebar-ink);border-radius:7px;text-decoration:none;font-weight:550;} .ds-nav span{margin-left:auto;} .ds-nav:hover{background:var(--sidebar-active);} .ds-nav:focus-visible{outline:2px solid var(--ring);outline-offset:3px;}"
     },
     {
       "name": "Verified outcome",
@@ -781,17 +944,32 @@
       "refersTo": "work-section",
       "description": "Flat surface for records and supporting evidence.",
       "html": "<section class=\"ds-section\"><h2>Receipt queue</h2><p>Inspect a receipt and its supporting evidence.</p></section>",
-      "css": ".ds-section{font-family:'Geist Variable',sans-serif;font-size:13px;padding:20px;background:var(--card);color:var(--card-foreground);border:1px solid var(--border);border-radius:8px;} .ds-section h2{font-size:14px;font-weight:550;letter-spacing:-.015em;margin:0 0 18px;} .ds-section p{font-size:13px;color:var(--muted-foreground);margin:0;}"
+      "css": ".ds-section{font-family:'Geist Variable',sans-serif;font-size:13px;padding:24px;background:var(--card);color:var(--card-foreground);border:0;border-radius:12px;} .ds-section h2{font-size:17px;font-weight:550;letter-spacing:-.025em;margin:0 0 18px;} .ds-section p{font-size:13px;color:var(--muted-foreground);margin:0;}"
+    },
+    {
+      "name": "Variance bridge",
+      "kind": "custom",
+      "refersTo": "balance-panel",
+      "description": "Preview proportions are illustrative; application widths are calculated from actual explained and held paise.",
+      "html": "<section class=\"ds-balance\"><h2>Reconciliation overview</h2><div class=\"ds-bridge-labels\"><span>Explained</span><span>Held for review</span></div><div class=\"ds-bridge\" role=\"img\" aria-label=\"Illustrative explained and held proportions\"><span></span><span></span></div></section>",
+      "css": ".ds-balance{padding:25px 28px 19px;border-radius:12px;background:var(--balance-ground);color:var(--balance-ink);font-family:Geist Variable,sans-serif;} .ds-balance h2{font-family:Instrument Serif,Georgia,serif;font-size:26px;line-height:1;font-weight:400;margin:0 0 22px;} .ds-bridge-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--balance-muted);margin-bottom:8px;} .ds-bridge{display:flex;gap:4px;height:10px;} .ds-bridge span{border-radius:2px;transition:width 300ms cubic-bezier(.16,1,.3,1);} .ds-bridge span:first-child{width:65%;background:var(--balance-explained);} .ds-bridge span:last-child{width:35%;background:var(--balance-held);} @media(prefers-reduced-motion:reduce){.ds-bridge span{transition-duration:.01ms;}}"
+    },
+    {
+      "name": "Readable evidence relationships",
+      "kind": "custom",
+      "description": "Graph as text is open by default, resolves graph-node labels, and moves above the visual graph at 760px and below.",
+      "html": "<div class=\"ds-evidence\"><div class=\"ds-graph\" role=\"img\" aria-label=\"Evidence graph preview\">Receipt → Invoice</div><details class=\"ds-graph-text\" open><summary>Graph as text</summary><ul><li>Receipt Demo receipt → Invoice Demo invoice: supports</li></ul></details></div>",
+      "css": ".ds-evidence{font-family:Geist Variable,sans-serif;color:var(--foreground);font-size:14px;} .ds-graph{padding:24px;border:1px solid var(--border);border-radius:8px;background:var(--card);} .ds-graph-text{margin-top:8px;} .ds-graph-text summary{cursor:pointer;color:var(--muted-foreground);} .ds-graph-text summary:focus-visible{outline:2px solid var(--ring);outline-offset:3px;} .ds-graph-text ul{padding-left:20px;margin-top:4px;} @media(max-width:760px){.ds-evidence{display:flex;flex-direction:column;}.ds-graph-text{order:-1;margin:0 0 18px;}.ds-graph-text li{margin-block:8px;overflow-wrap:anywhere;line-height:1.6;}}"
     }
   ],
   "narrative": {
-    "northStar": "The Achromatic Ledger",
-    "overview": "The Achromatic Ledger makes dense financial records composed and inspectable. Warm stone grounds, near-black ink and white work surfaces give receipts and evidence a clear hierarchy. Muted olive marks the product identity; outcome colors retain their precise semantic jobs.\n\nThis Operate-mode workspace is compact, quiet and direct. Self-hosted Geist, tabular figures and aligned rules carry the interface. Its signature is variance closure beside policy-controlled review, supported by an evidence graph and a separately verifiable audit history.",
+    "northStar": "The Annual Report",
+    "overview": "Artemis takes its hierarchy from an annual report: deep ink navigation frames a cool paper canvas, cobalt marks actions, and expressive serif titles distinguish interpretation from the figures beneath them. The composition is asymmetric and deliberate, with white working surfaces and quiet rules.\n\nInstrument Serif supplies the editorial voice; Geist keeps records and numbers precise. A navy reconciliation panel turns actual explained and held paise into a split variance bridge. Data is the visual material, and semantic statuses retain their established meanings.",
     "keyCharacteristics": [
-      "Warm stone surfaces and near-black ink.",
-      "Compact operational typography with tabular financial figures.",
-      "Flat bordered containers and restrained state transitions.",
-      "Status labels, evidence tiers and visible keyboard focus."
+      "Deep navy navigation and cobalt actions.",
+      "Self-hosted Instrument Serif headings with Geist body and figures.",
+      "Live variance bridge beside an asymmetric white outcome index.",
+      "Cool paper, generous surface corners and quiet table rules."
     ],
     "rules": [
       {
@@ -800,28 +978,36 @@
         "section": "colors"
       },
       {
-        "name": "The Financial Figure Rule",
-        "body": "Use tabular figures for money and sequence values. Keep identifier monospace separate from amount presentation.",
+        "name": "The Two Voices Rule",
+        "body": "Use Instrument Serif for editorial headings and the sidebar statement; keep records, controls and financial figures in Geist.",
         "section": "typography"
       },
       {
+        "name": "The Data Is Material Rule",
+        "body": "Draw the variance bridge from actual explained and held paise. Global overview totals remain stable when the queue is filtered.",
+        "section": "layout"
+      },
+      {
         "name": "The Flat Record Rule",
-        "body": "Use borders and tonal separation for records; reserve lift for overlapping controls and navigation.",
+        "body": "Separate records with surface tone and quiet rules; reserve shadows for temporary overlapping controls.",
         "section": "elevation"
       }
     ],
     "dos": [
-      "Do use the shared semantic tokens in web/src/design/tokens.css.",
-      "Do align financial figures and keep status text beside its color.",
+      "Do use shared semantic colors from web/src/design/tokens.css and final visual rules from web/src/design/editorial.css.",
+      "Do keep global financial totals independent of queue filters.",
+      "Do align financial figures and preserve explicit status labels.",
       "Do preserve integer paise and format amounts only through web/src/lib/format.ts.",
-      "Do explicitly label synthetic demo data and synthetic benchmark results.",
-      "Do preserve approval limits, named reviewer decisions, required comments, reset confirmation and status meanings.",
-      "Do support keyboard focus, reduced motion and mobile inspection."
+      "Do explicitly label synthetic data and synthetic benchmark results.",
+      "Do preserve policy limits, reviewer identity, required comments, reset confirmation and status meanings.",
+      "Do support keyboard focus, reduced motion and mobile receipt inspection."
     ],
     "donts": [
-      "Don't substitute a brand accent for a semantic outcome color.",
-      "Don't make Probable amber read as a red or salmon error.",
-      "Don't add raster decoration to this asset-free operational world.",
+      "Don't replace Instrument Serif headings with generic sans-serif titles.",
+      "Don't reintroduce the superseded achromatic olive identity.",
+      "Don't invent performance figures or substitute a decorative split for actual paise data.",
+      "Don't make Probable amber read as a red error.",
+      "Don't add remote font dependencies or shipping raster imagery.",
       "Don't imply configured tax rules are tax advice or synthetic accuracy is production accuracy."
     ]
   }

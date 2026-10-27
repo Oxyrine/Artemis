@@ -2,8 +2,11 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
+@import "@fontsource/instrument-serif/400.css";
+@import "@fontsource/instrument-serif/400-italic.css";
 @import "./design/tokens.css";
 @import "./design/workspace.css";
+@import "./design/editorial.css";
 
 @custom-variant dark (&:is(.dark *));
 
