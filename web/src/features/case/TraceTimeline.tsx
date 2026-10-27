@@ -10,8 +10,8 @@ const compact = (v: unknown) => {
 }
 
 /** The agent's run as a vertical timeline: the hypothesis it recorded and the tool it called, with a collapsed result. */
-export function TraceTimeline({ caseId }: { caseId: string }) {
-  const q = useTrace(caseId)
+export function TraceTimeline({ caseId, hasRun = true }: { caseId: string; hasRun?: boolean }) {
+  const q = useTrace(caseId, hasRun)
   if (q.isLoading) return <Section title="Agent trace"><Skeleton className="h-32 w-full" /></Section>
   if (!q.data) return <Section title="Agent trace"><p className="text-sm text-muted-foreground">No agent run for this case: the matcher closed it, or it has not been investigated yet.</p></Section>
   const t = q.data

@@ -63,7 +63,7 @@ export function CasePage() {
           {d.allocations.length > 0 && <Suspense fallback={<Skeleton className="h-72 w-full" />}><EvidenceGraphView caseId={d.case_id} /></Suspense>}
           <ReceiptsAndInvoices d={d} />
           <EvidenceList evidence={d.evidence} />
-          <TraceTimeline caseId={d.case_id} />
+          <TraceTimeline caseId={d.case_id} hasRun={!!d.run} />
         </div>
         <aside className="lg:sticky lg:top-20 lg:self-start"><ReviewerPanel detail={d} /></aside>
       </div>

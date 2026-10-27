@@ -13,9 +13,11 @@ import { Term } from '@/ui/Term'
 /** The hero case and its two twins, side by side: same shape of problem, different evidence, different tool path. */
 export function ComparePage() {
   useTitle('Agent paths')
-  const traces = [useTrace(SHOWCASE[0].caseId), useTrace(SHOWCASE[1].caseId), useTrace(SHOWCASE[2].caseId)]
   const cases = [useCase(SHOWCASE[0].caseId), useCase(SHOWCASE[1].caseId), useCase(SHOWCASE[2].caseId)]
-  const loading = traces.some((t) => t.isLoading)
+  // only ask for a trace when the case detail says a run exists: otherwise it is a 404 in the console on a fresh load
+  const traces = [useTrace(SHOWCASE[0].caseId, !!cases[0].data?.run), useTrace(SHOWCASE[1].caseId, !!cases[1].data?.run),
+    useTrace(SHOWCASE[2].caseId, !!cases[2].data?.run)]
+  const loading = cases.some((c) => c.isLoading) || traces.some((t) => t.isLoading)
   const ready = traces.every((t) => !!t.data)
   const paths = ready ? traces.map((t) => (t.data as TraceView).tool_path) : []
   const chips = ready ? markPaths(paths) : []

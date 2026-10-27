@@ -5,11 +5,16 @@ import type { TraceView } from '@/api/types'
 import { ComparePage } from './ComparePage'
 
 const traces: Record<string, TraceView | undefined> = {}
+const asked: [string, boolean][] = []
+const DETAIL: Record<string, object> = {
+  'CASE-0007': { status: 'VERIFIED', state: 'PENDING_APPROVAL', grade: { flags: [] } },
+  'CASE-0008': { status: 'PROBABLE', state: 'AWAITING_EVIDENCE', grade: { flags: [] } },
+  'CASE-0009': { status: 'CONFLICTING', state: 'NEEDS_REVIEW', grade: { flags: [{}] } },
+}
 vi.mock('@/api/hooks', () => ({
-  useTrace: (id: string) => ({ data: traces[id], isLoading: false }),
-  useCase: (id: string) => ({ data: { 'CASE-0007': { status: 'VERIFIED', state: 'PENDING_APPROVAL', grade: { flags: [] } },
-    'CASE-0008': { status: 'PROBABLE', state: 'AWAITING_EVIDENCE', grade: { flags: [] } },
-    'CASE-0009': { status: 'CONFLICTING', state: 'NEEDS_REVIEW', grade: { flags: [{}] } } }[id] }),
+  useTrace: (id: string, enabled = true) => { asked.push([id, enabled]); return { data: enabled ? traces[id] : undefined, isLoading: false } },
+  // a case has a run exactly when the test supplied its trace
+  useCase: (id: string) => ({ isLoading: false, data: { ...DETAIL[id], run: traces[id] ? { id: 'RUN-1' } : null } }),
 }))
 
 const trace = (id: string, tools: string[], extract: unknown[]): TraceView => ({
@@ -20,13 +25,19 @@ const trace = (id: string, tools: string[], extract: unknown[]): TraceView => ({
 }) as unknown as TraceView
 
 const page = () => render(<MemoryRouter><ComparePage /></MemoryRouter>)
-beforeEach(() => { for (const k of Object.keys(traces)) delete traces[k] })
+beforeEach(() => { for (const k of Object.keys(traces)) delete traces[k]; asked.length = 0 })
 
 describe('ComparePage', () => {
   it('asks for a batch run when the traces do not exist yet', () => {
     page()
     expect(screen.getByRole('heading', { name: 'Run the batch first' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /Go to the dashboard/ })).toHaveAttribute('href', '/')
+  })
+
+  it('does not request traces for cases that have no run yet (no 404s on a fresh load)', () => {
+    page()
+    expect(asked.length).toBeGreaterThan(0)
+    expect(asked.every(([, enabled]) => enabled === false)).toBe(true)
   })
 
   it('shows what each run found and how the paths differ', () => {

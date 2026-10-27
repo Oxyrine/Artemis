@@ -16,7 +16,9 @@ export function useCases(filter: { status?: string; state?: string } = {}) {
 }
 export const useCase = (id: string) => useQuery({ queryKey: keys.case(id), queryFn: () => api<CaseDetail>(`/cases/${id}`) })
 export const useGraph = (id: string) => useQuery({ queryKey: ['graph', id], queryFn: () => api<EvidenceGraph>(`/cases/${id}/graph`) })
-export const useTrace = (id: string) => useQuery({ queryKey: ['trace', id], queryFn: () => api<TraceView>(`/cases/${id}/trace`), retry: false })
+/** `enabled` is false for a case with no agent run (the case detail says so): asking would only produce a 404 in the console. */
+export const useTrace = (id: string, enabled = true) =>
+  useQuery({ queryKey: ['trace', id], queryFn: () => api<TraceView>(`/cases/${id}/trace`), retry: false, enabled })
 export const useMetrics = () => useQuery({ queryKey: ['metrics'], queryFn: () => api<MetricsReport>('/metrics'), retry: false })
 export const useAudit = (caseId?: string) =>
   useQuery({ queryKey: keys.audit(caseId), queryFn: () => api<AuditList>(`/audit${caseId ? `?case_id=${caseId}` : ''}`) })
