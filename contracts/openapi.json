@@ -1789,6 +1789,58 @@
         "title": "StopReason",
         "type": "string"
       },
+      "TamperResult": {
+        "description": "What the demo tamper changed: one audit event, edited as the database owner. Verify chain then fails at `seq`.",
+        "properties": {
+          "after": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "After"
+          },
+          "before": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Before"
+          },
+          "field": {
+            "title": "Field",
+            "type": "string"
+          },
+          "schema_version": {
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "seq": {
+            "title": "Seq",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "schema_version",
+          "seq",
+          "field",
+          "before",
+          "after"
+        ],
+        "title": "TamperResult",
+        "type": "object"
+      },
       "Tier": {
         "enum": [
           "primary",
@@ -2465,6 +2517,25 @@
           }
         },
         "summary": "Trace"
+      }
+    },
+    "/api/demo/tamper": {
+      "post": {
+        "description": "The spec's tamper demo from the UI: edit one audit event as the database owner. Demo-only, like /reset;\nReset environment starts a clean chain again.",
+        "operationId": "demo_tamper_api_demo_tamper_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TamperResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Demo Tamper"
       }
     },
     "/api/health": {

@@ -3,7 +3,7 @@ import json
 import threading
 
 import pytest
-from sqlalchemy import text
+from sqlalchemy import select, text
 from sqlalchemy.exc import DatabaseError
 
 from artemis.audit.ledger import GENESIS, canonical
@@ -138,3 +138,14 @@ def test_the_tamper_script_breaks_the_chain_at_the_edited_event(real, key):
     hit = tamper(real.core.db)
     v = real.audit.verify(key)
     assert v["ok"] is False and v["first_broken_seq"] == hit["seq"] and hit["after"] == hit["before"] + 100_000
+
+
+def test_tamper_can_pick_the_most_recent_amount_event_so_the_ui_can_show_it(real, key):
+    hit_first = tamper(real.core.db)
+    # reset the first edit's effect on verification by looking only at which events carry an amount
+    with real.core.db.tx() as s:
+        carrying = [e.seq for e in s.scalars(select(AuditEvent).order_by(AuditEvent.seq))
+                    if any(k.endswith("_paise") for k in json.loads(e.payload_json))]
+    hit_last = tamper(real.core.db, latest=True)
+    assert hit_first["seq"] == carrying[0] and hit_last["seq"] == carrying[-1] and carrying[0] != carrying[-1]
+    assert real.audit.verify(key)["first_broken_seq"] == carrying[0]  # the chain breaks at the earliest edit

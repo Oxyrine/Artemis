@@ -4,7 +4,7 @@ import { dateTime, humanize, shortHash } from '@/lib/format'
 import { CopyButton } from '@/ui/primitives'
 
 /** Global or per-case event list: seq, time, actor, type, short hash (the full hash is one click away). */
-export function AuditTable({ events, compact = false }: { events: AuditEvent[]; compact?: boolean }) {
+export function AuditTable({ events, compact = false, brokenSeq = null }: { events: AuditEvent[]; compact?: boolean; brokenSeq?: number | null }) {
   if (!events.length) return <p className="py-6 text-center text-sm text-muted-foreground">No audit events yet. Run a batch.</p>
   return (
     <Table>
@@ -14,7 +14,7 @@ export function AuditTable({ events, compact = false }: { events: AuditEvent[]; 
       </TableHeader>
       <TableBody>
         {events.map((e) => (
-          <TableRow key={e.seq}>
+          <TableRow key={e.seq} id={`event-${e.seq}`} data-broken={e.seq === brokenSeq || undefined} className={e.seq === brokenSeq ? 'row-broken' : undefined}>
             <TableCell className="tabular-nums">{e.seq}</TableCell>
             {!compact && <TableCell className="whitespace-nowrap text-xs">{dateTime(e.created_at)}</TableCell>}
             <TableCell className="text-xs">{e.actor}</TableCell>

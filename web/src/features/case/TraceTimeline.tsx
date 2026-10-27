@@ -1,6 +1,7 @@
 import { useTrace } from '@/api/hooks'
 import { Skeleton } from '@/components/ui/skeleton'
 import { humanize } from '@/lib/format'
+import { TOOL_LABEL } from '@/lib/guide'
 import { ModeBadge, Section } from '@/ui/primitives'
 
 const compact = (v: unknown) => {
@@ -28,7 +29,7 @@ export function TraceTimeline({ caseId }: { caseId: string }) {
               <p key={c.id} className="text-sm text-muted-foreground">Call rejected by the provider, the agent corrected it: {String((c.result_json as { error?: string }).error ?? '').slice(0, 120)}</p>
             ) : (
               <details key={c.id} className="text-sm">
-                <summary className="cursor-pointer"><span className="font-mono text-xs font-semibold">{c.tool_name}</span> <span className="font-mono text-xs text-muted-foreground">{compact(c.args_json)}</span></summary>
+                <summary className="cursor-pointer"><span className="font-medium">{TOOL_LABEL[c.tool_name] ?? humanize(c.tool_name)}</span> <span className="font-mono text-xs font-semibold">{c.tool_name}</span> <span className="font-mono text-xs text-muted-foreground">{compact(c.args_json)}</span></summary>
                 <pre className="mt-1 max-h-48 overflow-auto rounded bg-muted p-2 text-xs">{JSON.stringify(c.result_json, null, 2)}</pre>
               </details>
             ))}

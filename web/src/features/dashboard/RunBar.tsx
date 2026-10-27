@@ -34,7 +34,7 @@ export function RunBar() {
             )) ?? <option value="demo">Demo agent</option>}
           </NativeSelect>
         </div>
-        <Button disabled={running || chosen?.available === false}
+        <Button id="run-batch" disabled={running || chosen?.available === false}
           onClick={() => run.mutate(mode, { onSuccess: (d) => setBatchId(d.batch_id) })}>
           <Play /> {running ? 'Running…' : 'Run batch'}
         </Button>

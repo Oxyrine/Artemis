@@ -174,6 +174,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/demo/tamper": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Demo Tamper
+         * @description The spec's tamper demo from the UI: edit one audit event as the database owner. Demo-only, like /reset;
+         *     Reset environment starts a clean chain again.
+         */
+        post: operations["demo_tamper_api_demo_tamper_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/health": {
         parameters: {
             query?: never;
@@ -886,6 +907,25 @@ export interface components {
          */
         StopReason: "finished" | "max_steps" | "timeout" | "token_cap" | "loop" | "error";
         /**
+         * TamperResult
+         * @description What the demo tamper changed: one audit event, edited as the database owner. Verify chain then fails at `seq`.
+         */
+        TamperResult: {
+            /** After */
+            after: number | string;
+            /** Before */
+            before: number | string | null;
+            /** Field */
+            field: string;
+            /**
+             * Schema Version
+             * @default 1
+             */
+            schema_version: number;
+            /** Seq */
+            seq: number;
+        };
+        /**
          * Tier
          * @enum {string}
          */
@@ -1293,6 +1333,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    demo_tamper_api_demo_tamper_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TamperResult"];
                 };
             };
         };

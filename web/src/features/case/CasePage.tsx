@@ -10,6 +10,7 @@ import { amount, dateTime } from '@/lib/format'
 import { CopyButton, ErrorBanner, ModeBadge, Money, Section, StateBadge, StatusPill, useTitle } from '@/ui/primitives'
 import { ClosureCard } from './ClosureCard'
 import { ContradictionPanel, EvidenceList } from './EvidencePanels'
+import { GRADE_NOTE } from '@/lib/guide'
 import { ReviewerPanel } from './ReviewerPanel'
 import { TraceTimeline } from './TraceTimeline'
 
@@ -50,6 +51,7 @@ export function CasePage() {
 
       <div className="case-workspace">
         <div className="case-main flex min-w-0 flex-col gap-6">
+          {d.status && GRADE_NOTE[d.status] && <div className="grade-note" data-status={d.status}><strong>{GRADE_NOTE[d.status].title}</strong><span>{GRADE_NOTE[d.status].text}</span></div>}
           {d.narrative && (
             <Section title="Investigation summary" aside={d.narrative_source === 'template' ? <Badge variant="outline" title="Built from engine outputs. An LLM rewrite is only used when every figure and id checks out.">Template</Badge> : <Badge variant="secondary">Rephrased by the model</Badge>}>
               <p className="text-sm leading-relaxed">{d.narrative}</p>

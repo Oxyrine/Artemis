@@ -21,10 +21,11 @@ from artemis.agent.batch import start_batch
 from artemis.agent.llm import OpenAICompatClient, ScriptedLLM
 from artemis.agent.trace import build_trace
 from artemis.api import assemble
+from artemis.audit.tamper import tamper
 from artemis.api.security import ApiError, RateLimiter, SecurityMiddleware, require_token
 from artemis.api.views import (AppliedInvoice, AuditEventView, AuditList, BatchRunRequest, BatchStarted, CaseDetail,
                                CaseList, EvidenceGraph, ModeInfo, Modes, ResetResult, ReviewRequest, ReviewResult,
-                               ReviewerView, VerifyResult)
+                               ReviewerView, TamperResult, VerifyResult)
 from artemis.db import Allocation, Case, Invoice, Review, Reviewer
 from artemis.fakes.scripted import golden_agent
 from artemis.fakes.store import InMemoryRunStore
@@ -247,6 +248,20 @@ def create_app(deps: Deps | None = None, *, static_dir: Path | str | None = None
         with d.core.db.tx() as s:
             total = s.query(Case).count()
         return ResetResult(cases=total, auto_closed=len(closed))
+
+    @r.post("/demo/tamper", response_model=TamperResult, dependencies=[Depends(require_token)])
+    def demo_tamper(request: Request):
+        """The spec's tamper demo from the UI: edit one audit event as the database owner. Demo-only, like /reset;
+        Reset environment starts a clean chain again."""
+        if os.environ.get("DEMO_MODE", "1") != "1":
+            raise ApiError(403, "disabled", "the tamper demo is disabled on this server")
+        app.state.limiter.check(request, "tamper", 10)
+        if running():
+            raise ApiError(409, "batch_running", "wait for the running batch to finish")
+        try:
+            return TamperResult(**tamper(D().core.db, latest=True))  # a recent event, so the audit page can show it
+        except LookupError as e:
+            raise ApiError(409, "nothing_to_tamper", str(e))
 
     app.include_router(r)
 

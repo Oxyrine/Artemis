@@ -7,6 +7,7 @@
 @import "./design/tokens.css";
 @import "./design/workspace.css";
 @import "./design/editorial.css";
+@import "./design/guide.css";
 
 @custom-variant dark (&:is(.dark *));
 

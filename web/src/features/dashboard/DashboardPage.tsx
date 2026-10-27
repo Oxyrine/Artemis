@@ -1,6 +1,6 @@
-import { useState, type ReactNode } from 'react'
-import { Link } from 'react-router-dom'
-import { ArrowDownLeft, ArrowUpRight, Search, SlidersHorizontal, X, MoveUpRight, CircleCheck, CircleDashed } from 'lucide-react'
+import { useEffect, useState, type ReactNode } from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import { ArrowDownLeft, ArrowUpRight, CircleHelp, Search, SlidersHorizontal, X, MoveUpRight, CircleCheck, CircleDashed } from 'lucide-react'
 import { useCases, useMetrics } from '@/api/hooks'
 import type { CaseSummary } from '@/api/types'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -10,7 +10,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { STATUS_LABEL, amount, humanize, pct } from '@/lib/format'
 import { NativeSelect } from '@/ui/controls'
 import { ErrorBanner, Money, Section, StateBadge, StatusPill, Tile, useTitle } from '@/ui/primitives'
+import { Term } from '@/ui/Term'
 import { RunBar } from './RunBar'
+import { Welcome, useWelcome } from './Welcome'
 
 const STATUSES = ['AUTO_CLOSED', 'VERIFIED', 'PROBABLE', 'INSUFFICIENT', 'CONFLICTING']
 const STATES = ['NEW', 'AUTO_CLOSED', 'PENDING_APPROVAL', 'AWAITING_EVIDENCE', 'NEEDS_REVIEW', 'APPLIED', 'REJECTED']
@@ -26,6 +28,9 @@ export function DashboardPage() {
   const totals = allCases.data
   const rows = filterCases(d?.cases ?? [], search)
   const filtered = !!(search || status || state)
+  const welcome = useWelcome()
+  const { hash } = useLocation()
+  useEffect(() => { if (hash) document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'smooth' }) }, [hash])
 
   return (
     <div className="dashboard-page flex flex-col gap-6">
@@ -34,6 +39,9 @@ export function DashboardPage() {
         <p>Bring every receipt into balance.</p></div>
         <span className="page-heading-note"><ArrowDownLeft size={15} />Accounts receivable · INR</span>
       </div>
+      {welcome.hidden
+        ? <button type="button" className="welcome-reopen" onClick={welcome.show}><CircleHelp size={14} />What is this, and how does it work?</button>
+        : <Welcome onHide={welcome.hide} />}
       <RunBar />
       <ErrorBanner error={cases.error} />
 
@@ -75,7 +83,7 @@ export function DashboardPage() {
         <div className="queue-footnote"><span>Amounts in INR. Variance is subject to investigation.</span><span>Open a case to inspect evidence <ArrowUpRight size={13} /></span></div>
       </Section>
 
-      <MetricsPanel />
+      <div id="metrics"><MetricsPanel /></div>
     </div>
   )
 }
@@ -108,8 +116,8 @@ function CaseTable({ rows }: { rows: CaseSummary[] }) {
     <><div className="desktop-case-list"><Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Customer / receipt</TableHead><TableHead>Case</TableHead>
-          <TableHead className="text-right">Receipt ₹</TableHead><TableHead className="text-right">Variance ₹</TableHead>
+          <TableHead>Customer / <Term k="utr">receipt</Term></TableHead><TableHead>Case</TableHead>
+          <TableHead className="text-right">Receipt ₹</TableHead><TableHead className="text-right"><Term k="variance" /> ₹</TableHead>
           <TableHead>Outcome</TableHead><TableHead>Review state</TableHead><TableHead><span className="sr-only">Open case</span></TableHead>
         </TableRow>
       </TableHeader>

@@ -284,3 +284,11 @@ class ResetResult(_View):
     cases: int
     auto_closed: int
 
+
+class TamperResult(_View):
+    """What the demo tamper changed: one audit event, edited as the database owner. Verify chain then fails at `seq`."""
+    seq: int
+    field: str
+    before: int | str | None
+    after: int | str
+

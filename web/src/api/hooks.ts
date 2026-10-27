@@ -1,7 +1,7 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { api } from './client'
 import type { AuditList, BatchStatus, CaseDetail, CaseList, Decision, EvidenceGraph, MetricsReport, Modes, ReviewResult,
-  ReviewerView, RunMode, TraceView, VerifyResult } from './types'
+  ReviewerView, RunMode, TamperResult, TraceView, VerifyResult } from './types'
 
 export const keys = {
   cases: ['cases'] as const, case: (id: string) => ['case', id] as const, audit: (caseId?: string) => ['audit', caseId ?? 'all'] as const,
@@ -43,6 +43,12 @@ export function useReset() {
   const qc = useQueryClient()
   return useMutation({ mutationFn: () => api<{ cases: number; auto_closed: number }>('/reset', { method: 'POST' }),
     onSuccess: () => qc.invalidateQueries() })
+}
+
+export function useTamper() {
+  const qc = useQueryClient()
+  return useMutation({ mutationFn: () => api<TamperResult>('/demo/tamper', { method: 'POST' }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['audit'] }) })
 }
 
 export function useVerify() {

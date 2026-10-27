@@ -6,6 +6,7 @@ import { NotFound } from '@/app/NotFound'
 import { ReviewerProvider, ThemeProvider } from '@/app/providers'
 import { AuditPage } from '@/features/audit/AuditPage'
 import { CasePage } from '@/features/case/CasePage'
+import { ComparePage } from '@/features/compare/ComparePage'
 import { DashboardPage } from '@/features/dashboard/DashboardPage'
 
 const queryClient = new QueryClient({ defaultOptions: { queries: { staleTime: 2000, retry: 1, refetchOnWindowFocus: false } } })
@@ -14,6 +15,7 @@ const router = createBrowserRouter([
   { element: <Layout />, children: [
     { path: '/', element: <DashboardPage /> },
     { path: '/cases/:caseId', element: <CasePage /> },
+    { path: '/compare', element: <ComparePage /> },
     { path: '/audit', element: <AuditPage /> },
     { path: '*', element: <NotFound /> },
   ] },

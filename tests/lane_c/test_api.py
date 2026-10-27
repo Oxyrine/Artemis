@@ -221,3 +221,25 @@ def test_metrics_before_any_batch_is_an_empty_report_not_an_error(tmp_path):
     assert r.status_code == 200
     m = MetricsReport.model_validate(r.json())
     assert m.runs == 0 and m.cases == 0 and m.verified_precision is None and m.confusion == {}
+
+
+def test_tamper_demo_breaks_the_chain_at_the_edited_event_and_reset_heals_it(tmp_path):
+    deps = build_deps("real")
+    c = TestClient(create_app(deps, runs_dir=tmp_path / "runs", exports_dir=tmp_path / "exports",
+                              static_dir=tmp_path / "no-ui-build"))
+    assert c.get("/api/audit/verify").json()["ok"] is True
+    t = c.post("/api/demo/tamper")
+    assert t.status_code == 200 and t.json()["after"] != t.json()["before"]
+    v = c.get("/api/audit/verify").json()
+    assert v["ok"] is False and v["first_broken_seq"] == t.json()["seq"]
+    assert c.post("/api/reset").status_code == 200
+    assert c.get("/api/audit/verify").json()["ok"] is True
+
+
+def test_tamper_demo_is_disabled_when_the_server_is_not_in_demo_mode(tmp_path, monkeypatch):
+    monkeypatch.setenv("DEMO_MODE", "0")
+    c = TestClient(create_app(build_deps("real"), runs_dir=tmp_path / "runs", exports_dir=tmp_path / "exports",
+                              static_dir=tmp_path / "no-ui-build"))
+    r = c.post("/api/demo/tamper")
+    assert r.status_code == 403 and r.json()["error"] == "disabled"
+    assert c.get("/api/audit/verify").json()["ok"] is True

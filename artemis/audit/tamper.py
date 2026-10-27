@@ -10,12 +10,14 @@ from artemis.audit.models import AuditEvent, drop_trigger_statements, install_tr
 from artemis.db import Db
 
 
-def tamper(db: Db, seq: int | None = None) -> dict:
-    """Change one amount in an event's payload (default: the first event that carries one). Returns what changed."""
+def tamper(db: Db, seq: int | None = None, latest: bool = False) -> dict:
+    """Change one amount in an event's payload (default: the first event that carries one; latest=True picks the most
+    recent, which the UI uses so the edited event is in the window the audit page lists). Returns what changed."""
     with db.lock, db.engine.begin() as conn:
         dialect = conn.dialect.name
         rows = conn.execute(select(AuditEvent.seq, AuditEvent.payload_json).order_by(AuditEvent.seq)).all()
-        pick = next((r for r in rows if (r.seq == seq if seq else any(k.endswith("_paise") for k in json.loads(r.payload_json)))), None)
+        match = [r for r in rows if (r.seq == seq if seq else any(k.endswith("_paise") for k in json.loads(r.payload_json)))]
+        pick = (match[-1] if latest else match[0]) if match else None
         if pick is None:
             raise LookupError("no audit event to tamper with: run a batch first")
         payload = json.loads(pick.payload_json)
