@@ -21,7 +21,8 @@ ANALYST, CONTROLLER = {"X-Reviewer-Id": "analyst-1"}, {"X-Reviewer-Id": "control
 def investigated(tmp_path, cases=HERO):
     deps = build_deps("real")
     asyncio.run(run_batch(deps, lambda c: ScriptedLLM(golden_agent(deps.core, c)), case_ids=cases))
-    return TestClient(create_app(deps, runs_dir=tmp_path / "runs", exports_dir=tmp_path / "exports")), deps
+    nodist = tmp_path / "no-ui-build"  # tests must not depend on whether web/dist happens to be built
+    return TestClient(create_app(deps, runs_dir=tmp_path / "runs", exports_dir=tmp_path / "exports", static_dir=nodist)), deps
 
 
 @pytest.fixture
@@ -40,7 +41,8 @@ def wait(client, bid, seconds=90):
 
 # ------------------------------------------------------------------ batch + modes (one full demo run, then replay)
 def test_demo_batch_then_replay_reproduces_it(tmp_path):
-    c = TestClient(create_app(build_deps("real"), runs_dir=tmp_path / "runs", exports_dir=tmp_path / "exports"))
+    c = TestClient(create_app(build_deps("real"), runs_dir=tmp_path / "runs", exports_dir=tmp_path / "exports",
+                              static_dir=tmp_path / "no-ui-build"))
     modes = {m["mode"]: m for m in Modes.model_validate(c.get("/api/modes").json()).model_dump()["modes"]}
     assert modes["demo"]["available"] and not modes["replay"]["available"] and not modes["live"]["available"]
     assert c.post("/api/batch/run", json={"mode": "replay"}).status_code == 409  # nothing recorded yet
