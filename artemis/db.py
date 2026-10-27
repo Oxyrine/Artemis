@@ -141,6 +141,18 @@ class Reviewer(Base):
     approval_limit_paise: Mapped[int | None] = mapped_column(Integer, nullable=True)  # None = unlimited
 
 
+class Review(Base):
+    """A named reviewer's decision (Lane C writes it; the policy engine decides whether the move is legal)."""
+    __tablename__ = "reviews"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    case_id: Mapped[str] = mapped_column(ForeignKey("cases.id"))
+    reviewer_id: Mapped[str] = mapped_column(ForeignKey("reviewers.id"))
+    decision: Mapped[str] = mapped_column(String)  # approve | reject | request_evidence
+    comment: Mapped[str] = mapped_column(Text, default="")
+    policy_id: Mapped[str] = mapped_column(String, default="policy-v1")
+    decided_at: Mapped[str] = mapped_column(String)
+
+
 def make_engine(url: str | None = None) -> Engine:
     """DATABASE_URL (default: sqlite file under data/). `sqlite://` gives a private in-memory DB for tests."""
     url = url or os.environ.get("DATABASE_URL", "sqlite:///data/artemis.db")
@@ -165,22 +177,33 @@ class Db:
 
     def __init__(self, url: str | None = None):
         import threading
+        from contextvars import ContextVar
         self.engine = make_engine(url)
         self._sessions = session_factory(self.engine)
         self.lock = threading.RLock()
+        self._ambient: ContextVar[Session | None] = ContextVar(f"db-session-{id(self)}", default=None)
 
     def tx(self):
+        """One transaction per call, except nested: a tx() opened while another is active in this thread JOINS it, so a
+        state change and its audit event (written by the ledger from inside the policy engine) commit or roll back together."""
         from contextlib import contextmanager
 
         @contextmanager
         def _tx():
+            outer = self._ambient.get()
+            if outer is not None:
+                yield outer
+                return
             with self.lock, self._sessions() as s:
+                token = self._ambient.set(s)
                 try:
                     yield s
                     s.commit()
                 except Exception:
                     s.rollback()
                     raise
+                finally:
+                    self._ambient.reset(token)
         return _tx()
 
     def reset(self) -> None:

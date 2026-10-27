@@ -4,7 +4,7 @@ from __future__ import annotations
 from enum import StrEnum
 from typing import Any
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class CaseState(StrEnum):
@@ -135,6 +135,7 @@ class Grade(BaseModel):
 
 # --- agent bookkeeping (B writes) ---
 class Hypothesis(BaseModel):
+    model_config = ConfigDict(json_schema_serialization_defaults_required=True)
     id: str
     run_id: str
     step: int
@@ -145,6 +146,7 @@ class Hypothesis(BaseModel):
 
 
 class ToolCall(BaseModel):
+    model_config = ConfigDict(json_schema_serialization_defaults_required=True)
     id: str
     run_id: str
     step: int
@@ -155,6 +157,7 @@ class ToolCall(BaseModel):
 
 
 class AgentRun(BaseModel):
+    model_config = ConfigDict(json_schema_serialization_defaults_required=True)
     id: str
     case_id: str
     model: str

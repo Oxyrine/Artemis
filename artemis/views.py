@@ -2,7 +2,7 @@
 is Lane C's job alone. Bump SCHEMA_VERSION on breaking changes; schemas export to contracts/."""
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from artemis.models import AgentRun, EvidenceStatus, Hypothesis, StopReason, ToolCall
 
@@ -10,12 +10,14 @@ SCHEMA_VERSION = 1
 
 
 class TraceStep(BaseModel):
+    model_config = ConfigDict(json_schema_serialization_defaults_required=True)
     step: int
     hypotheses: list[Hypothesis] = Field(default_factory=list)
     tool_calls: list[ToolCall] = Field(default_factory=list)
 
 
 class TraceView(BaseModel):  # GET /cases/{id}/trace
+    model_config = ConfigDict(json_schema_serialization_defaults_required=True)
     schema_version: int = SCHEMA_VERSION
     case_id: str
     run: AgentRun
@@ -25,6 +27,7 @@ class TraceView(BaseModel):  # GET /cases/{id}/trace
 
 
 class NarrativeView(BaseModel):
+    model_config = ConfigDict(json_schema_serialization_defaults_required=True)
     schema_version: int = SCHEMA_VERSION
     case_id: str
     text: str
@@ -32,9 +35,11 @@ class NarrativeView(BaseModel):
 
 
 class BatchStatus(BaseModel):  # GET /batch/{id}
+    model_config = ConfigDict(json_schema_serialization_defaults_required=True)
     schema_version: int = SCHEMA_VERSION
     batch_id: str
     replay: bool = False
+    mode: str = ""  # demo | replay | live (set by the API; empty for CLI runs)
     total: int = 0
     done: int = 0
     running: bool = True
@@ -45,6 +50,7 @@ class BatchStatus(BaseModel):  # GET /batch/{id}
 
 
 class MetricsReport(BaseModel):  # GET /metrics
+    model_config = ConfigDict(json_schema_serialization_defaults_required=True)
     schema_version: int = SCHEMA_VERSION
     runs: int
     cases: int

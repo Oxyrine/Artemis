@@ -1,0 +1,261 @@
+"""The Artemis API (FastAPI). Every route is under /api; the built UI, when present, is served from / by the same process.
+
+Routes follow the build spec: batch run/progress, case list/detail/trace/graph, review, audit + verify + checkpoint,
+metrics, reset. Reviewer identity is a stub (X-Reviewer-Id chosen from a dropdown); POST /cases/{id}/review never changes
+state itself: it asks the policy engine, which refuses anything illegal and returns the reason."""
+from __future__ import annotations
+
+import json
+import os
+import threading
+from datetime import datetime, timezone
+from pathlib import Path
+
+from fastapi import APIRouter, Depends, FastAPI, Header, Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
+from sqlalchemy import select
+
+from artemis.agent.batch import start_batch
+from artemis.agent.llm import OpenAICompatClient, ScriptedLLM
+from artemis.agent.trace import build_trace
+from artemis.api import assemble
+from artemis.api.security import ApiError, RateLimiter, SecurityMiddleware, require_token
+from artemis.api.views import (AppliedInvoice, AuditEventView, AuditList, BatchRunRequest, BatchStarted, CaseDetail,
+                               CaseList, EvidenceGraph, ModeInfo, Modes, ResetResult, ReviewRequest, ReviewResult,
+                               ReviewerView, VerifyResult)
+from artemis.db import Allocation, Case, Invoice, Review, Reviewer
+from artemis.fakes.scripted import golden_agent
+from artemis.fakes.store import InMemoryRunStore
+from artemis.models import CaseState
+from artemis.ports import IllegalTransition
+from artemis.views import BatchStatus, MetricsReport, TraceView
+from artemis.wiring import Deps, build_deps
+from eval.metrics import compute
+
+ROOT = Path(__file__).resolve().parents[2]
+TRUTH_FILE = ROOT / "data" / "cases_truth.json"
+LABELS = {"demo": "Demo agent (rule-based, no LLM)", "replay": "Replay of a recorded run", "live": "Live model"}
+
+
+def _now() -> str:
+    return datetime.now(timezone.utc).isoformat(timespec="milliseconds")
+
+
+def create_app(deps: Deps | None = None, *, static_dir: Path | str | None = None, runs_dir: Path | str | None = None,
+               exports_dir: Path | str | None = None) -> FastAPI:
+    deps = deps or build_deps("real")
+    runs = Path(runs_dir or os.environ.get("RUNS_DIR") or ROOT / "runs")
+    exports = Path(exports_dir or os.environ.get("EXPORTS_DIR") or ROOT / "exports")
+    app = FastAPI(title="Artemis", docs_url=None, redoc_url=None, openapi_url="/api/openapi.json")
+    app.state.deps, app.state.limiter = deps, RateLimiter()
+    app.state.current = {"batch_id": None}
+    app.add_middleware(SecurityMiddleware)
+
+    @app.exception_handler(ApiError)
+    async def _api_error(_: Request, e: ApiError):
+        return JSONResponse({"error": e.error, "detail": e.detail}, status_code=e.status)
+
+    @app.exception_handler(RequestValidationError)
+    async def _invalid(_: Request, e: RequestValidationError):
+        return JSONResponse({"error": "invalid_request", "detail": json.loads(json.dumps(e.errors(), default=str))},
+                            status_code=422)
+
+    def D() -> Deps:  # always read through app.state: /reset and replay swap the store
+        return app.state.deps
+
+    def running() -> bool:
+        bid = app.state.current["batch_id"]
+        return bool(bid and D().store.get_batch(bid).running)
+
+    def recording() -> Path | None:
+        env = os.environ.get("REPLAY_FILE")
+        for p in ([Path(env)] if env else []) + [runs / "latest-live.json", runs / "latest-demo.json"]:
+            if p.exists():
+                return p
+        return None
+
+    r = APIRouter(prefix="/api")
+
+    @r.get("/health")
+    def health():
+        return {"ok": True}
+
+    # ------------------------------------------------------------------ batch
+    @r.get("/modes", response_model=Modes)
+    def modes():
+        s = D().settings
+        live_ok = bool(s.llm_api_key and s.llm_model)
+        return Modes(modes=[
+            ModeInfo(mode="demo", label=LABELS["demo"], available=True, reason=None),
+            ModeInfo(mode="replay", label=LABELS["replay"], available=recording() is not None,
+                     reason=None if recording() else "no recorded run yet: run the demo agent once to record one"),
+            ModeInfo(mode="live", label=LABELS["live"], available=live_ok,
+                     reason=None if live_ok else "set LLM_API_KEY and LLM_MODEL on the server")])
+
+    @r.post("/batch/run", response_model=BatchStarted, status_code=202, dependencies=[Depends(require_token)])
+    def run_batch_route(body: BatchRunRequest, request: Request):
+        app.state.limiter.check(request, "batch", 20)
+        if running():
+            raise ApiError(409, "batch_running", "a batch is already running")
+        d, mode = D(), body.mode
+        replay_of = None
+        if mode == "replay":
+            rec = recording()
+            if rec is None:
+                raise ApiError(409, "no_recording", "no recorded run to replay yet: run the demo agent once")
+            d.core.reset()
+            d.core.auto_close()
+            d.store = InMemoryRunStore.load(rec)  # the recorded runs are the 'model'; the environment starts from seed
+            replay_of = max((b for b in d.store._batches.values() if not b.replay), key=lambda b: b.batch_id).batch_id
+            factory = None
+        elif mode == "live":
+            if not (d.settings.llm_api_key and d.settings.llm_model):
+                raise ApiError(409, "no_llm_key", "live mode needs LLM_API_KEY and LLM_MODEL on the server")
+            s = d.settings
+            factory = lambda c: OpenAICompatClient(s.llm_base_url, s.llm_api_key, s.llm_model)  # noqa: E731
+        else:
+            factory = lambda c: ScriptedLLM(golden_agent(d.core, c))  # noqa: E731
+        if replay_of is None and not d.core.new_case_ids():
+            raise ApiError(409, "nothing_to_do", "no new cases to investigate: reset the environment first")
+
+        def finished(batch: BatchStatus) -> None:  # seal the audit chain, and keep a recording for replay
+            d.audit.checkpoint(batch.batch_id, out_dir=exports)
+            if mode != "replay":
+                runs.mkdir(parents=True, exist_ok=True)
+                d.store.save(runs / f"latest-{mode}.json")
+
+        bid = start_batch(d, factory, replay_of=replay_of, on_done=finished, mode=mode)
+        app.state.current["batch_id"] = bid
+        return BatchStarted(batch_id=bid, mode=mode)
+
+    @r.get("/batch/{batch_id}", response_model=BatchStatus)
+    def batch_status(batch_id: str):
+        try:
+            return D().store.get_batch(batch_id)
+        except KeyError:
+            raise ApiError(404, "not_found", f"no batch {batch_id}") from None
+
+    # ------------------------------------------------------------------ cases
+    @r.get("/cases", response_model=CaseList)
+    def cases(status: str | None = None, state: str | None = None):
+        return assemble.case_list(D(), status, state)
+
+    @r.get("/cases/{case_id}", response_model=CaseDetail)
+    def case(case_id: str):
+        try:
+            return assemble.detail(D(), case_id)
+        except KeyError:
+            raise ApiError(404, "not_found", f"no case {case_id}") from None
+
+    @r.get("/cases/{case_id}/trace", response_model=TraceView)
+    def trace(case_id: str):
+        try:
+            return build_trace(D().store, case_id)
+        except KeyError:
+            raise ApiError(404, "not_found", f"no agent run for {case_id} (auto-closed or not investigated yet)") from None
+
+    @r.get("/cases/{case_id}/graph", response_model=EvidenceGraph)
+    def case_graph(case_id: str):
+        try:
+            return assemble.graph(D(), case_id)
+        except KeyError:
+            raise ApiError(404, "not_found", f"no case {case_id}") from None
+
+    @r.post("/cases/{case_id}/review", response_model=ReviewResult, dependencies=[Depends(require_token)])
+    def review(case_id: str, body: ReviewRequest, x_reviewer_id: str | None = Header(default=None)):
+        d = D()
+        if not x_reviewer_id:
+            raise ApiError(401, "reviewer_required", "choose a reviewer (X-Reviewer-Id header)")
+        if body.decision in ("reject", "request_evidence") and not body.comment.strip():
+            raise ApiError(422, "comment_required", f"a comment is required to {body.decision.replace('_', ' ')}")
+        with d.core.db.tx() as s:  # the state change, the review row and the audit events commit (or roll back) together
+            if s.get(Reviewer, x_reviewer_id) is None:
+                raise ApiError(401, "unknown_reviewer", f"no reviewer {x_reviewer_id!r}")
+            if s.get(Case, case_id) is None:
+                raise ApiError(404, "not_found", f"no case {case_id}")
+            try:
+                to = d.policy.decide(case_id, x_reviewer_id, body.decision)
+            except IllegalTransition as e:
+                raise ApiError(409, "policy", e.reason) from None
+            actor = f"reviewer:{x_reviewer_id}"
+            seq = d.audit.append(case_id, "REVIEW_DECIDED", actor, {"decision": body.decision, "state": to.value,
+                                                                    "comment": body.comment})
+            s.add(Review(case_id=case_id, reviewer_id=x_reviewer_id, decision=body.decision, comment=body.comment,
+                         decided_at=_now()))
+            applied: list[AppliedInvoice] = []
+            if to == CaseState.APPLIED:  # post the allocations: invoices become applied / partially_applied
+                for a in s.scalars(select(Allocation).where(Allocation.case_id == case_id)):
+                    inv = s.get(Invoice, a.invoice_id)
+                    inv.status = "applied" if a.amount_paise >= inv.gross_amount - 100 else "partially_applied"
+                    applied.append(AppliedInvoice(invoice_id=inv.id, status=inv.status))
+                d.audit.append(case_id, "APPLIED", actor, {"invoices": [a.model_dump() for a in applied]})
+            return ReviewResult(case_id=case_id, decision=body.decision, state=to, applied=applied, audit_seq=seq)
+
+    # ------------------------------------------------------------------ audit
+    @r.get("/audit", response_model=AuditList)
+    def audit(case_id: str | None = None, limit: int = 500):
+        rows = D().audit.rows(case_id, min(max(limit, 1), 2000))
+        return AuditList(events=[AuditEventView(**D().audit.as_dict(e)) for e in rows])
+
+    @r.get("/audit/verify", response_model=VerifyResult)
+    def verify():
+        return VerifyResult(**D().audit.verify())
+
+    @r.get("/audit/checkpoint")
+    def checkpoint():
+        cp = D().audit.latest_checkpoint()
+        if cp is None:
+            raise ApiError(404, "not_found", "no checkpoint yet: run a batch first")
+        return JSONResponse(cp, headers={"Content-Disposition": f'attachment; filename="checkpoint-{cp["seq"]:06d}.json"'})
+
+    # ------------------------------------------------------------------ metrics, reviewers, reset
+    @r.get("/metrics", response_model=MetricsReport)
+    def metrics():
+        d = D()
+        outcomes = d.store.outcomes()
+        if not outcomes or not TRUTH_FILE.exists():
+            raise ApiError(404, "not_found", "no metrics yet: run a batch first")
+        truth = json.loads(TRUTH_FILE.read_text(encoding="utf-8"))
+        auto = frozenset(c for c in truth if d.policy.state_of(c) == CaseState.AUTO_CLOSED)
+        s = d.settings
+        return compute(outcomes, {x.id: x for x in d.store.runs()}, truth, auto_closed=auto,
+                       price_in=s.price_in_paise_per_mtok, price_out=s.price_out_paise_per_mtok)
+
+    @r.get("/reviewers", response_model=list[ReviewerView])
+    def reviewers():
+        with D().core.db.tx() as s:
+            return [ReviewerView(id=x.id, name=x.name, role=x.role, approval_limit_paise=x.approval_limit_paise)
+                    for x in s.scalars(select(Reviewer).order_by(Reviewer.id))]
+
+    @r.post("/reset", response_model=ResetResult, dependencies=[Depends(require_token)])
+    def reset(request: Request):
+        if os.environ.get("DEMO_MODE", "1") != "1":
+            raise ApiError(403, "disabled", "reset is a demo-only action and is disabled on this server")
+        app.state.limiter.check(request, "reset", 10)
+        if running():
+            raise ApiError(409, "batch_running", "wait for the running batch to finish")
+        d = D()
+        d.core.reset()
+        closed = d.core.auto_close()
+        d.store = InMemoryRunStore()
+        app.state.current["batch_id"] = None
+        with d.core.db.tx() as s:
+            total = s.query(Case).count()
+        return ResetResult(cases=total, auto_closed=len(closed))
+
+    app.include_router(r)
+
+    # ------------------------------------------------------------------ the built UI (single-service hosting)
+    dist = Path(static_dir) if static_dir else ROOT / "web" / "dist"
+    if (dist / "index.html").exists():
+        app.mount("/assets", StaticFiles(directory=dist / "assets"), name="assets")
+
+        @app.get("/{path:path}", include_in_schema=False)
+        def spa(path: str):
+            if path.startswith("api/"):
+                raise ApiError(404, "not_found", f"no route /{path}")
+            f = (dist / path).resolve()
+            return FileResponse(f if f.is_file() and dist.resolve() in f.parents else dist / "index.html")
+    return app

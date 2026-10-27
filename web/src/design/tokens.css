@@ -1,0 +1,84 @@
+/*
+  Artemis design tokens. To restyle the product, edit THIS file (and the shadcn variables in index.css):
+  components reference tokens, never raw colours. Status colours are fixed by the spec: Verified green, Probable amber
+  (amber, not salmon, so Probable never reads as an error), Insufficient grey, Conflicting red.
+*/
+:root {
+  --status-verified: oklch(0.55 0.15 150);
+  --status-verified-soft: oklch(0.95 0.05 150);
+  --status-verified-fg: oklch(0.38 0.1 150);
+  --status-probable: oklch(0.72 0.16 78);
+  --status-probable-soft: oklch(0.96 0.07 90);
+  --status-probable-fg: oklch(0.45 0.1 70);
+  --status-insufficient: oklch(0.6 0.01 260);
+  --status-insufficient-soft: oklch(0.95 0.005 260);
+  --status-insufficient-fg: oklch(0.42 0.01 260);
+  --status-conflicting: oklch(0.56 0.21 27);
+  --status-conflicting-soft: oklch(0.95 0.04 27);
+  --status-conflicting-fg: oklch(0.42 0.16 27);
+  --status-auto: oklch(0.55 0.1 245);
+  --status-auto-soft: oklch(0.95 0.03 245);
+  --status-auto-fg: oklch(0.4 0.09 245);
+
+  --edge-supports: oklch(0.55 0.15 150);
+  --edge-contradicts: oklch(0.56 0.21 27);
+  --edge-neutral: oklch(0.6 0.01 260);
+  --node-receipt: oklch(0.94 0.04 245);
+  --node-invoice: oklch(0.96 0.02 260);
+  --node-adjustment: oklch(0.96 0.06 90);
+  --node-evidence: oklch(0.99 0 0);
+  --node-rule: oklch(0.95 0.04 300);
+
+  --space-page: 1.5rem;
+  --radius-pill: 9999px;
+}
+
+.dark {
+  --status-verified: oklch(0.72 0.16 150);
+  --status-verified-soft: oklch(0.3 0.06 150);
+  --status-verified-fg: oklch(0.88 0.1 150);
+  --status-probable: oklch(0.8 0.15 80);
+  --status-probable-soft: oklch(0.33 0.07 80);
+  --status-probable-fg: oklch(0.9 0.11 85);
+  --status-insufficient: oklch(0.72 0.01 260);
+  --status-insufficient-soft: oklch(0.3 0.01 260);
+  --status-insufficient-fg: oklch(0.85 0.01 260);
+  --status-conflicting: oklch(0.7 0.19 25);
+  --status-conflicting-soft: oklch(0.32 0.08 25);
+  --status-conflicting-fg: oklch(0.88 0.1 25);
+  --status-auto: oklch(0.72 0.11 245);
+  --status-auto-soft: oklch(0.3 0.05 245);
+  --status-auto-fg: oklch(0.87 0.08 245);
+
+  --edge-supports: oklch(0.72 0.16 150);
+  --edge-contradicts: oklch(0.7 0.19 25);
+  --edge-neutral: oklch(0.7 0.01 260);
+  --node-receipt: oklch(0.3 0.05 245);
+  --node-invoice: oklch(0.28 0.01 260);
+  --node-adjustment: oklch(0.32 0.07 80);
+  --node-evidence: oklch(0.24 0 0);
+  --node-rule: oklch(0.3 0.05 300);
+}
+
+/* Status pill: colour comes from the tokens above via data-status, so a re-skin is a CSS edit. */
+.pill { display: inline-flex; align-items: center; gap: 0.4rem; border-radius: var(--radius-pill); padding: 0.125rem 0.6rem;
+  font-size: 0.75rem; font-weight: 600; line-height: 1.25rem; white-space: nowrap; border: 1px solid transparent; }
+.pill::before { content: ""; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: currentColor; }
+.pill[data-status="VERIFIED"] { background: var(--status-verified-soft); color: var(--status-verified-fg); }
+.pill[data-status="PROBABLE"] { background: var(--status-probable-soft); color: var(--status-probable-fg); }
+.pill[data-status="INSUFFICIENT"] { background: var(--status-insufficient-soft); color: var(--status-insufficient-fg); }
+.pill[data-status="CONFLICTING"] { background: var(--status-conflicting-soft); color: var(--status-conflicting-fg); }
+.pill[data-status="AUTO_CLOSED"] { background: var(--status-auto-soft); color: var(--status-auto-fg); }
+.pill[data-status="NONE"] { background: transparent; color: var(--muted-foreground); border-color: var(--border); }
+
+/* Evidence tiers: primary = solid border, supporting = dashed, derived = dotted. */
+.tier { border-width: 1.5px; border-radius: var(--radius-md); padding: 0 0.4rem; font-size: 0.7rem; font-weight: 600; }
+.tier[data-tier="primary"] { border-style: solid; }
+.tier[data-tier="supporting"] { border-style: dashed; }
+.tier[data-tier="derived"] { border-style: dotted; }
+
+.tile[data-status="VERIFIED"] { --tile: var(--status-verified); }
+.tile[data-status="PROBABLE"] { --tile: var(--status-probable); }
+.tile[data-status="INSUFFICIENT"] { --tile: var(--status-insufficient); }
+.tile[data-status="CONFLICTING"] { --tile: var(--status-conflicting); }
+.tile[data-status="AUTO_CLOSED"] { --tile: var(--status-auto); }
