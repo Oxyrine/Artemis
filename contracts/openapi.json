@@ -141,8 +141,15 @@
           "id",
           "case_id",
           "model",
+          "model_version",
           "prompt_version",
-          "started_at"
+          "started_at",
+          "ended_at",
+          "steps",
+          "tokens_in",
+          "tokens_out",
+          "stop_reason",
+          "replay_of"
         ],
         "title": "AgentRun",
         "type": "object"
@@ -255,6 +262,7 @@
           }
         },
         "required": [
+          "schema_version",
           "events"
         ],
         "title": "AuditList",
@@ -299,6 +307,7 @@
           }
         },
         "required": [
+          "schema_version",
           "batch_id",
           "mode"
         ],
@@ -371,7 +380,17 @@
           }
         },
         "required": [
-          "batch_id"
+          "schema_version",
+          "batch_id",
+          "replay",
+          "mode",
+          "total",
+          "done",
+          "running",
+          "counts_by_status",
+          "counts_by_state",
+          "errors",
+          "run_ids"
         ],
         "title": "BatchStatus",
         "type": "object"
@@ -530,6 +549,7 @@
           }
         },
         "required": [
+          "schema_version",
           "case_id",
           "state",
           "status",
@@ -581,6 +601,7 @@
           }
         },
         "required": [
+          "schema_version",
           "total",
           "counts_by_status",
           "rupees",
@@ -714,7 +735,8 @@
           "unexplained_paise",
           "status",
           "state",
-          "steps"
+          "steps",
+          "duplicate"
         ],
         "title": "CaseSummary",
         "type": "object"
@@ -769,6 +791,7 @@
           }
         },
         "required": [
+          "schema_version",
           "case_id",
           "nodes",
           "edges"
@@ -1002,7 +1025,9 @@
           "id",
           "source",
           "target",
-          "kind"
+          "kind",
+          "label",
+          "amount_paise"
         ],
         "title": "GraphEdge",
         "type": "object"
@@ -1064,7 +1089,10 @@
         "required": [
           "id",
           "kind",
-          "label"
+          "label",
+          "tier",
+          "amount_paise",
+          "validated"
         ],
         "title": "GraphNode",
         "type": "object"
@@ -1118,7 +1146,8 @@
           "step",
           "text",
           "kind",
-          "status"
+          "status",
+          "reason"
         ],
         "title": "Hypothesis",
         "type": "object"
@@ -1335,6 +1364,7 @@
           }
         },
         "required": [
+          "schema_version",
           "runs",
           "cases",
           "verified_precision",
@@ -1347,7 +1377,11 @@
           "tool_path_diversity",
           "mean_steps",
           "mean_tokens",
-          "mean_seconds"
+          "mean_seconds",
+          "estimated_cost_paise",
+          "false_clears",
+          "red_team_applied",
+          "spread"
         ],
         "title": "MetricsReport",
         "type": "object"
@@ -1408,6 +1442,7 @@
           }
         },
         "required": [
+          "schema_version",
           "modes"
         ],
         "title": "Modes",
@@ -1526,6 +1561,7 @@
           }
         },
         "required": [
+          "schema_version",
           "cases",
           "auto_closed"
         ],
@@ -1593,6 +1629,7 @@
           }
         },
         "required": [
+          "schema_version",
           "case_id",
           "decision",
           "state",
@@ -1801,7 +1838,8 @@
           "step",
           "tool_name",
           "args_json",
-          "result_json"
+          "result_json",
+          "latency_ms"
         ],
         "title": "ToolCall",
         "type": "object"
@@ -1828,7 +1866,9 @@
           }
         },
         "required": [
-          "step"
+          "step",
+          "hypotheses",
+          "tool_calls"
         ],
         "title": "TraceStep",
         "type": "object"
@@ -1868,8 +1908,10 @@
           }
         },
         "required": [
+          "schema_version",
           "case_id",
           "run",
+          "replay",
           "tool_path",
           "steps"
         ],
@@ -1996,6 +2038,7 @@
           }
         },
         "required": [
+          "schema_version",
           "ok",
           "first_broken_seq",
           "checked",

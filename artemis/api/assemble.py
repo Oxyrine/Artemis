@@ -171,6 +171,7 @@ def graph(deps, case_id: str) -> EvidenceGraph:
     """Nodes and edges only, no positions: the browser lays the graph out (dagre), so a UI redesign never touches this."""
     d = detail(deps, case_id)
     ev = {e.id: e for e in d.evidence}
+    calls = {tc.id: tc for run in deps.store.runs(case_id) for tc in deps.store.tool_calls(run.replay_of or run.id)}
     nodes: dict[str, GraphNode] = {}
     edges: list[GraphEdge] = []
 
@@ -202,9 +203,11 @@ def graph(deps, case_id: str) -> EvidenceGraph:
             if eid not in ev:
                 continue
             e = ev[eid]
-            if e.kind == "withholding_calc":  # the calculation hangs off a rule node, and is never the dissenter
-                rule = node(GraphNode(id=f"rule:{e.source_id}", kind="rule", label=e.excerpt or e.source_id))
-                edge(rule, aid, "rule", label=e.source_id)
+            if e.kind == "withholding_calc":  # the calculation is a rule node; its edge carries the rule reference
+                res = calls[e.tool_call_id].result_json if e.tool_call_id in calls else {}
+                rule = node(GraphNode(id=f"rule:{eid}", kind="rule", label="Withholding calculation",
+                                      amount_paise=res.get("expected_paise")))
+                edge(rule, aid, "rule", label=res.get("rule_ref") or e.source_id)
             elif eid not in flagged:
                 edge(node(GraphNode(id=eid, kind="evidence", label=e.kind, tier=e.tier)), aid, "supports")
     def side_node(side: FlagSide) -> str:

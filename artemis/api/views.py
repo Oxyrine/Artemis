@@ -14,12 +14,17 @@ Status = Literal["AUTO_CLOSED", "VERIFIED", "PROBABLE", "INSUFFICIENT", "CONFLIC
 Decision = Literal["approve", "reject", "request_evidence"]
 
 
-class _View(BaseModel):
+class _Out(BaseModel):
+    """Response models: the server always sends defaulted fields, so the schema (and the UI types) say they are required."""
+    model_config = ConfigDict(json_schema_serialization_defaults_required=True)
+
+
+class _View(_Out):
     schema_version: int = SCHEMA_VERSION
 
 
 # ---------------------------------------------------------------- dashboard
-class CaseSummary(BaseModel):
+class CaseSummary(_Out):
     case_id: str
     utrs: list[str]
     customer_id: str | None
@@ -33,7 +38,7 @@ class CaseSummary(BaseModel):
     duplicate: bool = False
 
 
-class RupeeSummary(BaseModel):
+class RupeeSummary(_Out):
     investigated_variance_paise: int  # total apparent variance across investigated cases
     explained_verified_paise: int  # explained by Verified cases
     held_paise: int  # held for evidence or review (Probable, Insufficient, Conflicting)
@@ -47,7 +52,7 @@ class CaseList(_View):
 
 
 # ---------------------------------------------------------------- case detail
-class ReceiptView(BaseModel):
+class ReceiptView(_Out):
     utr: str
     value_date: str
     amount_paise: int
@@ -57,7 +62,7 @@ class ReceiptView(BaseModel):
     resolution_score: int | None
 
 
-class InvoiceView(BaseModel):
+class InvoiceView(_Out):
     id: str
     invoice_date: str
     due_date: str
@@ -67,12 +72,12 @@ class InvoiceView(BaseModel):
     status: str
 
 
-class AllocationView(BaseModel):
+class AllocationView(_Out):
     invoice_id: str
     amount_paise: int
 
 
-class AdjustmentView(BaseModel):
+class AdjustmentView(_Out):
     kind: str
     amount_paise: int
     validated: bool
@@ -80,7 +85,7 @@ class AdjustmentView(BaseModel):
     evidence_ids: list[str]
 
 
-class EvidenceView(BaseModel):
+class EvidenceView(_Out):
     id: str
     kind: str
     tier: Tier
@@ -91,34 +96,34 @@ class EvidenceView(BaseModel):
     tool_name: str | None
 
 
-class FlagSide(BaseModel):
+class FlagSide(_Out):
     ref: str  # an evidence id, or 'table:id' when the grader found it without the agent
     kind: str
     excerpt: str
     amount_paise: int | None  # the value the UI highlights when the two sides differ
 
 
-class FlagView(BaseModel):
+class FlagView(_Out):
     code: int
     detail: str
     a: FlagSide
     b: FlagSide
 
 
-class GradeView(BaseModel):
+class GradeView(_Out):
     status: Status | None
     flags: list[FlagView]
     duplicate: bool
     recommendation: str | None
 
 
-class ClosureLine(BaseModel):
+class ClosureLine(_Out):
     kind: str
     amount_paise: int
     validated: bool
 
 
-class VarianceClosure(BaseModel):
+class VarianceClosure(_Out):
     """Slide 5: invoiced, minus each validated adjustment, equals expected, against received, then unexplained."""
     invoiced_paise: int
     adjustments: list[ClosureLine]
@@ -127,19 +132,19 @@ class VarianceClosure(BaseModel):
     unexplained_paise: int
 
 
-class ProposedEntry(BaseModel):
+class ProposedEntry(_Out):
     kind: Literal["allocation", "adjustment"]
     invoice_id: str | None
     account: str | None  # e.g. 'TDS receivable' for a TDS adjustment
     amount_paise: int
 
 
-class ActionState(BaseModel):
+class ActionState(_Out):
     allowed: bool
     reason: str | None
 
 
-class ReviewerActions(BaseModel):
+class ReviewerActions(_Out):
     reviewer_id: str
     name: str
     role: str
@@ -148,7 +153,7 @@ class ReviewerActions(BaseModel):
     reject: ActionState
 
 
-class RunInfo(BaseModel):
+class RunInfo(_Out):
     run_id: str
     model: str
     prompt_version: str
@@ -178,7 +183,7 @@ class CaseDetail(_View):
 
 
 # ---------------------------------------------------------------- evidence graph (topology only; the browser lays it out)
-class GraphNode(BaseModel):
+class GraphNode(_Out):
     id: str
     kind: Literal["receipt", "invoice", "adjustment", "evidence", "rule"]
     label: str
@@ -187,7 +192,7 @@ class GraphNode(BaseModel):
     validated: bool | None = None
 
 
-class GraphEdge(BaseModel):
+class GraphEdge(_Out):
     id: str
     source: str
     target: str
@@ -209,7 +214,7 @@ class ReviewRequest(BaseModel):
     comment: str = Field(default="", max_length=1000)
 
 
-class AppliedInvoice(BaseModel):
+class AppliedInvoice(_Out):
     invoice_id: str
     status: str
 
@@ -222,7 +227,7 @@ class ReviewResult(_View):
     audit_seq: int  # seq of the REVIEW_DECIDED event, so the UI can show it without a reload
 
 
-class ReviewerView(BaseModel):
+class ReviewerView(_Out):
     id: str
     name: str
     role: str
@@ -230,7 +235,7 @@ class ReviewerView(BaseModel):
 
 
 # ---------------------------------------------------------------- audit
-class AuditEventView(BaseModel):
+class AuditEventView(_Out):
     seq: int
     case_id: str | None
     event_type: str
@@ -259,7 +264,7 @@ class BatchRunRequest(BaseModel):
     mode: Literal["demo", "replay", "live"] = "demo"
 
 
-class ModeInfo(BaseModel):
+class ModeInfo(_Out):
     mode: Literal["demo", "replay", "live"]
     label: str
     available: bool
