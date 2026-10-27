@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, useLocation } from 'react-router-dom'
@@ -20,7 +21,7 @@ vi.mock('@/api/hooks', () => ({
 
 const Where = () => <p data-testid="where">{useLocation().pathname}</p>
 const Start = () => <button onClick={useGuide().start}>start</button>
-const setup = () => render(<MemoryRouter><GuideProvider><BatchProvider><Start /><DemoGuide /><Where /></BatchProvider></GuideProvider></MemoryRouter>)
+const setup = () => render(<QueryClientProvider client={new QueryClient()}><MemoryRouter><GuideProvider><BatchProvider><Start /><DemoGuide /><Where /></BatchProvider></GuideProvider></MemoryRouter></QueryClientProvider>)
 const toStep = async (n: number) => { await userEvent.click(screen.getByText('start')); for (let i = 0; i < n; i++) await userEvent.click(screen.getByRole('button', { name: /Next/ })) }
 
 beforeEach(() => { sessionStorage.clear(); vi.clearAllMocks(); states = ['NEW', 'AUTO_CLOSED']; batchData = undefined; Element.prototype.scrollIntoView = vi.fn(); window.scrollTo = vi.fn() })

@@ -84,6 +84,7 @@ make demo-down   # stop and delete the volumes
 make demo-local  # no Docker: build the UI, seed SQLite, serve everything on http://localhost:8000 (set DATABASE_URL for Postgres)
 make seed        # just the migrate + seed step (DATABASE_URL, SIGNING_KEY_PATH)
 make smoke       # build the UI and run the Playwright smoke test (BASE_URL, default http://localhost:8000)
+make workflow    # the full Playwright walkthrough: 28 checks incl. the answer key's 10/16/6/4/4, blocked approvals, tamper, restart-proofing and a phone-sized screen (needs a freshly seeded server)
 ```
 
 `deploy/docker-compose.yml` starts the three services. The api container runs `scripts/seed.py` (Alembic to head, create the Ed25519 signing key if it is missing, load `data/env` and run the matcher if the database is empty) and then one uvicorn worker with `ARTEMIS_PREPARE=0`, so a restart keeps the database and the ledger. `.env.example` lists every variable. The images build and the stack runs: the smoke test passes through nginx on :8080, data and the ledger survive an api restart, and `docker exec <api> python -m scripts.tamper 5` turns Verify chain red at event 5. The smoke test (`web/e2e/smoke.mjs`) resets the environment, runs the batch, opens the hero case, approves it as the analyst and verifies the chain; it needs a server in demo mode without `ARTEMIS_API_TOKEN`.
@@ -94,6 +95,7 @@ The API keeps batch state in the process and runs batches on a background thread
 
 - **API:** a Render web service built from `deploy/Dockerfile.api` (it binds `$PORT`), plus a Render Postgres 16. Set `DATABASE_URL` on the service to the database's *internal* URL (`postgres://` is accepted and normalised to the psycopg driver). Without it the service falls back to SQLite inside the container, which works but is wiped on every deploy. `DEMO_MODE=1` leaves `POST /reset` open so a judge can re-run the demo; set `ARTEMIS_API_TOKEN` to lock writes (the UI has no token field, so that disables its buttons).
 - **UI:** a Vercel project with root directory `web/`. `web/vercel.json` holds the build settings, the `/api` rewrite to the Render URL (edit it if the API's URL changes), SPA routing and the security headers.
+- **Keep UI-only pushes from restarting the API.** Render deploys the whole branch, and a restart drops a batch that is running. In Render, `artemis-api` → Settings → Build & Deploy → Build Filters, add `web/**` and `*.md` under Ignored Paths. If a restart does cut a batch off, the UI says so, the server moves any case it was working on to Needs review (audited), and Run batch carries on with the cases still waiting.
 - Free tiers: the Render web service sleeps when idle (first request takes about a minute), its disk is ephemeral (the signing key is regenerated on redeploy), and the free Postgres expires after 30 days.
 
 ## Database and migrations

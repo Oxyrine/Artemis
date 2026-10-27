@@ -70,6 +70,24 @@ def restore_run_records(d: Deps) -> None:
         d.store = InMemoryRunStore.from_dict(payload)
 
 
+def recover_interrupted(d: Deps) -> list[str]:
+    """At start no batch is running, so a case still INVESTIGATING (or GRADED but not yet routed) was cut off by a restart.
+    Send it to NEEDS_REVIEW through the policy engine, audited, so it is not stuck forever; cases still NEW are untouched
+    and the next batch picks them up."""
+    db = getattr(d.core, "db", None)
+    if db is None:
+        return []
+    try:
+        with db.tx() as s:
+            stuck = list(s.scalars(select(Case.id).where(Case.state.in_([CaseState.INVESTIGATING.value, CaseState.GRADED.value])).order_by(Case.id)))
+    except Exception:  # an un-migrated or empty database: nothing to recover
+        return []
+    for cid in stuck:
+        d.audit.append(cid, "INVESTIGATION_FAILED", "system", {"error": "InterruptedByRestart"})
+        d.policy.transition(cid, CaseState.NEEDS_REVIEW, "system")
+    return stuck
+
+
 def create_app(deps: Deps | None = None, *, static_dir: Path | str | None = None, runs_dir: Path | str | None = None,
                exports_dir: Path | str | None = None) -> FastAPI:
     # ARTEMIS_PREPARE=0: the database is already migrated and seeded (scripts/seed.py), so do not wipe it on start
@@ -77,6 +95,7 @@ def create_app(deps: Deps | None = None, *, static_dir: Path | str | None = None
     runs = Path(runs_dir or os.environ.get("RUNS_DIR") or ROOT / "runs")
     exports = Path(exports_dir or os.environ.get("EXPORTS_DIR") or ROOT / "exports")
     restore_run_records(deps)
+    recover_interrupted(deps)
     app = FastAPI(title="Artemis", docs_url=None, redoc_url=None, openapi_url="/api/openapi.json")
     app.state.deps, app.state.limiter = deps, RateLimiter()
     app.state.current = {"batch_id": None}

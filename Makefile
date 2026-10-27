@@ -20,3 +20,5 @@ demo-local:
 	cd web && npm ci && npm run build
 	uv run python -m scripts.seed
 	ARTEMIS_PREPARE=0 uv run python -m scripts.serve
+workflow:
+	cd web && npm run e2e:workflow

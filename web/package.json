@@ -10,7 +10,8 @@
     "gen:api": "openapi-typescript ../contracts/openapi.json -o src/api/schema.d.ts",
     "test": "vitest run",
     "typecheck": "tsc -b --noEmit",
-    "e2e": "node e2e/smoke.mjs"
+    "e2e": "node e2e/smoke.mjs",
+    "e2e:workflow": "node e2e/workflow.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

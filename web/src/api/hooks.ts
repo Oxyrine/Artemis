@@ -1,5 +1,5 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { api } from './client'
+import { ApiError, api } from './client'
 import type { AuditList, BatchStatus, CaseDetail, CaseList, Decision, EvidenceGraph, MetricsReport, Modes, ReviewResult,
   ReviewerView, RunMode, TamperResult, TraceView, VerifyResult } from './types'
 
@@ -33,7 +33,9 @@ export function useBatch(id: string | null) {
       if (!b.running) void qc.invalidateQueries({ predicate: (q) => q.queryKey[0] !== 'batch' })
       return b
     },
-    refetchInterval: (q) => (q.state.data && !q.state.data.running ? false : 1000),
+    // a 404 means the server no longer has this batch (it restarted mid-run): retrying cannot bring it back
+    retry: (n, err) => !(err instanceof ApiError && err.status === 404) && n < 2,
+    refetchInterval: (q) => (q.state.error || (q.state.data && !q.state.data.running) ? false : 1000),
   })
 }
 
@@ -44,7 +46,8 @@ export function useRunBatch() {
 export function useReset() {
   const qc = useQueryClient()
   return useMutation({ mutationFn: () => api<{ cases: number; auto_closed: number }>('/reset', { method: 'POST' }),
-    onSuccess: () => qc.invalidateQueries() })
+    // batch ids restart at BATCH-0001 after a reset: drop what we know about the old ones so a new batch does not inherit their state
+    onSuccess: () => { qc.removeQueries({ queryKey: ['batch'] }); return qc.invalidateQueries() } })
 }
 
 export function useTamper() {

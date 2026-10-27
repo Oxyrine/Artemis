@@ -8,6 +8,7 @@ from artemis.agent.llm import ScriptedLLM
 from artemis.api.app import create_app
 from artemis.fakes.scripted import golden_agent
 from artemis.fakes.store import InMemoryRunStore
+from artemis.models import CaseState
 from artemis.wiring import build_deps
 from tests.conftest import HERO
 
@@ -49,3 +50,21 @@ def test_traces_and_metrics_survive_a_restart_of_the_server(tmp_path, monkeypatc
                                   exports_dir=tmp_path / "exports", static_dir=tmp_path / "no-ui"))
     assert third.get("/api/metrics").json()["runs"] == 0
     assert third.get("/api/cases/CASE-0007/trace").status_code == 404
+
+
+def test_a_case_cut_off_by_a_restart_is_not_stuck_forever(tmp_path, monkeypatch):
+    monkeypatch.setenv("DATABASE_URL", f"sqlite:///{tmp_path / 'host.db'}")
+    first = build_deps("real")
+    new = first.core.new_case_ids()
+    first.policy.transition(new[0], CaseState.INVESTIGATING, "agent")  # the batch was killed while working on this one
+    first.policy.transition(new[1], CaseState.INVESTIGATING, "agent")
+    first.policy.transition(new[1], CaseState.GRADED, "agent")  # and this one after grading but before routing
+
+    deps = build_deps("real", prepare=False)  # the restarted server, same database
+    client = TestClient(create_app(deps, runs_dir=tmp_path / "runs", exports_dir=tmp_path / "exports", static_dir=tmp_path / "no-ui"))
+    assert deps.policy.state_of(new[0]) == CaseState.NEEDS_REVIEW and deps.policy.state_of(new[1]) == CaseState.NEEDS_REVIEW
+    assert deps.policy.state_of(new[2]) == CaseState.NEW  # cases nobody started are left for the next batch
+    events = [e for e in client.get("/api/audit", params={"case_id": new[0]}).json()["events"] if e["event_type"] == "INVESTIGATION_FAILED"]
+    assert len(events) == 1 and events[0]["actor"] == "system"
+    assert client.get("/api/audit/verify").json()["ok"] is True
+    assert client.post("/api/batch/run", json={"mode": "demo"}).status_code == 202  # the rest can still be run

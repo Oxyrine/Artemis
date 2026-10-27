@@ -41,6 +41,7 @@ export function RunBar() {
         {b && <ModeBadge mode={b.mode} />}
       </div>
 
+      {runner.lost && <p role="status" className="text-sm text-[var(--status-probable-fg)]">The server restarted while the batch was running, so its progress was lost. Run the batch again to continue with the cases that are still waiting.</p>}
       {allDone && !running && <p className="text-sm text-muted-foreground">Every case has already been investigated. Reset the environment to run the batch again.</p>}
       {chosen && !chosen.available && <p className="text-sm text-muted-foreground">{chosen.reason}</p>}
       {b && (
