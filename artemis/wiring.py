@@ -41,12 +41,13 @@ def build_deps(backend: str | None = None, *, store: RunStore | None = None, fix
     backend = backend or os.environ.get("ARTEMIS_BACKEND", "fixtures")
     from artemis.fakes.audit import ListAudit
     from artemis.fakes.store import InMemoryRunStore
-    audit = ListAudit()  # swap for Lane C's hash-chained ledger when it lands
     if backend == "real":
+        from artemis.audit.ledger import SqlAudit
         from artemis.core import SqlCore
         from artemis.db import Db
         from artemis.grading.policy import SqlPolicy
         db = Db(os.environ.get("DATABASE_URL") or "sqlite://")
+        audit = SqlAudit(db)  # Lane C's hash-chained, append-only ledger, in the same database and transactions
         policy = SqlPolicy(db, audit)
         core = SqlCore(db, policy, audit)
         if prepare:
@@ -57,4 +58,5 @@ def build_deps(backend: str | None = None, *, store: RunStore | None = None, fix
         raise ValueError(f"unknown backend {backend!r} (fixtures | real)")
     from artemis.fakes.core import FixtureCore
     from artemis.fakes.policy import FakePolicy
+    audit = ListAudit()
     return Deps(FixtureCore(fixtures_dir), FakePolicy(audit), audit, store or InMemoryRunStore(), Settings.from_env())

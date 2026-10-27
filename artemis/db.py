@@ -165,22 +165,33 @@ class Db:
 
     def __init__(self, url: str | None = None):
         import threading
+        from contextvars import ContextVar
         self.engine = make_engine(url)
         self._sessions = session_factory(self.engine)
         self.lock = threading.RLock()
+        self._ambient: ContextVar[Session | None] = ContextVar(f"db-session-{id(self)}", default=None)
 
     def tx(self):
+        """One transaction per call, except nested: a tx() opened while another is active in this thread JOINS it, so a
+        state change and its audit event (written by the ledger from inside the policy engine) commit or roll back together."""
         from contextlib import contextmanager
 
         @contextmanager
         def _tx():
+            outer = self._ambient.get()
+            if outer is not None:
+                yield outer
+                return
             with self.lock, self._sessions() as s:
+                token = self._ambient.set(s)
                 try:
                     yield s
                     s.commit()
                 except Exception:
                     s.rollback()
                     raise
+                finally:
+                    self._ambient.reset(token)
         return _tx()
 
     def reset(self) -> None:
