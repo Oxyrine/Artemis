@@ -1,10 +1,13 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { ArrowDownLeft, ArrowUpRight, Search, SlidersHorizontal, X } from 'lucide-react'
 import { useCases, useMetrics } from '@/api/hooks'
 import type { CaseSummary } from '@/api/types'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { STATUS_LABEL, amount, pct } from '@/lib/format'
+import { STATUS_LABEL, amount, humanize, pct } from '@/lib/format'
 import { NativeSelect } from '@/ui/controls'
 import { ErrorBanner, Money, Section, StateBadge, StatusPill, Tile, useTitle } from '@/ui/primitives'
 import { RunBar } from './RunBar'
@@ -16,42 +19,52 @@ export function DashboardPage() {
   useTitle('Dashboard')
   const [status, setStatus] = useState('')
   const [state, setState] = useState('')
+  const [search, setSearch] = useState('')
   const cases = useCases({ status, state })
   const d = cases.data
+  const rows = filterCases(d?.cases ?? [], search)
+  const filtered = !!(search || status || state)
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Receipts to reconcile</h1>
-        <p className="text-sm text-muted-foreground">Run the batch, then open any case to see the evidence and decide.</p>
+    <div className="dashboard-page flex flex-col gap-6">
+      <div className="page-heading">
+        <div><h1>Reconciliation</h1>
+        <p>From receipt to resolution. Every adjustment accounted for.</p></div>
+        <span className="page-heading-note"><ArrowDownLeft size={15} />Accounts receivable · INR</span>
       </div>
       <RunBar />
       <ErrorBanner error={cases.error} />
 
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-5" aria-label="Cases by status">
+      <div className="financial-summary">
+        <Summary label="Apparent variance investigated" paise={d?.rupees.investigated_variance_paise} note="Variance examined by the agent" />
+        <Summary label="Explained by verified cases" paise={d?.rupees.explained_verified_paise} note="Supported by validated evidence" />
+        <Summary label="Held for evidence or review" paise={d?.rupees.held_paise} note="Further evidence or a decision needed" />
+      </div>
+
+      <div className="outcome-section"><div className="section-intro"><h2>Investigation outcomes</h2><span>Select an outcome to filter the queue</span></div>
+      <div className="outcome-strip" aria-label="Cases by status" aria-busy={cases.isLoading}>
         {STATUSES.map((s) => (
           <Tile key={s} status={s} count={d?.counts_by_status[s] ?? 0} active={status === s} onClick={() => setStatus(status === s ? '' : s)} />
         ))}
-      </div>
+      </div></div>
 
-      <div className="grid gap-3 md:grid-cols-3">
-        <Summary label="Apparent variance investigated" paise={d?.rupees.investigated_variance_paise} />
-        <Summary label="Explained by Verified cases" paise={d?.rupees.explained_verified_paise} />
-        <Summary label="Held for evidence or review" paise={d?.rupees.held_paise} />
-      </div>
-
-      <Section title="Cases" aside={
-        <div className="flex gap-2">
+      <Section title="Receipt queue" aside={<span className="text-xs text-muted-foreground" aria-live="polite">{cases.isLoading ? 'Loading receipts…' : `${rows.length} ${rows.length === 1 ? 'case' : 'cases'}${filtered ? ' matching filters' : ' in this workspace'}`}</span>}>
+        <div className="queue-toolbar">
+          <label className="queue-search"><Search size={16} aria-hidden="true" /><Input aria-label="Search receipts" placeholder="Search customer, case or UTR…" value={search} onChange={(e) => setSearch(e.target.value)} /></label>
+          <div className="queue-filters"><SlidersHorizontal size={15} aria-hidden="true" />
           <NativeSelect aria-label="Filter by status" value={status} onChange={(e) => setStatus(e.target.value)}>
             <option value="">All statuses</option>
             {STATUSES.map((s) => <option key={s} value={s}>{STATUS_LABEL[s]}</option>)}
           </NativeSelect>
           <NativeSelect aria-label="Filter by state" value={state} onChange={(e) => setState(e.target.value)}>
             <option value="">All states</option>
-            {STATES.map((s) => <option key={s} value={s}>{s.replace(/_/g, ' ').toLowerCase()}</option>)}
+            {STATES.map((s) => <option key={s} value={s}>{humanize(s)}</option>)}
           </NativeSelect>
-        </div>}>
-        {cases.isLoading ? <Skeleton className="h-64 w-full" /> : <CaseTable rows={d?.cases ?? []} />}
+          </div>
+          {filtered && <Button variant="ghost" size="sm" onClick={() => { setSearch(''); setStatus(''); setState('') }}><X size={14} />Clear filters</Button>}
+        </div>
+        {cases.isLoading ? <Skeleton className="h-64 w-full" /> : <CaseTable rows={rows} />}
+        <div className="queue-footnote"><span>Amounts in INR. Variance is subject to investigation.</span><span>Open a case to inspect evidence <ArrowUpRight size={13} /></span></div>
       </Section>
 
       <MetricsPanel />
@@ -59,39 +72,51 @@ export function DashboardPage() {
   )
 }
 
-const Summary = ({ label, paise }: { label: string; paise: number | undefined }) => (
-  <div className="rounded-lg border bg-card p-4">
-    <p className="text-sm text-muted-foreground">{label}</p>
-    <p className="mt-1 text-2xl font-semibold"><Money paise={paise ?? null} /></p>
+export function filterCases(rows: CaseSummary[], query: string) {
+  const needle = query.trim().toLowerCase()
+  return rows.filter((c) => [c.case_id, c.customer_name ?? '', ...c.utrs].some((v) => v.toLowerCase().includes(needle)))
+}
+
+const Summary = ({ label, paise, note }: { label: string; paise: number | undefined; note: string }) => (
+  <div className="financial-summary-cell">
+    <p>{label}</p>
+    <strong><Money paise={paise ?? null} /></strong>
+    <span>{note}</span>
   </div>
 )
 
 function CaseTable({ rows }: { rows: CaseSummary[] }) {
-  if (!rows.length) return <p className="py-8 text-center text-sm text-muted-foreground">No cases match. Clear a filter, or reset the environment.</p>
+  if (!rows.length) return <div className="queue-empty"><Search size={24} strokeWidth={1.5} /><h3>No receipts found</h3><p>Clear your search or filters to return to the receipt queue.</p></div>
   return (
-    <Table>
+    <><div className="desktop-case-list"><Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Case</TableHead><TableHead>UTR</TableHead><TableHead>Customer</TableHead>
-          <TableHead className="text-right">Receipt</TableHead><TableHead className="text-right">Variance</TableHead>
-          <TableHead>Status</TableHead><TableHead>State</TableHead><TableHead className="text-right">Steps</TableHead>
+          <TableHead>Customer / receipt</TableHead><TableHead>Case</TableHead>
+          <TableHead className="text-right">Receipt ₹</TableHead><TableHead className="text-right">Variance ₹</TableHead>
+          <TableHead>Outcome</TableHead><TableHead>Review state</TableHead><TableHead><span className="sr-only">Open case</span></TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {rows.map((c) => (
           <TableRow key={c.case_id}>
-            <TableCell><Link to={`/cases/${c.case_id}`} className="font-medium underline-offset-2 hover:underline">{c.case_id}</Link></TableCell>
-            <TableCell className="tabular-nums">{c.utrs[0]}{c.utrs.length > 1 ? ` +${c.utrs.length - 1}` : ''}</TableCell>
-            <TableCell>{c.customer_name ?? <span className="text-muted-foreground">unresolved</span>}</TableCell>
+            <TableCell><Link to={`/cases/${c.case_id}`} className="customer-link">{c.customer_name ?? 'Unresolved customer'}<span>{c.utrs[0]}{c.utrs.length > 1 ? ` +${c.utrs.length - 1}` : ''}</span></Link></TableCell>
+            <TableCell><Link to={`/cases/${c.case_id}`} className="case-id-link">{c.case_id}</Link></TableCell>
             <TableCell className="text-right tabular-nums">{amount(c.receipt_paise)}</TableCell>
             <TableCell className="text-right tabular-nums">{c.variance_paise == null ? '—' : amount(c.variance_paise)}</TableCell>
             <TableCell><StatusPill status={c.status} /></TableCell>
             <TableCell><StateBadge state={c.state} /></TableCell>
-            <TableCell className="text-right tabular-nums">{c.steps ?? '—'}</TableCell>
+            <TableCell><Link to={`/cases/${c.case_id}`} aria-label={`Review ${c.case_id}`} className="row-open"><ArrowUpRight size={16} /></Link></TableCell>
           </TableRow>
         ))}
       </TableBody>
-    </Table>
+    </Table></div>
+    <div className="mobile-case-list">
+      {rows.map((c) => <article key={c.case_id} className="mobile-case-row">
+        <div className="mobile-case-top"><Link to={`/cases/${c.case_id}`} className="customer-link">{c.customer_name ?? 'Unresolved customer'}<span>{c.case_id} · {c.utrs.join(' + ')}</span></Link><Link to={`/cases/${c.case_id}`} className="row-open" aria-label={`Review ${c.case_id}`}><ArrowUpRight size={17} /></Link></div>
+        <dl className="mobile-case-amounts"><div><dt>Receipt</dt><dd><Money paise={c.receipt_paise} /></dd></div><div><dt>Variance</dt><dd><Money paise={c.variance_paise} /></dd></div></dl>
+        <div className="mobile-case-state"><StatusPill status={c.status} /><StateBadge state={c.state} /></div>
+      </article>)}
+    </div></>
   )
 }
 

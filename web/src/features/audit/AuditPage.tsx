@@ -27,21 +27,22 @@ export function AuditPage() {
   const verify = useVerify()
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Audit log</h1>
-        <p className="text-sm text-muted-foreground">Every step is a hash-linked event. Verify recomputes the chain and checks it against the latest signed checkpoint.</p>
+    <div className="audit-page flex flex-col gap-6">
+      <div className="page-heading">
+        <div><h1>Audit ledger</h1>
+        <p>Every action recorded. Every link verifiable.</p></div><span className="page-heading-note"><ShieldCheck size={15} />Hash-linked event history</span>
       </div>
       <Section title="Integrity" aside={
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button onClick={() => verify.mutate()} disabled={verify.isPending}><ShieldCheck /> {verify.isPending ? 'Verifying…' : 'Verify chain'}</Button>
           <Button variant="outline" render={<a href="/api/audit/checkpoint" download />}><Download /> Latest signed checkpoint</Button>
         </div>}>
-        {verify.data ? <VerifyResultBanner result={verify.data} /> : <p className="text-sm text-muted-foreground">Not verified yet in this session.</p>}
+        <p className="mb-4 max-w-2xl text-sm text-muted-foreground">Recompute the event chain and check it against the latest signed checkpoint. Verification identifies the first broken link if the history has changed.</p>
+        {verify.data ? <VerifyResultBanner result={verify.data} /> : <p className="integrity-pending">Not verified yet in this session. Select Verify chain to check integrity.</p>}
         <ErrorBanner error={verify.error} className="mt-2" />
       </Section>
       <Section title="Events" aside={
-        <Input aria-label="Filter by case id" placeholder="Filter by case, e.g. CASE-0007" className="h-9 w-64" value={caseId} onChange={(e) => setCaseId(e.target.value)} />}>
+        <Input aria-label="Filter by case id" placeholder="Filter by case, e.g. CASE-0007" className="h-9 w-full sm:w-64" value={caseId} onChange={(e) => setCaseId(e.target.value)} />}>
         <ErrorBanner error={events.error} />
         {events.isLoading ? <Skeleton className="h-64 w-full" /> : <AuditTable events={[...(events.data?.events ?? [])].reverse()} />}
       </Section>

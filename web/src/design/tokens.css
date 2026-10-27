@@ -82,3 +82,52 @@
 .tile[data-status="INSUFFICIENT"] { --tile: var(--status-insufficient); }
 .tile[data-status="CONFLICTING"] { --tile: var(--status-conflicting); }
 .tile[data-status="AUTO_CLOSED"] { --tile: var(--status-auto); }
+
+/* Ledger surfaces override the neutral component defaults through the shared tokens. */
+:root:root {
+  --background: #f5f5f2;
+  --foreground: #242720;
+  --card: #ffffff;
+  --card-foreground: #242720;
+  --popover: #ffffff;
+  --popover-foreground: #242720;
+  --primary: #30362b;
+  --primary-foreground: #ffffff;
+  --secondary: #eeefe9;
+  --secondary-foreground: #30362b;
+  --muted: #eeefe9;
+  --muted-foreground: #666b61;
+  --accent: #e8eae3;
+  --accent-foreground: #242720;
+  --border: #e1e3db;
+  --input: #d6d9cf;
+  --ring: #737e5b;
+  --radius: 0.5rem;
+  --brand-ink: #63704c;
+  --sidebar-ground: #f0f1ec;
+  --sidebar-active: #e3e6dc;
+  --table-rule: #eceee7;
+}
+.dark:root {
+  --background: #191c18;
+  --foreground: #e9ece4;
+  --card: #20241f;
+  --card-foreground: #e9ece4;
+  --popover: #262b24;
+  --popover-foreground: #e9ece4;
+  --primary: #d6dfc5;
+  --primary-foreground: #20251b;
+  --secondary: #2b3028;
+  --secondary-foreground: #e9ece4;
+  --muted: #2b3028;
+  --muted-foreground: #adb5a5;
+  --accent: #30362c;
+  --accent-foreground: #e9ece4;
+  --border: #363d31;
+  --input: #48513f;
+  --ring: #a6b88a;
+  --brand-ink: #b3c696;
+  --sidebar-ground: #1d211b;
+  --sidebar-active: #30362b;
+  --table-rule: #30362c;
+}

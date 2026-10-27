@@ -33,8 +33,8 @@ export function ModeBadge({ mode }: { mode: string | null | undefined }) {
 export function Tile({ status, count, active, onClick }: { status: string; count: number; active: boolean; onClick: () => void }) {
   return (
     <button type="button" onClick={onClick} aria-pressed={active} data-status={status} aria-label={`${STATUS_LABEL[status]}: ${count} cases`}
-      className="tile flex flex-col items-start gap-1 rounded-lg border bg-card p-4 text-left transition hover:bg-muted/60 focus-visible:ring-2 focus-visible:ring-ring aria-pressed:border-foreground/40 aria-pressed:bg-muted">
-      <span className="text-3xl font-semibold tabular-nums">{count}</span>
+      className="tile">
+      <span className="outcome-count tabular-nums">{count}</span>
       <span className="flex items-center gap-2 text-sm text-muted-foreground">
         <span aria-hidden className="size-2.5 rounded-full bg-[var(--tile)]" />
         {STATUS_LABEL[status]}
@@ -69,9 +69,9 @@ export function ErrorBanner({ error, className = '' }: { error: unknown; classNa
 }
 
 export const Section = ({ title, aside, children }: { title: string; aside?: ReactNode; children: ReactNode }) => (
-  <section className="rounded-lg border bg-card p-4">
-    <div className="mb-3 flex items-center justify-between gap-2">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">{title}</h2>
+  <section className="work-section">
+    <div className="work-section-heading">
+      <h2>{title}</h2>
       {aside}
     </div>
     {children}

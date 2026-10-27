@@ -21,10 +21,10 @@ export function ClosureCard({ closure }: { closure: VarianceClosure }) {
         <Row label="Expected" value={amount(closure.expected_paise)} strong />
         <Row label="Received" value={amount(closure.received_paise)} />
       </dl>
-      <div className="mt-3 flex items-baseline gap-3 border-t pt-3">
+      <div className="closure-result">
         <span className="text-sm text-muted-foreground">Unexplained</span>
         <span data-testid="unexplained"
-          className={`text-4xl font-semibold tabular-nums ${zero ? 'text-[var(--status-verified-fg)]' : 'text-[var(--status-conflicting-fg)]'}`}>
+          className={`text-3xl font-semibold tabular-nums ${zero ? 'text-[var(--status-verified-fg)]' : 'text-[var(--status-conflicting-fg)]'}`}>
           ₹{amount(closure.unexplained_paise)}
         </span>
         <span className="text-xs text-muted-foreground">{zero ? 'closes to zero within tolerance' : 'not explained by any validated adjustment'}</span>

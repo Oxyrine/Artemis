@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { ArrowLeft } from 'lucide-react'
 import { useCase } from '@/api/hooks'
 import { ApiError } from '@/api/client'
 import { Badge } from '@/components/ui/badge'
@@ -32,10 +33,10 @@ export function CasePage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <Link to="/" className="text-sm text-muted-foreground hover:underline">← Dashboard</Link>
+      <div className="case-heading">
+        <Link to="/" className="back-link"><ArrowLeft size={14} />Receipt queue</Link>
         <div className="mt-1 flex flex-wrap items-center gap-3">
-          <h1 className="text-2xl font-semibold tracking-tight">{d.case_id}</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">{d.customer_name ?? d.case_id}</h1><span className="case-id-link">{d.customer_name ? d.case_id : ''}</span>
           <StatusPill status={d.status} /><StateBadge state={d.state} />
           {d.run && <ModeBadge mode={d.run.replay ? 'replay' : d.run.model === 'scripted' ? 'demo' : 'live'} />}
         </div>
@@ -47,10 +48,10 @@ export function CasePage() {
         </p>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_24rem]">
-        <div className="flex min-w-0 flex-col gap-6">
+      <div className="case-workspace">
+        <div className="case-main flex min-w-0 flex-col gap-6">
           {d.narrative && (
-            <Section title="Narrative" aside={d.narrative_source === 'template' ? <Badge variant="outline" title="Built from engine outputs. An LLM rewrite is only used when every figure and id checks out.">Template</Badge> : <Badge variant="secondary">Rephrased by the model</Badge>}>
+            <Section title="Investigation summary" aside={d.narrative_source === 'template' ? <Badge variant="outline" title="Built from engine outputs. An LLM rewrite is only used when every figure and id checks out.">Template</Badge> : <Badge variant="secondary">Rephrased by the model</Badge>}>
               <p className="text-sm leading-relaxed">{d.narrative}</p>
             </Section>
           )}

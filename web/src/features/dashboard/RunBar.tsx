@@ -1,4 +1,4 @@
-import { Play, RotateCcw } from 'lucide-react'
+import { Play, RotateCcw, Workflow } from 'lucide-react'
 import { useState } from 'react'
 import { useBatch, useModes, useReset, useRunBatch } from '@/api/hooks'
 import type { RunMode } from '@/api/types'
@@ -23,10 +23,11 @@ export function RunBar() {
   const chosen = modes.data?.modes.find((m) => m.mode === mode)
 
   return (
-    <div className="flex flex-col gap-3 rounded-lg border bg-card p-4">
-      <div className="flex flex-wrap items-end gap-3">
+    <div className="agent-toolbar">
+      <div className="agent-toolbar-row">
+        <div className="agent-description"><Workflow size={20} strokeWidth={1.5} /><div><strong>Investigation agent</strong><span>Gather evidence. Explain the difference.</span></div></div>
         <div className="flex flex-col gap-1">
-          <label htmlFor="mode" className="text-xs font-medium text-muted-foreground">Agent</label>
+          <label htmlFor="mode" className="sr-only">Agent mode</label>
           <NativeSelect id="mode" value={mode} disabled={running} onChange={(e) => setMode(e.target.value as RunMode)}>
             {modes.data?.modes.map((m) => (
               <option key={m.mode} value={m.mode} disabled={!m.available}>{m.label}{m.available ? '' : ' (unavailable)'}</option>
@@ -37,9 +38,7 @@ export function RunBar() {
           onClick={() => run.mutate(mode, { onSuccess: (d) => setBatchId(d.batch_id) })}>
           <Play /> {running ? 'Running…' : 'Run batch'}
         </Button>
-        <Button variant="outline" disabled={running} onClick={() => setConfirmReset(true)}>
-          <RotateCcw /> Reset environment
-        </Button>
+        <Button variant="ghost" size="icon" title="Reset environment" aria-label="Reset environment" disabled={running} onClick={() => setConfirmReset(true)}><RotateCcw /></Button>
         {b && <ModeBadge mode={b.mode} />}
       </div>
 
