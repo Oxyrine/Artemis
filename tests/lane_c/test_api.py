@@ -211,3 +211,13 @@ def test_spa_fallback_serves_the_ui_but_never_swallows_api_errors(tmp_path):
     assert c.get("/cases/CASE-0007").text == "<html>artemis</html>"  # a client-side route
     assert c.get("/api/nope").json()["error"] == "not_found"
     assert c.get("/..%2f..%2fpyproject.toml").text == "<html>artemis</html>"  # path traversal falls back to the UI
+
+
+def test_metrics_before_any_batch_is_an_empty_report_not_an_error(tmp_path):
+    deps = build_deps("real")  # environment loaded, no investigation yet
+    c = TestClient(create_app(deps, runs_dir=tmp_path / "runs", exports_dir=tmp_path / "exports",
+                              static_dir=tmp_path / "no-ui-build"))
+    r = c.get("/api/metrics")
+    assert r.status_code == 200
+    m = MetricsReport.model_validate(r.json())
+    assert m.runs == 0 and m.cases == 0 and m.verified_precision is None and m.confusion == {}

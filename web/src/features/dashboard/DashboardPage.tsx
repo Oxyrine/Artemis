@@ -140,7 +140,7 @@ function CaseTable({ rows }: { rows: CaseSummary[] }) {
 function MetricsPanel() {
   const m = useMetrics()
   if (m.isLoading) return <Skeleton className="h-28 w-full" />
-  if (!m.data) return <Section title="Evaluation metrics"><p className="text-sm text-muted-foreground">Run a batch to see precision, abstention accuracy and tool-path diversity.</p></Section>
+  if (!m.data || m.data.runs === 0) return <Section title="Evaluation metrics"><p className="text-sm text-muted-foreground">Run a batch to see precision, abstention accuracy and tool-path diversity.</p></Section>
   const x = m.data
   const cells: [string, string, string?][] = [
     ['Verified precision', pct(x.verified_precision), 'Cases graded Verified whose answer key is Verified. 100% means zero false clears.'],

@@ -216,8 +216,10 @@ def create_app(deps: Deps | None = None, *, static_dir: Path | str | None = None
     def metrics():
         d = D()
         outcomes = d.store.outcomes()
-        if not outcomes or not TRUTH_FILE.exists():
-            raise ApiError(404, "not_found", "no metrics yet: run a batch first")
+        if not outcomes or not TRUTH_FILE.exists():  # 200 with an empty report, not a 404: a fresh load is not an error
+            return MetricsReport(runs=0, cases=0, verified_precision=None, evidence_coverage=None, abstention_accuracy=None,
+                                 autonomous_completion=None, status_accuracy=None, allocation_accuracy=None, confusion={},
+                                 tool_path_diversity=0, mean_steps=0.0, mean_tokens=0.0, mean_seconds=0.0)
         truth = json.loads(TRUTH_FILE.read_text(encoding="utf-8"))
         auto = frozenset(c for c in truth if d.policy.state_of(c) == CaseState.AUTO_CLOSED)
         s = d.settings
