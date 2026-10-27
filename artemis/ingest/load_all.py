@@ -73,6 +73,7 @@ def load_all(db: Db, env_dir: Path | str = ENV_DIR) -> dict[str, int]:
             s.add(Invoice(id=r["invoice_no"], customer_id=r["customer_id"], invoice_date=r["invoice_date"],
                           due_date=r["due_date"], taxable_value=taxable, gst_amount=gst, gross_amount=gross,
                           po_ref=r["po_ref"], status=r["status"]))
+        s.flush()  # no relationship() links the mappers, so insert order is ours to keep (Postgres enforces the FKs)
 
         seen: set[str] = set()
         bank = _csv(env / "bank_statement.csv")
