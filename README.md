@@ -137,5 +137,5 @@ If the agent links a receipt that sits in another case (`propose_allocation` wit
 ### Not done yet
 - Dispute flags: no dispute data exists in the environment, and adding some changes the generator's answer key. The hook is `matcher.DISPUTED`.
 - The matcher's own entity resolutions write `customer_aliases` rows but no evidence row (the spec's derived item with the score): evidence belongs to Lane B's `RunStore`, so today the derived row appears when the agent calls `resolve_customer`.
-- Lane B's records (`agent_runs`, `tool_calls`, `hypotheses`, `evidence`, batches) are in memory (`InMemoryRunStore`, recorded to `runs/*.json` for replay), not tables, so they are not in the migrations and do not survive a restart.
+- Lane B's records (runs, tool calls, hypotheses, evidence, batches) are kept in memory and saved as one JSON document in the `run_snapshots` table after each batch, so traces and metrics survive a restart. They are not the spec's separate `agent_runs`/`tool_calls`/`hypotheses`/`evidence` tables.
 - Not done here: the hosted copy, the backup video, and the analyst-effort stopwatch figures.

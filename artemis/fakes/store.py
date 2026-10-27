@@ -64,24 +64,29 @@ class InMemoryRunStore:
         return list(self._outcomes.values())
 
     # JSON persistence so a recorded batch survives the process (replay is the offline demo fallback)
+    def to_dict(self) -> dict:
+        dump = lambda xs: [x.model_dump(mode="json") for x in xs]  # noqa: E731
+        return {"runs": dump(self._runs.values()), "calls": dump(c for v in self._calls.values() for c in v),
+                "hyps": dump(h for v in self._hyps.values() for h in v), "ev": dump(e for v in self._ev.values() for e in v),
+                "batches": dump(self._batches.values()), "outcomes": dump(self._outcomes.values())}
+
     def save(self, path) -> None:
         import json
         from pathlib import Path
-        dump = lambda xs: [x.model_dump(mode="json") for x in xs]  # noqa: E731
         Path(path).parent.mkdir(parents=True, exist_ok=True)
-        Path(path).write_text(json.dumps({
-            "runs": dump(self._runs.values()), "calls": dump(c for v in self._calls.values() for c in v),
-            "hyps": dump(h for v in self._hyps.values() for h in v), "ev": dump(e for v in self._ev.values() for e in v),
-            "batches": dump(self._batches.values()), "outcomes": dump(self._outcomes.values())}, indent=1),
-            encoding="utf-8")
+        Path(path).write_text(json.dumps(self.to_dict(), indent=1), encoding="utf-8")
 
     @classmethod
     def load(cls, path) -> "InMemoryRunStore":
         import json
-        import re
         from pathlib import Path
+        return cls.from_dict(json.loads(Path(path).read_text(encoding="utf-8")))
+
+    @classmethod
+    def from_dict(cls, d: dict) -> "InMemoryRunStore":
+        import re
         from artemis.models import AgentRun, CaseOutcome, Evidence, Hypothesis, ToolCall
-        d, s = json.loads(Path(path).read_text(encoding="utf-8")), cls()
+        s = cls()
         for r in d["runs"]:
             s.save_run(AgentRun(**r))
         for c in d["calls"]:

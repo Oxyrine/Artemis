@@ -1,6 +1,6 @@
 import { Play, RotateCcw, Workflow } from 'lucide-react'
 import { useState } from 'react'
-import { useBatch, useModes, useReset, useRunBatch } from '@/api/hooks'
+import { useBatch, useCases, useModes, useReset, useRunBatch } from '@/api/hooks'
 import type { RunMode } from '@/api/types'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
@@ -16,11 +16,15 @@ export function RunBar() {
   const run = useRunBatch()
   const reset = useReset()
   const batch = useBatch(batchId)
+  const cases = useCases()
+  // nothing NEW means the server would answer 409: say so instead of offering a button that can only fail
+  const nothingNew = !!cases.data?.cases.length && cases.data.cases.every((c) => c.state !== 'NEW')
 
   const running = run.isPending || !!batch.data?.running
   const b = batch.data
   const pct = b && b.total ? Math.round((100 * b.done) / b.total) : 0
   const chosen = modes.data?.modes.find((m) => m.mode === mode)
+  const allDone = nothingNew && mode !== 'replay'
 
   return (
     <div className="agent-toolbar">
@@ -34,7 +38,7 @@ export function RunBar() {
             )) ?? <option value="demo">Demo agent</option>}
           </NativeSelect>
         </div>
-        <Button id="run-batch" disabled={running || chosen?.available === false}
+        <Button id="run-batch" disabled={running || allDone || chosen?.available === false}
           onClick={() => run.mutate(mode, { onSuccess: (d) => setBatchId(d.batch_id) })}>
           <Play /> {running ? 'Running…' : 'Run batch'}
         </Button>
@@ -42,6 +46,7 @@ export function RunBar() {
         {b && <ModeBadge mode={b.mode} />}
       </div>
 
+      {allDone && !running && <p className="text-sm text-muted-foreground">Every case has already been investigated. Reset the environment to run the batch again.</p>}
       {chosen && !chosen.available && <p className="text-sm text-muted-foreground">{chosen.reason}</p>}
       {b && (
         <div className="flex flex-col gap-1" role="status" aria-live="polite">

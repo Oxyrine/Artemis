@@ -153,6 +153,15 @@ class Review(Base):
     decided_at: Mapped[str] = mapped_column(String)
 
 
+class RunSnapshot(Base):
+    """Lane B's run records (runs, tool calls, hypotheses, evidence, batches, outcomes) as one JSON document, written after
+    each batch and loaded on start, so traces and metrics survive a restart of a host whose memory is not durable."""
+    __tablename__ = "run_snapshots"
+    id: Mapped[str] = mapped_column(String, primary_key=True)  # 'latest'
+    payload: Mapped[dict] = mapped_column(JSON)
+    saved_at: Mapped[str] = mapped_column(String)
+
+
 def normalize_url(url: str) -> str:
     """Hosts hand out postgres:// or postgresql:// URLs; SQLAlchemy needs the psycopg 3 driver spelled out."""
     for scheme in ("postgres://", "postgresql://"):

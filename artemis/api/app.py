@@ -26,7 +26,7 @@ from artemis.api.security import ApiError, RateLimiter, SecurityMiddleware, requ
 from artemis.api.views import (AppliedInvoice, AuditEventView, AuditList, BatchRunRequest, BatchStarted, CaseDetail,
                                CaseList, EvidenceGraph, ModeInfo, Modes, ResetResult, ReviewRequest, ReviewResult,
                                ReviewerView, TamperResult, VerifyResult)
-from artemis.db import Allocation, Case, Invoice, Review, Reviewer
+from artemis.db import Allocation, Case, Invoice, Review, Reviewer, RunSnapshot
 from artemis.fakes.scripted import golden_agent
 from artemis.fakes.store import InMemoryRunStore
 from artemis.models import CaseState
@@ -44,12 +44,39 @@ def _now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="milliseconds")
 
 
+def persist_run_records(d: Deps) -> None:
+    """Keep the run records in the database (see RunSnapshot): the process may be restarted, the database is not."""
+    db = getattr(d.core, "db", None)
+    if db is None:
+        return
+    with db.tx() as s:
+        row = s.get(RunSnapshot, "latest") or RunSnapshot(id="latest", payload={}, saved_at="")
+        row.payload, row.saved_at = d.store.to_dict(), _now()
+        s.add(row)
+
+
+def restore_run_records(d: Deps) -> None:
+    """Load the last batch's run records, if the database holds them (a reset or a fresh seed has none)."""
+    db = getattr(d.core, "db", None)
+    if db is None:
+        return
+    try:
+        with db.tx() as s:
+            row = s.get(RunSnapshot, "latest")
+            payload = row.payload if row else None
+    except Exception:  # an un-migrated database has no table yet: start with an empty store, as before
+        return
+    if payload:
+        d.store = InMemoryRunStore.from_dict(payload)
+
+
 def create_app(deps: Deps | None = None, *, static_dir: Path | str | None = None, runs_dir: Path | str | None = None,
                exports_dir: Path | str | None = None) -> FastAPI:
     # ARTEMIS_PREPARE=0: the database is already migrated and seeded (scripts/seed.py), so do not wipe it on start
     deps = deps or build_deps("real", prepare=os.environ.get("ARTEMIS_PREPARE", "1") != "0")
     runs = Path(runs_dir or os.environ.get("RUNS_DIR") or ROOT / "runs")
     exports = Path(exports_dir or os.environ.get("EXPORTS_DIR") or ROOT / "exports")
+    restore_run_records(deps)
     app = FastAPI(title="Artemis", docs_url=None, redoc_url=None, openapi_url="/api/openapi.json")
     app.state.deps, app.state.limiter = deps, RateLimiter()
     app.state.current = {"batch_id": None}
@@ -127,6 +154,7 @@ def create_app(deps: Deps | None = None, *, static_dir: Path | str | None = None
             if mode != "replay":
                 runs.mkdir(parents=True, exist_ok=True)
                 d.store.save(runs / f"latest-{mode}.json")
+                persist_run_records(d)
 
         bid = start_batch(d, factory, replay_of=replay_of, on_done=finished, mode=mode)
         app.state.current["batch_id"] = bid
