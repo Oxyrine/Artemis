@@ -10,7 +10,7 @@ from alembic.config import Config
 from sqlalchemy import select
 
 from artemis.audit.signing import key_path, load_or_create_key
-from artemis.db import Case, Db, Reviewer
+from artemis.db import Case, Db, Reviewer, normalize_url
 from artemis.ingest.load_all import load_all
 from artemis.wiring import build_deps
 
@@ -41,6 +41,6 @@ def seed(url: str) -> dict:
 
 if __name__ == "__main__":
     os.chdir(ROOT)
-    url = os.environ.get("DATABASE_URL") or "sqlite:///data/artemis.db"
+    url = normalize_url(os.environ.get("DATABASE_URL") or "sqlite:///data/artemis.db")
     os.environ["DATABASE_URL"] = url
     print("seeded:", seed(url))

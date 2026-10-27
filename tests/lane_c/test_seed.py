@@ -22,3 +22,11 @@ def test_seed_migrates_loads_once_and_creates_the_key(tmp_path, monkeypatch):
     assert again["cases"] == 40 and key.read_bytes() == key_bytes
     with create_engine(url).connect() as c:
         assert c.execute(text("SELECT count(*) FROM audit_events")).scalar() == events
+
+
+def test_host_style_database_urls_get_the_psycopg_driver():
+    from artemis.db import normalize_url
+    assert normalize_url("postgres://u:p@h/db") == "postgresql+psycopg://u:p@h/db"
+    assert normalize_url("postgresql://u:p@h/db") == "postgresql+psycopg://u:p@h/db"
+    assert normalize_url("postgresql+psycopg://u:p@h/db") == "postgresql+psycopg://u:p@h/db"
+    assert normalize_url("sqlite:///x.db") == "sqlite:///x.db"

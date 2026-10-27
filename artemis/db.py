@@ -153,9 +153,17 @@ class Review(Base):
     decided_at: Mapped[str] = mapped_column(String)
 
 
+def normalize_url(url: str) -> str:
+    """Hosts hand out postgres:// or postgresql:// URLs; SQLAlchemy needs the psycopg 3 driver spelled out."""
+    for scheme in ("postgres://", "postgresql://"):
+        if url.startswith(scheme):
+            return "postgresql+psycopg://" + url[len(scheme):]
+    return url
+
+
 def make_engine(url: str | None = None) -> Engine:
     """DATABASE_URL (default: sqlite file under data/). `sqlite://` gives a private in-memory DB for tests."""
-    url = url or os.environ.get("DATABASE_URL", "sqlite:///data/artemis.db")
+    url = normalize_url(url or os.environ.get("DATABASE_URL", "sqlite:///data/artemis.db"))
     if url == "sqlite://":  # one shared connection so every session sees the same in-memory DB
         return create_engine(url, connect_args={"check_same_thread": False}, poolclass=StaticPool)
     return create_engine(url, connect_args={"check_same_thread": False} if url.startswith("sqlite") else {})

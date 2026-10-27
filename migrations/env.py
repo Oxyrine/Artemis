@@ -7,7 +7,7 @@ from alembic import context
 from sqlalchemy import create_engine
 
 import artemis.audit.models  # noqa: F401  (registers the ledger tables on Base.metadata)
-from artemis.db import Base
+from artemis.db import Base, normalize_url
 
 config = context.config
 if config.config_file_name is not None:
@@ -16,7 +16,7 @@ target_metadata = Base.metadata
 
 
 def _url() -> str:
-    return config.get_main_option("sqlalchemy.url") or os.environ.get("DATABASE_URL", "sqlite:///data/artemis.db")
+    return normalize_url(config.get_main_option("sqlalchemy.url") or os.environ.get("DATABASE_URL", "sqlite:///data/artemis.db"))
 
 
 def run_migrations_offline() -> None:
