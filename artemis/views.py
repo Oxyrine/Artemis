@@ -35,6 +35,7 @@ class BatchStatus(BaseModel):  # GET /batch/{id}
     schema_version: int = SCHEMA_VERSION
     batch_id: str
     replay: bool = False
+    mode: str = ""  # demo | replay | live (set by the API; empty for CLI runs)
     total: int = 0
     done: int = 0
     running: bool = True

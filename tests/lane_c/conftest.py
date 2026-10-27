@@ -26,3 +26,9 @@ def fill(ledger, n=5):
 def real():
     from artemis.wiring import build_deps
     return build_deps("real")
+
+
+@pytest.fixture(autouse=True)
+def _signing_key(tmp_path, monkeypatch):
+    """Never create or read the real data/signing_key.pem from a test."""
+    monkeypatch.setenv("SIGNING_KEY_PATH", str(tmp_path / "signing_key.pem"))

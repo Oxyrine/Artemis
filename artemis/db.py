@@ -141,6 +141,18 @@ class Reviewer(Base):
     approval_limit_paise: Mapped[int | None] = mapped_column(Integer, nullable=True)  # None = unlimited
 
 
+class Review(Base):
+    """A named reviewer's decision (Lane C writes it; the policy engine decides whether the move is legal)."""
+    __tablename__ = "reviews"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    case_id: Mapped[str] = mapped_column(ForeignKey("cases.id"))
+    reviewer_id: Mapped[str] = mapped_column(ForeignKey("reviewers.id"))
+    decision: Mapped[str] = mapped_column(String)  # approve | reject | request_evidence
+    comment: Mapped[str] = mapped_column(Text, default="")
+    policy_id: Mapped[str] = mapped_column(String, default="policy-v1")
+    decided_at: Mapped[str] = mapped_column(String)
+
+
 def make_engine(url: str | None = None) -> Engine:
     """DATABASE_URL (default: sqlite file under data/). `sqlite://` gives a private in-memory DB for tests."""
     url = url or os.environ.get("DATABASE_URL", "sqlite:///data/artemis.db")

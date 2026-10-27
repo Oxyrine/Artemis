@@ -30,6 +30,11 @@
       "title": "Errors",
       "type": "object"
     },
+    "mode": {
+      "default": "",
+      "title": "Mode",
+      "type": "string"
+    },
     "replay": {
       "default": false,
       "title": "Replay",

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import threading
 from typing import Callable
 
 from artemis.agent.llm import LLMClient
@@ -32,15 +33,46 @@ def _client(factory, case_id):
         return _Unavailable(e)
 
 
+def _select(deps, case_ids, replay_of) -> list[str]:
+    if case_ids:
+        return case_ids
+    if replay_of:
+        return sorted(deps.store.get_batch(replay_of).run_ids)
+    return [c for c in deps.core.new_case_ids() if deps.policy.state_of(c) == CaseState.NEW]
+
+
+def start_batch(deps, llm_factory: Callable[[str], LLMClient] | None, *, case_ids: list[str] | None = None,
+                concurrency: int | None = None, replay_of: str | None = None, limits: Limits = Limits(),
+                on_done: Callable[[BatchStatus], None] | None = None, mode: str = "") -> str:
+    """Create the batch, return its id at once and run it on a background thread (POST /batch/run polls GET /batch/{id})."""
+    ids = _select(deps, case_ids, replay_of)
+    batch = BatchStatus(batch_id=deps.store.next_id("BATCH"), replay=bool(replay_of), mode=mode, total=len(ids))
+    deps.store.save_batch(batch)
+
+    def work() -> None:
+        try:
+            asyncio.run(run_batch(deps, llm_factory, case_ids=ids, concurrency=concurrency, replay_of=replay_of,
+                                  limits=limits, batch=batch))
+        except Exception as e:  # never leave a batch 'running' forever
+            batch.running, batch.errors["batch"] = False, f"{type(e).__name__}: {e}"
+            deps.store.save_batch(batch)
+        finally:
+            if on_done:
+                on_done(deps.store.get_batch(batch.batch_id))
+
+    threading.Thread(target=work, daemon=True, name=batch.batch_id).start()
+    return batch.batch_id
+
+
 async def run_batch(deps, llm_factory: Callable[[str], LLMClient] | None, *, case_ids: list[str] | None = None,
-                    concurrency: int | None = None, replay_of: str | None = None,
-                    limits: Limits = Limits()) -> BatchStatus:
+                    concurrency: int | None = None, replay_of: str | None = None, limits: Limits = Limits(),
+                    batch: BatchStatus | None = None) -> BatchStatus:
     store = deps.store
     recorded = store.get_batch(replay_of).run_ids if replay_of else {}
-    ids = case_ids or (sorted(recorded) if replay_of else
-                       [c for c in deps.core.new_case_ids() if deps.policy.state_of(c) == CaseState.NEW])
-    batch = BatchStatus(batch_id=store.next_id("BATCH"), replay=bool(replay_of), total=len(ids))
-    store.save_batch(batch)
+    ids = _select(deps, case_ids, replay_of)
+    if batch is None:
+        batch = BatchStatus(batch_id=store.next_id("BATCH"), replay=bool(replay_of), total=len(ids))
+        store.save_batch(batch)
     deps.audit.append(None, "BATCH_STARTED", "system", {"batch_id": batch.batch_id, "total": len(ids),
                                                         "replay_of": replay_of})
     sem = asyncio.Semaphore(concurrency or deps.settings.concurrency)
