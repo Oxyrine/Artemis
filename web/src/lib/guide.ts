@@ -50,12 +50,15 @@ export const TOOL_LABEL: Record<string, string> = {
   finish: 'Finish and hand over for grading',
 }
 
-export type GuideLink = { label: string; to: string; action?: 'run-batch' }
+/** Fired to reopen the dashboard explainer when a guide step points at it after the visitor dismissed it. */
+export const WELCOME_EVENT = 'artemis:show-welcome'
+
+export type GuideLink = { label: string; to: string; action?: 'run-batch' | 'show-welcome' }
 export type GuideStep = { id: string; title: string; body: string; links: GuideLink[] }
 
 /** The spec's five-minute demo script, as steps a visitor can follow without a presenter. */
 export const GUIDE_STEPS: GuideStep[] = [
-  { id: 'problem', title: 'The problem', links: [{ label: 'Show me', to: '/' }],
+  { id: 'problem', title: 'The problem', links: [{ label: 'Show me', to: '/', action: 'show-welcome' }],
     body: 'A customer pays ₹15,08,000 against ₹15,34,000 of invoices. Where did the ₹26,000 go? Finance teams chase this one receipt at a time. Artemis does the legwork and shows its evidence.' },
   { id: 'batch', title: 'Run the batch', links: [{ label: 'Run it for me', to: '/', action: 'run-batch' }],
     body: 'Artemis matches payments to invoices, closes the exact ones itself, then sends an agent to investigate every exception. Watch the outcome tiles fill in.' },

@@ -1,8 +1,8 @@
 import { Compass, FileSearch, GitMerge, Landmark, Scale, ShieldCheck, UserCheck, X } from 'lucide-react'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, buttonVariants } from '@/components/ui/button'
-import { HERO_CASE, HERO_FACTS } from '@/lib/guide'
+import { HERO_CASE, HERO_FACTS, WELCOME_EVENT } from '@/lib/guide'
 import { rupees } from '@/lib/format'
 import { Term } from '@/ui/Term'
 import { useGuide } from '../guide/GuideProvider'
@@ -16,6 +16,11 @@ export function useWelcome() {
     setHidden(v)
     try { localStorage.setItem(KEY, v ? '1' : '0') } catch { /* ignore */ }
   }, [])
+  useEffect(() => { // the guided demo can ask for the explainer to come back
+    const open = () => set(false)
+    window.addEventListener(WELCOME_EVENT, open)
+    return () => window.removeEventListener(WELCOME_EVENT, open)
+  }, [set])
   return { hidden, hide: () => set(true), show: () => set(false) }
 }
 
@@ -30,7 +35,7 @@ export function Welcome({ onHide }: { onHide: () => void }) {
   const guide = useGuide()
   const f = HERO_FACTS
   return (
-    <section className="welcome" aria-labelledby="welcome-title">
+    <section id="welcome" className="welcome" aria-labelledby="welcome-title">
       <button type="button" className="welcome-close" onClick={onHide} aria-label="Hide this introduction"><X size={16} /></button>
       <div className="welcome-lead">
         <p className="welcome-kicker"><Landmark size={14} />Accounts receivable, explained</p>

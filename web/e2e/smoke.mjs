@@ -51,6 +51,13 @@ try {
   await page.getByRole('button', { name: 'Reset environment' }).click()
   await page.getByTestId('verify-ok').waitFor()
 
+  step('run the batch from the guided demo (the environment was just reset)')
+  await page.getByRole('link', { name: 'Reconciliation' }).click()
+  await page.getByRole('button', { name: 'Guided demo' }).first().click()
+  await page.getByRole('button', { name: /Next/ }).click()
+  await page.getByRole('button', { name: /Run it for me/ }).click()
+  await page.getByText(/Done: \d+ of \d+ investigated/).waitFor({ timeout: 180_000 })
+
   console.log('smoke passed')
 } catch (e) {
   await page.screenshot({ path: 'e2e/failure.png', fullPage: true }).catch(() => {})

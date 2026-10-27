@@ -1,27 +1,22 @@
 import { Play, RotateCcw, Workflow } from 'lucide-react'
 import { useState } from 'react'
-import { useBatch, useCases, useModes, useReset, useRunBatch } from '@/api/hooks'
+import { useModes } from '@/api/hooks'
 import type { RunMode } from '@/api/types'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { ConfirmDialog, NativeSelect } from '@/ui/controls'
 import { ErrorBanner, ModeBadge } from '@/ui/primitives'
+import { useBatchRunner } from './BatchProvider'
 
 /** "Run batch" with the agent mode switch, a progress bar fed by polling, and a demo-only reset. */
 export function RunBar() {
   const modes = useModes()
   const [mode, setMode] = useState<RunMode>('demo')
-  const [batchId, setBatchId] = useState<string | null>(null)
   const [confirmReset, setConfirmReset] = useState(false)
-  const run = useRunBatch()
-  const reset = useReset()
-  const batch = useBatch(batchId)
-  const cases = useCases()
+  const runner = useBatchRunner()
   // nothing NEW means the server would answer 409: say so instead of offering a button that can only fail
-  const nothingNew = !!cases.data?.cases.length && cases.data.cases.every((c) => c.state !== 'NEW')
-
-  const running = run.isPending || !!batch.data?.running
-  const b = batch.data
+  const { running, nothingNew } = runner
+  const b = runner.status
   const pct = b && b.total ? Math.round((100 * b.done) / b.total) : 0
   const chosen = modes.data?.modes.find((m) => m.mode === mode)
   const allDone = nothingNew && mode !== 'replay'
@@ -39,7 +34,7 @@ export function RunBar() {
           </NativeSelect>
         </div>
         <Button id="run-batch" disabled={running || allDone || chosen?.available === false}
-          onClick={() => run.mutate(mode, { onSuccess: (d) => setBatchId(d.batch_id) })}>
+          onClick={() => runner.run(mode)}>
           <Play /> {running ? 'Running…' : 'Run batch'}
         </Button>
         <Button variant="ghost" size="icon" title="Reset environment" aria-label="Reset environment" disabled={running} onClick={() => setConfirmReset(true)}><RotateCcw /></Button>
@@ -57,15 +52,15 @@ export function RunBar() {
           </p>
         </div>
       )}
-      <ErrorBanner error={run.error ?? reset.error} />
+      <ErrorBanner error={runner.runError ?? runner.resetError} />
       {b && Object.keys(b.errors).length > 0 && (
         <ErrorBanner error={new Error(`${Object.keys(b.errors).length} case(s) failed and were sent to review: ${Object.values(b.errors)[0]}`)} />
       )}
 
       <ConfirmDialog open={confirmReset} onOpenChange={setConfirmReset} title="Reset the environment?"
         description="This reloads the 40-case seed data and clears every decision, run and audit event. It is a demo-only action."
-        confirmLabel="Reset" pending={reset.isPending}
-        onConfirm={() => reset.mutate(undefined, { onSuccess: () => { setConfirmReset(false); setBatchId(null) } })} />
+        confirmLabel="Reset" pending={runner.resetPending}
+        onConfirm={() => runner.reset(() => setConfirmReset(false))} />
     </div>
   )
 }

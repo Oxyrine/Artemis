@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { DemoGuide } from '@/features/guide/DemoGuide'
+import { BatchProvider } from '@/features/dashboard/BatchProvider'
 import { GuideProvider, useGuide } from '@/features/guide/GuideProvider'
 import { useReviewer, useTheme } from './providers'
 
@@ -10,7 +11,7 @@ const link = ({ isActive }: { isActive: boolean }) =>
   `workspace-link ${isActive ? 'is-active' : ''}`
 
 export function Layout() {
-  return <GuideProvider><Shell /></GuideProvider>
+  return <GuideProvider><BatchProvider><Shell /></BatchProvider></GuideProvider>
 }
 
 function Shell() {
