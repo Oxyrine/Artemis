@@ -16,7 +16,7 @@ from artemis.grading import grader, variance
 from artemis.grading.policy import SqlPolicy
 from artemis.ingest.load_all import ENV_DIR, load_all
 from artemis.matching import matcher, names
-from artemis.models import (AllocationResult, CoreError, CoreResult, Evidence, EvidenceRef, Grade, Tier)
+from artemis.models import (AllocationResult, CaseState, CoreError, CoreResult, Evidence, EvidenceRef, Grade, Tier)
 from artemis.money import quarter_of
 from artemis.ports import AuditSink
 from artemis.rules import withholding
@@ -202,12 +202,31 @@ class SqlCore:
             return CoreResult(data={"candidates": res.candidates}, refs=refs)
 
     # ---- variance engine + grader
+    def _absorb_receipts(self, s, case_id: str, utrs: list[str]) -> None:
+        """A receipt the agent links to this case but that sits in another case moves here. A case left with no receipts
+        becomes MERGED with a pointer (through the policy engine, so the move is audited). Only a case nobody has started
+        (NEW) can be absorbed: a receipt in an investigated, applied or closed case is a conflict, not a merge."""
+        for utr in dict.fromkeys(utrs):
+            r = s.get(BankReceipt, utr)
+            if r is None or r.case_id in (None, case_id):
+                continue
+            donor = s.get(Case, r.case_id)
+            if donor.state != CaseState.NEW.value:
+                raise CoreError("conflict", f"receipt {utr} belongs to {donor.id}, which is {donor.state}: only a case that "
+                                            f"has not been investigated can be merged")
+            r.case_id = case_id
+            s.flush()
+            if not s.scalars(select(BankReceipt.utr).where(BankReceipt.case_id == donor.id)).first():
+                donor.merged_into = case_id
+                self.policy.apply(s, donor.id, CaseState.MERGED, "agent")
+
     def propose_allocation(self, case_id, utrs, allocations, adjustments) -> AllocationResult:
         with self.db.tx() as s:
             case = s.get(Case, case_id)
             if case is None:
                 raise CoreError("not_found", f"case {case_id}")
             res = variance.propose(s, case_id, utrs, allocations, adjustments)
+            self._absorb_receipts(s, case_id, utrs)
             for model in (Allocation, Adjustment):  # the latest proposal replaces the previous one
                 for old in s.scalars(select(model).where(model.case_id == case_id)):
                     s.delete(old)
