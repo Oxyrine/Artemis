@@ -81,11 +81,12 @@ uv run python -m scripts.tamper [seq]            # edit one audit event as the D
 ```bash
 make demo        # docker compose: postgres 16 + api + web (nginx). Migrates, seeds, serves on http://localhost:8080
 make demo-down   # stop and delete the volumes
-make seed        # the same migrate + seed step without Docker (DATABASE_URL, SIGNING_KEY_PATH)
+make demo-local  # no Docker: build the UI, seed SQLite, serve everything on http://localhost:8000 (set DATABASE_URL for Postgres)
+make seed        # just the migrate + seed step (DATABASE_URL, SIGNING_KEY_PATH)
 make smoke       # build the UI and run the Playwright smoke test (BASE_URL, default http://localhost:8000)
 ```
 
-`deploy/docker-compose.yml` starts the three services. The api container runs `scripts/seed.py` (Alembic to head, create the Ed25519 signing key if it is missing, load `data/env` and run the matcher if the database is empty) and then one uvicorn worker with `ARTEMIS_PREPARE=0`, so a restart keeps the database and the ledger. `.env.example` lists every variable. The smoke test (`web/e2e/smoke.mjs`) resets the environment, runs the batch, opens the hero case, approves it as the analyst and verifies the chain; it needs a server in demo mode without `ARTEMIS_API_TOKEN`.
+`deploy/docker-compose.yml` starts the three services. The api container runs `scripts/seed.py` (Alembic to head, create the Ed25519 signing key if it is missing, load `data/env` and run the matcher if the database is empty) and then one uvicorn worker with `ARTEMIS_PREPARE=0`, so a restart keeps the database and the ledger. `.env.example` lists every variable. The images build and the stack runs: the smoke test passes through nginx on :8080, data and the ledger survive an api restart, and `docker exec <api> python -m scripts.tamper 5` turns Verify chain red at event 5. The smoke test (`web/e2e/smoke.mjs`) resets the environment, runs the batch, opens the hero case, approves it as the analyst and verifies the chain; it needs a server in demo mode without `ARTEMIS_API_TOKEN`.
 
 ## Database and migrations
 
@@ -129,4 +130,4 @@ If the agent links a receipt that sits in another case (`propose_allocation` wit
 - Dispute flags: no dispute data exists in the environment, and adding some changes the generator's answer key. The hook is `matcher.DISPUTED`.
 - The matcher's own entity resolutions write `customer_aliases` rows but no evidence row (the spec's derived item with the score): evidence belongs to Lane B's `RunStore`, so today the derived row appears when the agent calls `resolve_customer`.
 - Lane B's records (`agent_runs`, `tool_calls`, `hypotheses`, `evidence`, batches) are in memory (`InMemoryRunStore`, recorded to `runs/*.json` for replay), not tables, so they are not in the migrations and do not survive a restart.
-- Not done here: a Docker image build (compose file validated, images not built), the hosted copy, the backup video, and the analyst-effort stopwatch figures.
+- Not done here: the hosted copy, the backup video, and the analyst-effort stopwatch figures.

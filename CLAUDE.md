@@ -13,7 +13,7 @@ uv run python -m scripts.export_schemas         # regenerate contracts/*.schema.
 uv run python -m scripts.export_openapi         # regenerate contracts/openapi.json (a test fails on drift)
 uv run alembic revision --autogenerate -m "..." # after any model change (a test fails when models and migrations disagree)
 uv run python -m scripts.serve                  # API on :8000 (+ web/dist if built); cd web && npm test / npm run dev for the UI
-uv run python -m scripts.seed                   # migrate + signing key + load data/env into DATABASE_URL (idempotent); `make demo` = compose stack
+uv run python -m scripts.seed                   # migrate + signing key + load data/env into DATABASE_URL (idempotent); `make demo` = compose stack, `make demo-local` = same without Docker
 make smoke                                      # Playwright smoke (needs a server in demo mode: BASE_URL)
 uv run python -m eval.run --backend real --scripted --runs 3   # full 40-case pipeline with the offline oracle agent
 ARTEMIS_BACKEND=real uv run --env-file .env python -m scripts.debug_case CASE-0033     # trace one live case

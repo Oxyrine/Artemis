@@ -15,3 +15,8 @@ seed:
 	uv run python -m scripts.seed
 smoke:
 	cd web && npm run build && npm run e2e
+
+demo-local:
+	cd web && npm ci && npm run build
+	uv run python -m scripts.seed
+	ARTEMIS_PREPARE=0 uv run python -m scripts.serve

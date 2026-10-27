@@ -10,6 +10,8 @@ COPY migrations ./migrations
 COPY artemis ./artemis
 COPY data ./data
 COPY contracts ./contracts
+COPY eval ./eval
+COPY fixtures ./fixtures
 COPY scripts ./scripts
 COPY deploy/api-entrypoint.sh /usr/local/bin/api-entrypoint.sh
 ENV PATH="/app/.venv/bin:$PATH" PYTHONPATH=/app SIGNING_KEY_PATH=/keys/signing_key.pem ARTEMIS_PREPARE=0
