@@ -284,20 +284,21 @@ await step('phone: every page fits the screen', async () => {
   }
 })
 
-await step('phone: the menu opens, scrolls to the reviewer and closes on navigation', async () => {
+await step('phone: floating navigation stays visible and its menu closes on navigation', async () => {
   await mp.goto(BASE)
+  await mp.evaluate(() => window.scrollTo(0, 500))
+  check(await mp.evaluate(() => document.querySelector('.floating-navigation').getBoundingClientRect().top === 12), 'navigation stays at the top on scroll')
   await mp.getByRole('button', { name: 'Open navigation' }).click()
-  const sb = mp.locator('.workspace-sidebar')
-  await sb.waitFor()
-  const reachable = await mp.evaluate(() => { const r = document.querySelector('.reviewer-identity'); r.scrollIntoView({ block: 'end' }); const b = r.getBoundingClientRect(); return b.top >= 0 && b.bottom <= innerHeight })
-  check(reachable, 'reviewer row reachable in the menu')
+  await mp.getByRole('navigation', { name: 'Main' }).waitFor()
+  await mp.keyboard.press('Escape')
+  check(await mp.getByRole('button', { name: 'Open navigation' }).evaluate(el => el === document.activeElement), 'Escape closes menu and restores focus')
+  await mp.getByRole('button', { name: 'Open navigation' }).click()
   await mp.getByRole('link', { name: 'Agent paths' }).click()
-  await mp.waitForFunction(() => !document.querySelector('.workspace-sidebar.menu-open'))
+  await mp.waitForFunction(() => !document.querySelector('.floating-navigation.menu-open'))
 })
 
 await step('phone: the guided demo panel fits and works', async () => {
   await mp.goto(BASE)
-  await mp.getByRole('button', { name: 'Open navigation' }).click()
   await mp.getByRole('button', { name: 'Guided demo' }).first().click()
   const box = await mp.getByRole('complementary', { name: 'Guided demo' }).boundingBox()
   check(box.x >= 0 && box.x + box.width <= 390, 'guide panel inside the screen')

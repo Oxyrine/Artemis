@@ -1,5 +1,7 @@
 # Artemis
 
+Navigation preference: replace the left sidebar with a compact curved top navbar, fixed while scrolling. Remove the decorative tagline, workflow chain, breadcrumb bar and duplicate reviewer identity. Preserve the three main routes, guided demo and theme toggle. Keep reviewer selection in the decision panel.
+
 Visual preference: the user explicitly rejects repeated cards and badges as generic. Use open document sections, whitespace, table rules and column separators as the default. Reserve enclosed surfaces for controls that need containment, such as the evidence graph viewport, floating guide and confirmation dialogs. Omit case-header status/mode badges, the “Synthetic environment” header label and the “Receivables workspace / INR” sidebar strip. Keep synthetic-data disclosure in the footer and meaningful status text in the receipt queue and review explanation.
 
 Artemis is a synthetic Indian accounts-receivable reconciliation workspace for analysts and controllers. Its deterministic core and investigating agent explain differences between bank receipts and invoices. Reviewers inspect evidence and make policy-controlled decisions, recorded in a hash-linked audit ledger.

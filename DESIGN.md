@@ -82,7 +82,9 @@ typography:
     fontFeature: "tnum"
 rounded:
   badge: "4px"
-  navigation: "7px"
+  navigation: "24px"
+  navbar: "40px"
+  navbar-mobile: "32px"
   control: "6px"
   document: "0px"
   floating: "12px"
@@ -121,7 +123,8 @@ components:
     backgroundColor: "{colors.sidebar-active}"
     textColor: "{colors.sidebar-ink}"
     rounded: "{rounded.navigation}"
-    padding: "13px 12px"
+    padding: "0 14px"
+    height: "44px"
   status-verified:
     textColor: "{colors.status-verified-fg}"
     padding: "0"
@@ -141,14 +144,14 @@ components:
 
 **Creative North Star: "The Annual Report"**
 
-Artemis uses the hierarchy of an annual report: deep ink navigation, a cool paper canvas, cobalt actions, Instrument Serif headings and precise Geist figures. Open document sections, whitespace and thin rules carry the composition.
+Artemis uses the hierarchy of an annual report: a compact floating navigation bar, a cool paper canvas, cobalt actions, Instrument Serif headings and precise Geist figures. Open document sections, whitespace and thin rules carry the composition.
 
 Receipts, variance closure and evidence share the page without repeated card containers. The variance bridge uses actual explained and held paise; meaningful status and provenance appear as plain text. Enclosed surfaces are reserved for controls and interactions that require containment.
 
 **Key Characteristics:**
 
 - Open document sections and column separators.
-- Deep navy navigation, cobalt actions and cool paper.
+- Curved floating navigation, cobalt actions and cool paper.
 - Self-hosted Instrument Serif titles with Geist records and tabular figures.
 - Actual variance proportions and plain-language review evidence.
 
@@ -159,7 +162,7 @@ The final visual rules live in web/src/design/editorial.css and guide.css, over 
 ### Primary
 
 - **Reporting Cobalt** (primary, brand-ink): actions, operational accents and the held variance share.
-- **Deep Navigation Ink** (sidebar-ground): sidebar ground with light sidebar-ink and sidebar-muted text.
+- **Active Cobalt** (primary with accent): selected navigation text and its subtle active fill.
 
 ### Neutral
 
@@ -167,7 +170,7 @@ The final visual rules live in web/src/design/editorial.css and guide.css, over 
 - **Financial Ink** (foreground): headings, figures and overview values.
 - **Slate Metadata** (muted-foreground): provenance, mode and supporting labels.
 - **Quiet Rules** (border, table-rule): top rules, column separators and record rows.
-- **Control White** (card, popover): fields, topbar, guide and temporary controls; not repeated work-section fills.
+- **Control White** (card, popover): floating navbar, fields, guide and temporary controls; not repeated work-section fills.
 
 The open balance section locally maps balance-ink to foreground, balance-muted to muted-foreground, balance-rule to border, balance-explained to status-verified and balance-held to primary. Root balance colors remain available in source; they no longer give the overview a navy card fill. The worked example similarly maps its balance colors to ordinary document text and rules.
 
@@ -185,13 +188,13 @@ Page headings use the frontmatter headline role (48px), becoming (43px) on mobil
 
 ## Layout
 
-Desktop has a (246px) navy sidebar, (66px) breadcrumb bar and main content capped at (1600px), with (32px 40px 40px) padding. At (1200px), navigation narrows to (212px), with (26px) main horizontal gutters. The scope strip and environment label are absent.
+A centered fixed navbar sits (18px) from the desktop viewport top. Its card-colored surface is at least (64px) tall, with (40px) corners and a subtle functional shadow. The document begins below (108px) of top clearance. Main content is capped at (1600px), with (32px 40px 40px) padding; at (1200px), its horizontal gutters become (26px). There is no sidebar or breadcrumb bar. Anchor scroll padding and the desktop sticky reviewer offset are (112px).
 
 The overview uses (1.65fr / 1fr) columns. Its outcome index has a left rule and (30px) left padding, reduced to (22px) on compact desktop. At (1000px), overview sections stack, the separator becomes a top rule, and outcomes use five columns. At (440px), outcomes use three columns. The overview itself has zero container padding.
 
 At (1000px), receipt rows replace the desktop queue table, keeping customer, both amounts, outcome and review state together in a vertical region capped at (530px). The toolbar description spans its first grid row; mode, Run batch and Reset share the second. Desktop queue and audit scrolling regions retain (460px) and (580px) maximum heights respectively.
 
-Case evidence and review use two columns until (950px); the review aside's left rule becomes a top rule when stacked. At (760px), navigation becomes a drawer up to (300px) wide, the sticky topbar is (57px), and main horizontal gutters become (18px). Sidebar content scrolls; its statement gives way on phones and short screens.
+Case evidence and review use two columns until (950px); the review aside's left rule becomes a top rule when stacked. At (820px), navigation links move into a dropdown beneath the navbar. The navbar sits (12px) from the top, is at least (60px) tall, has (32px) corners and a maximum width of (540px). Document top clearance becomes (90px). At (760px), main horizontal gutters become (18px).
 
 Welcome text and its worked example use open columns, with a left rule before the example. At (860px), they stack with a top rule. Comparison uses three open columns with separators, becoming stacked ruled sections at (1100px).
 
@@ -199,13 +202,13 @@ Welcome text and its worked example use open columns, with a left rule before th
 
 ## Elevation & Depth
 
-Work, balance, outcome, welcome, comparison and review sections are transparent and unrounded. Thin top or column rules establish hierarchy. Closure and integrity explanations remain in the document flow. Containment remains for graph navigation, floating guide, forms, confirmation dialogs and error feedback. Temporary overlays retain functional shadow.
+Work, balance, outcome, welcome, comparison and review sections are transparent and unrounded. Thin top or column rules establish hierarchy. Closure and integrity explanations remain in the document flow. Containment remains for graph navigation, floating guide, forms, confirmation dialogs and error feedback. The floating navbar and temporary overlays retain functional shadow.
 
 **The Open Document Rule.** Use whitespace, top rules and column separators for working sections. Do not wrap each region in a rounded card.
 
 ## Shapes
 
-Document sections have zero corner radius. Controls retain (6px) corners and navigation (7px). Outcome filter hit areas retain small (5px) corners for selected/hover feedback; they are controls, not containers. Bridge segments use (2px) corners and a (4px) gap. The floating guide retains (12px) corners, and the evidence graph viewport keeps its border and rounded edge. Evidence tiers retain solid, dashed and dotted borders.
+Document sections have zero corner radius. Controls retain (6px) corners; navigation links use (24px), becoming (12px) inside the mobile dropdown. The navbar uses its own larger curved silhouette. Outcome filter hit areas retain small (5px) corners for selected/hover feedback; they are controls, not containers. Bridge segments use (2px) corners and a (4px) gap. The floating guide retains (12px) corners, and the evidence graph viewport keeps its border and rounded edge. Evidence tiers retain solid, dashed and dotted borders.
 
 ## Components
 
@@ -227,7 +230,7 @@ Queue search and filters remain (36px) high with control corners. Fields retain 
 
 ### Navigation
 
-Navy sidebar destinations use light text and a lighter active fill. The Receivables workspace / INR scope strip is removed. The topbar contains breadcrumbs without a Synthetic environment tag. Synthetic disclosure remains in the footer.
+The compact navbar contains the Artemis home link, Reconciliation, Agent paths and Audit ledger. Main links are plain text with muted default color; the active destination uses primary text on accent, and hover uses muted. Case review keeps Reconciliation active. Guide and theme controls remain persistent with minimum (44px) targets. At (820px) and below, Menu opens the dropdown; selecting a link, leaving navbar focus or pressing Escape closes it. Escape returns focus to Menu. The guide becomes an icon with the accessible label Guided demo. The sidebar, tagline, workflow chain, avatar, About area, breadcrumbs, scope strip and environment tag are absent. Synthetic disclosure remains in the footer.
 
 ### Variance Overview and Outcomes
 

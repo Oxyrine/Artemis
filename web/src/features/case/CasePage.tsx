@@ -62,7 +62,7 @@ export function CasePage() {
           <EvidenceList evidence={d.evidence} />
           <TraceTimeline caseId={d.case_id} hasRun={!!d.run} />
         </div>
-        <aside className="lg:sticky lg:top-20 lg:self-start"><ReviewerPanel detail={d} /></aside>
+        <aside className="lg:sticky lg:top-28 lg:self-start"><ReviewerPanel detail={d} /></aside>
       </div>
     </div>
   )
