@@ -84,7 +84,8 @@ rounded:
   badge: "4px"
   navigation: "7px"
   control: "6px"
-  surface: "12px"
+  document: "0px"
+  floating: "12px"
   pill: "9999px"
 spacing:
   compact: "8px"
@@ -121,21 +122,17 @@ components:
     textColor: "{colors.sidebar-ink}"
     rounded: "{rounded.navigation}"
     padding: "13px 12px"
-  chip-verified:
-    backgroundColor: "{colors.status-verified-soft}"
+  status-verified:
     textColor: "{colors.status-verified-fg}"
-    rounded: "{rounded.pill}"
-    padding: "1px 7px"
+    padding: "0"
   work-section:
-    backgroundColor: "{colors.card}"
-    textColor: "{colors.card-foreground}"
-    rounded: "{rounded.surface}"
-    padding: "24px"
+    textColor: "{colors.foreground}"
+    rounded: "{rounded.document}"
+    padding: "26px 0 0"
   balance-panel:
-    backgroundColor: "{colors.balance-ground}"
-    textColor: "{colors.balance-ink}"
-    rounded: "{rounded.surface}"
-    padding: "25px 28px 19px"
+    textColor: "{colors.foreground}"
+    rounded: "{rounded.document}"
+    padding: "0"
 ---
 
 # Design System: Artemis
@@ -144,139 +141,122 @@ components:
 
 **Creative North Star: "The Annual Report"**
 
-Artemis takes its hierarchy from an annual report: deep ink navigation frames a cool paper canvas, cobalt marks actions, and expressive serif titles distinguish interpretation from the figures beneath them. The composition is asymmetric and deliberate, with white working surfaces and quiet rules.
+Artemis uses the hierarchy of an annual report: deep ink navigation, a cool paper canvas, cobalt actions, Instrument Serif headings and precise Geist figures. Open document sections, whitespace and thin rules carry the composition.
 
-Instrument Serif supplies the editorial voice; Geist keeps records and numbers precise. A navy reconciliation panel turns actual explained and held paise into a split variance bridge. Data is the visual material, and semantic statuses retain their established meanings.
+Receipts, variance closure and evidence share the page without repeated card containers. The variance bridge uses actual explained and held paise; meaningful status and provenance appear as plain text. Enclosed surfaces are reserved for controls and interactions that require containment.
 
 **Key Characteristics:**
 
-- Deep navy navigation and cobalt actions.
-- Self-hosted Instrument Serif headings with Geist body and figures.
-- Live variance bridge beside an asymmetric white outcome index.
-- Cool paper, generous surface corners and quiet table rules.
+- Open document sections and column separators.
+- Deep navy navigation, cobalt actions and cool paper.
+- Self-hosted Instrument Serif titles with Geist records and tabular figures.
+- Actual variance proportions and plain-language review evidence.
 
-The final visual cascade is tokens.css, workspace.css, then editorial.css; editorial.css governs where it overrides the structural base.
+The final visual rules live in web/src/design/editorial.css and guide.css, over the structural workspace.css base. Shared colors remain in tokens.css. Frontmatter records root color tokens; local overrides described below govern the open overview. Dark token overrides remain authoritative.
 
 ## Colors
 
 ### Primary
 
-- **Reporting Cobalt** (primary, brand-ink): primary actions, operational accents and the receipt opening affordance.
-- **Deep Navigation Ink** (sidebar-ground): persistent navigation, with sidebar-ink and sidebar-muted providing the correct light text hierarchy.
-- **Reconciliation Navy** (balance-ground): the financial overview, paired with balance-ink, balance-muted and balance-rule.
+- **Reporting Cobalt** (primary, brand-ink): actions, operational accents and the held variance share.
+- **Deep Navigation Ink** (sidebar-ground): sidebar ground with light sidebar-ink and sidebar-muted text.
 
 ### Neutral
 
-- **Cool Paper** (background): the canvas outside working surfaces.
-- **White Record** (card, popover): queue, outcome index, evidence and temporary controls.
-- **Financial Ink** (foreground): body text and figures.
-- **Slate Metadata** (muted-foreground): quiet labels and secondary information.
-- **Cool Rules** (border, input, table-rule): fields, separators and record structure.
+- **Cool Paper** (background): continuous document canvas.
+- **Financial Ink** (foreground): headings, figures and overview values.
+- **Slate Metadata** (muted-foreground): provenance, mode and supporting labels.
+- **Quiet Rules** (border, table-rule): top rules, column separators and record rows.
+- **Control White** (card, popover): fields, topbar, guide and temporary controls; not repeated work-section fills.
 
-### Semantic accents
+The open balance section locally maps balance-ink to foreground, balance-muted to muted-foreground, balance-rule to border, balance-explained to status-verified and balance-held to primary. Root balance colors remain available in source; they no longer give the overview a navy card fill. The worked example similarly maps its balance colors to ordinary document text and rules.
 
-- **Explained Mint** (balance-explained): the actual explained share of the variance bridge and sidebar workflow endpoint.
-- **Held Periwinkle** (balance-held): the actual held share of that bridge.
-- Status, edge and node palettes retain their dedicated source tokens. The bridge palette does not redefine outcome semantics.
-
-**The Status Meaning Rule.** Verified is green, Probable amber, Insufficient grey, Conflicting red and Auto-closed blue. Preserve explicit status text; color supplements the label.
-
-Frontmatter records the light-theme primitives. Dark overrides in tokens.css remain authoritative; sidebar and balance tokens without overrides retain their root values. Preview ramps in the sidecar are synthesized display aids, not extra implementation tokens.
+**The Status Meaning Rule.** Verified is green, Probable amber, Insufficient grey, Conflicting red and Auto-closed blue. Keep written states; color supplements text.
 
 ## Typography
 
-**Display Font:** Instrument Serif, Georgia, serif fallback, self-hosted regular and italic through @fontsource/instrument-serif.
-**Body Font:** Geist Variable, self-hosted through @fontsource-variable/geist, sans-serif fallback.
-**Label/Mono Font:** Geist labels and tabular figures; system monospace for identifiers, hashes and tool traces.
+**Display Font:** self-hosted Instrument Serif regular and italic, Georgia/serif fallback.
+**Body Font:** self-hosted Geist Variable, sans-serif fallback.
+**Label/Mono Font:** Geist metadata; system monospace identifiers, hashes and traces.
 
-**Character:** Editorial hierarchy above precise operational data. Regular serif titles add character without enlarging the data typography.
+Page headings use the frontmatter headline role (48px), becoming (43px) on mobile. Case headings use (36px), then (32px). Balance headings use (26px); section headings use Geist (17px, 550). Body text is (14px), table records (13px), and metadata generally (11–12px). Financial values use tabular numerals, with overview totals sized by the frontmatter financial role. The welcome heading uses Instrument Serif at clamp(28px, 3.1vw, 40px).
 
-### Hierarchy
-
-- **Headline:** the frontmatter headline role; page titles step to (43px) on mobile.
-- **Case heading:** Instrument Serif (36px, 400, 1.15), becoming (32px) on mobile.
-- **Balance heading:** Instrument Serif (26px, 400, 1); compact desktop uses (23px), small phones (24px).
-- **Sidebar statement:** Instrument Serif (34px, 400, 1.08) with tracking (-0.015em).
-- **Section title:** Geist (17px, 550) with tracking (-0.025em).
-- **Body:** Geist (14px); receipt rows and customer names (13px).
-- **Label:** secondary metadata and table headers generally (11px), control and status labels generally (12px).
-- **Financial:** the frontmatter financial role, with tabular numerals; overview breakdown uses (21–28px).
-
-**The Two Voices Rule.** Use Instrument Serif for editorial headings and the sidebar statement; keep records, controls and financial figures in Geist.
+**The Two Voices Rule.** Use Instrument Serif for editorial headings and Geist for records, controls and financial figures.
 
 ## Layout
 
-The desktop navigation column is (246px); the white breadcrumb bar is (66px). Main content is capped at (1600px), with padding (32px 40px 40px). The dashboard uses (22px) between sections. Its overview has a navy financial panel and white outcome index in a (1.65fr / 1fr) grid with a (260px) minimum index width. At (1200px), navigation narrows to (212px), main padding becomes (28px 26px 36px), and the overview uses (1.5fr / 1fr) with (16px) gaps.
+Desktop has a (246px) navy sidebar, (66px) breadcrumb bar and main content capped at (1600px), with (32px 40px 40px) padding. At (1200px), navigation narrows to (212px), with (26px) main horizontal gutters. The scope strip and environment label are absent.
 
-At (1000px), overview panels stack and outcomes become five compact columns. At (760px), the navigation is a toggleable drawer up to (300px) wide; the sticky topbar is (57px), and main padding is (27px 18px). At (440px), outcomes use three columns; the financial breakdown remains two columns with smaller figures.
+The overview uses (1.65fr / 1fr) columns. Its outcome index has a left rule and (30px) left padding, reduced to (22px) on compact desktop. At (1000px), overview sections stack, the separator becomes a top rule, and outcomes use five columns. At (440px), outcomes use three columns. The overview itself has zero container padding.
 
-The base preserves the queue's sticky table header and (460px) maximum scrolling region. At (1000px) and below, receipt cards replace the desktop queue table in a vertical scrolling region capped at (530px), keeping customer, both amounts, outcome and review state together. The toolbar becomes a grid: the agent description spans the first row, with mode, Run batch and Reset grouped on the second row. The audit table retains its (580px) scrolling region. Case detail keeps the flexible evidence column plus review aside and becomes one column below (950px), placing the first two main blocks before review and remaining evidence after it.
+At (1000px), receipt rows replace the desktop queue table, keeping customer, both amounts, outcome and review state together in a vertical region capped at (530px). The toolbar description spans its first grid row; mode, Run batch and Reset share the second. Desktop queue and audit scrolling regions retain (460px) and (580px) maximum heights respectively.
 
-**The Data Is Material Rule.** Draw the variance bridge from actual explained and held paise. Global overview totals remain stable when the queue is filtered.
+Case evidence and review use two columns until (950px); the review aside's left rule becomes a top rule when stacked. At (760px), navigation becomes a drawer up to (300px) wide, the sticky topbar is (57px), and main horizontal gutters become (18px). Sidebar content scrolls; its statement gives way on phones and short screens.
+
+Welcome text and its worked example use open columns, with a left rule before the example. At (860px), they stack with a top rule. Comparison uses three open columns with separators, becoming stacked ruled sections at (1100px).
+
+**The Data Is Material Rule.** Draw the variance bridge from actual explained and held paise. Keep global totals independent of queue filters.
 
 ## Elevation & Depth
 
-The final surfaces are flat, with rounded white records on cool paper and a solid navy overview. Work sections have no resting shadow or outer border. Table rules remain quiet, while the review aside retains an input-colored border. Temporary mobile navigation and inherited select popups retain functional elevation.
+Work, balance, outcome, welcome, comparison and review sections are transparent and unrounded. Thin top or column rules establish hierarchy. Closure and integrity explanations remain in the document flow. Containment remains for graph navigation, floating guide, forms, confirmation dialogs and error feedback. Temporary overlays retain functional shadow.
 
-**The Flat Record Rule.** Separate records with surface tone and quiet rules; reserve shadows for temporary overlapping controls.
+**The Open Document Rule.** Use whitespace, top rules and column separators for working sections. Do not wrap each region in a rounded card.
 
 ## Shapes
 
-The repeated working surface has (12px) corners. Toolbar buttons, selects, queue search and closure result use (6px) corners; navigation uses (7px). Outcome rows have (5px) corners, and the bridge's segments use (2px) corners with a (4px) gap. Pills remain fully rounded. Evidence tiers preserve solid, dashed and dotted borders for primary, supporting and derived evidence.
+Document sections have zero corner radius. Controls retain (6px) corners and navigation (7px). Outcome filter hit areas retain small (5px) corners for selected/hover feedback; they are controls, not containers. Bridge segments use (2px) corners and a (4px) gap. The floating guide retains (12px) corners, and the evidence graph viewport keeps its border and rounded edge. Evidence tiers retain solid, dashed and dotted borders.
 
 ## Components
 
 ### Buttons
 
-Cobalt Run batch is the primary action. Toolbar buttons are (37px) high with (6px) corners. The inherited outline, ghost and destructive variants retain their semantic behavior. Shared color transitions remain (160ms ease); enabled buttons move down (1px) while pressed, and outcome filters opt out.
+Cobalt Run batch remains primary. Toolbar buttons are (37px) high with (6px) corners. Shared color transitions use (160ms ease), with a (1px) press displacement; outcome filters opt out.
 
-### Chips
+### Status and Provenance
 
-Outcome pills retain soft semantic fills, strong readable text and a (5px) dot. Their effective label is (12px, 500) with (18px) line height. Review badges use small rectangular corners. Color always appears with a written state.
+Queue statuses are plain text in the established semantic foregrounds, without pill fill, border or leading dot. Review state and mode use muted plain text. Narrative provenance is textual. Case-header status/state/mode badges are absent. Evidence-tier markers retain their meaningful border distinctions.
 
-### Cards / Containers
+### Sections / Containers
 
-Work sections have the surface radius, card fill and (24px) padding; mobile reduces this to (20px), then (18px 16px) on small phones. The outcome index is a white companion surface. The navy overview uses its own balance palette and (25px 28px 19px) desktop padding.
+Work sections begin with a one-pixel top rule and padding (26px 0 0), becoming (24px 0 0) on phones. They have no fill, enclosing border or corner radius. Desktop review uses a left separator and (24px) inset; stacked review uses a top rule. Welcome, worked example and comparison use the same open document grammar.
 
 ### Inputs / Fields
 
-Queue search is (36px) high with a cool paper fill and control radius. Queue filters are white, (36px) high and use (11px) labels. The toolbar is a transparent rule-separated row rather than a card. Shared focus uses a (2px) ring with (3px) offset; inherited field and button focus/invalid treatments remain.
+Queue search and filters remain (36px) high with control corners. Fields retain borders and focus/invalid states because their interaction needs containment. Shared keyboard focus has a (2px) outline and (3px) offset.
 
 ### Navigation
 
-Navy navigation has light labels, muted metadata and a lighter active row. The serif sidebar statement is followed by a receipt–evidence–decision chain. Hover and active states use sidebar-specific tokens to preserve contrast. Mobile retains the same hierarchy in a drawer.
+Navy sidebar destinations use light text and a lighter active fill. The Receivables workspace / INR scope strip is removed. The topbar contains breadcrumbs without a Synthetic environment tag. Synthetic disclosure remains in the footer.
 
-### Reconciliation Overview
+### Variance Overview and Outcomes
 
-The panel presents the global total, an explained/held split bridge, actual breakdown amounts and a clarifying caption. The track is (10px) high. Segment width follows actual paise proportions, with a neutral empty state; widths transition over (300ms) using cubic-bezier(.16,1,.3,1). The white outcome index uses semantic dots, text and right-aligned counts on desktop; selected rows have a thin outline, without the former underline. Narrow layouts turn outcomes into compact tiles.
+The open overview presents global total, explained/held bridge, actual breakdown and caption. The track is (10px) high, with widths calculated from actual paise and a neutral empty state. Width transitions use (300ms) cubic-bezier(.16,1,.3,1). The adjacent transparent outcome index retains semantic dots, text and counts; selection uses a thin outline on the control.
 
-### Receipt Queue
+### Evidence Graph and Guide
 
-Quiet shaded headers, aligned money columns and lighter rules prioritize scanning. Customer labels use (13px, 550); identifiers and metadata use (11px). Tablet and mobile receipt cards preserve customer, receipt, variance and state together from (1000px) down. Review and audit inherit serif headings and the ink/cobalt palette.
+The evidence viewport remains enclosed. Its text version is open by default and resolves relationships from node labels. At (760px), readable text relationships move above the graph. The floating guide remains a contained, scrollable overlay up to (360px) wide, with a border and functional shadow; it does not establish a card pattern for page content.
 
-### Evidence Graph
-
-The graph has an open-by-default text version. Each relationship resolves its source and target from graph-node labels, making the explanation readable without internal IDs where nodes are available. At (760px) and below, the text relationships move above the visual graph; their (1.6) line height, wrapping and (8px) vertical spacing support inspection at entry.
-
-Reduced motion preserves the base override: animation and transition durations become (.01ms), with auto scrolling.
+Reduced motion shortens animation/transition durations to (.01ms) and uses auto scrolling. No remote font or shipping raster dependency is introduced.
 
 ## Do's and Don'ts
 
 ### Do:
 
-- Do use shared semantic colors from web/src/design/tokens.css and final visual rules from web/src/design/editorial.css.
+- Do use open document sections, whitespace and thin rules as the default.
+- Do retain containment for the evidence graph viewport, floating guide, form fields and confirmation dialogs.
+- Do keep meaningful queue status, review state, mode and narrative provenance as plain text.
+- Do retain synthetic-data disclosure in the footer and explicitly label synthetic benchmark results.
 - Do keep global financial totals independent of queue filters.
-- Do align financial figures and preserve explicit status labels.
 - Do preserve integer paise and format amounts only through web/src/lib/format.ts.
-- Do explicitly label synthetic data and synthetic benchmark results.
-- Do preserve policy limits, reviewer identity, required comments, reset confirmation and status meanings.
-- Do support keyboard focus, reduced motion and mobile receipt inspection.
+- Do preserve policy limits, named reviewer decisions, required comments, reset confirmation and status meanings.
+- Do support keyboard focus, reduced motion and readable tablet/mobile receipt rows.
 
 ### Don't:
 
-- Don't replace Instrument Serif headings with generic sans-serif titles.
-- Don't reintroduce the superseded achromatic olive identity.
-- Don't invent performance figures or substitute a decorative split for actual paise data.
-- Don't make Probable amber read as a red error.
-- Don't add remote font dependencies or shipping raster imagery.
-- Don't imply configured tax rules are tax advice or synthetic accuracy is production accuracy.
+- Don't repeat rounded card containers across dashboard, welcome, comparison, evidence and review sections.
+- Don't add case-header Verified, Pending approval or Demo agent badges.
+- Don't restore the Synthetic environment topbar label or Receivables workspace / INR sidebar strip.
+- Don't invent figures or turn Probable amber into a red error.
+- Don't add remote fonts or shipping raster imagery.
+- Don't present configured tax rules as advice or synthetic accuracy as production accuracy.

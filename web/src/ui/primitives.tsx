@@ -1,7 +1,6 @@
 // Presentational pieces: no data fetching, styled only through design tokens (src/design/tokens.css).
 import { Check, Copy } from 'lucide-react'
 import { useEffect, useState, type ReactNode } from 'react'
-import { Badge } from '@/components/ui/badge'
 import { humanize, rupees, STATUS_LABEL } from '@/lib/format'
 
 export function StatusPill({ status }: { status: string | null | undefined }) {
@@ -16,7 +15,7 @@ export function TierBadge({ tier }: { tier: string }) {
 export const Money = ({ paise, className = '' }: { paise: number | null | undefined; className?: string }) =>
   <span className={`tabular-nums ${className}`}>{rupees(paise)}</span>
 
-export const StateBadge = ({ state }: { state: string }) => <Badge variant="outline">{humanize(state)}</Badge>
+export const StateBadge = ({ state }: { state: string }) => <span className="state-label">{humanize(state)}</span>
 
 const MODES: Record<string, { label: string; hint: string }> = {
   demo: { label: 'Demo agent', hint: 'A rule-based stand-in for the model. No LLM was called.' },
@@ -27,7 +26,7 @@ const MODES: Record<string, { label: string; hint: string }> = {
 export function ModeBadge({ mode }: { mode: string | null | undefined }) {
   if (!mode) return null
   const m = MODES[mode] ?? { label: humanize(mode), hint: '' }
-  return <Badge variant="secondary" title={m.hint}>{m.label}</Badge>
+  return <span className="mode-label" title={m.hint}>{m.label}</span>
 }
 
 export function Tile({ status, count, active, onClick }: { status: string; count: number; active: boolean; onClick: () => void }) {

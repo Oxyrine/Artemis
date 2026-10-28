@@ -32,7 +32,7 @@ export function EvidenceList({ evidence }: { evidence: CaseDetail['evidence'] })
 
 function Side({ label, side, differs }: { label: string; side: FlagView['a']; differs: boolean }) {
   return (
-    <div className="rounded-md border p-3">
+    <div className="border-t py-3">
       <p className="text-xs uppercase tracking-wide text-muted-foreground">{label} · {humanize(side.kind)}</p>
       <p className="font-mono text-xs text-muted-foreground">{side.ref}</p>
       {side.amount_paise != null && (

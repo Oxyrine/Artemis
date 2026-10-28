@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { ArrowDownLeft, ArrowUpRight, CircleHelp, Search, SlidersHorizontal, X, MoveUpRight, CircleCheck, CircleDashed } from 'lucide-react'
+import { ArrowUpRight, CircleHelp, Search, SlidersHorizontal, X, CircleCheck, CircleDashed } from 'lucide-react'
 import { useCases, useMetrics } from '@/api/hooks'
 import type { CaseSummary } from '@/api/types'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -37,7 +37,6 @@ export function DashboardPage() {
       <div className="page-heading">
         <div><h1>Reconciliation</h1>
         <p>Bring every receipt into balance.</p></div>
-        <span className="page-heading-note"><ArrowDownLeft size={15} />Accounts receivable · INR</span>
       </div>
       {welcome.hidden
         ? <button type="button" className="welcome-reopen" onClick={welcome.show}><CircleHelp size={14} />What is this, and how does it work?</button>
@@ -47,7 +46,7 @@ export function DashboardPage() {
 
       <div className="reconciliation-overview">
       <section className="balance-panel" aria-label="Variance overview">
-        <div className="balance-panel-top"><h2>The reconciliation balance</h2><MoveUpRight size={20} strokeWidth={1.5} /></div>
+        <div className="balance-panel-top"><h2>The reconciliation balance</h2></div>
         <div className="balance-total"><span>Apparent variance investigated</span><Money paise={totals?.rupees.investigated_variance_paise} /></div>
         <VarianceBridge investigated={totals?.rupees.investigated_variance_paise} explained={totals?.rupees.explained_verified_paise} held={totals?.rupees.held_paise} />
         <div className="balance-breakdown">

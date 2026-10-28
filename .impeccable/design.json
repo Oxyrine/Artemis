@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-27T15:54:28.609Z",
+  "generatedAt": "2026-10-28T15:58:18.847Z",
   "title": "Design System: Artemis",
   "extensions": {
     "colorMeta": {
@@ -830,6 +830,11 @@
         "name": "mobile-navigation",
         "value": "12px 16px 30px color-mix(in srgb, var(--foreground) 12%, transparent)",
         "purpose": "Temporary drawer elevation; records remain flat."
+      },
+      {
+        "name": "floating-guide",
+        "value": "0 18px 50px -12px rgb(15 23 42 / .35)",
+        "purpose": "Functional elevation for the contained guide overlay; page sections remain open."
       }
     ],
     "motion": [
@@ -886,6 +891,14 @@
       {
         "name": "graph-text-first",
         "value": "760px"
+      },
+      {
+        "name": "stacked-comparison",
+        "value": "1100px"
+      },
+      {
+        "name": "stacked-welcome",
+        "value": "860px"
       }
     ]
   },
@@ -931,28 +944,28 @@
       "css": ".ds-nav{font-family:'Geist Variable',sans-serif;font-size:13px;display:flex;align-items:center;gap:10px;padding:13px 12px;background:var(--sidebar-active);color:var(--sidebar-ink);border-radius:7px;text-decoration:none;font-weight:550;} .ds-nav span{margin-left:auto;} .ds-nav:hover{background:var(--sidebar-active);} .ds-nav:focus-visible{outline:2px solid var(--ring);outline-offset:3px;}"
     },
     {
-      "name": "Verified outcome",
-      "kind": "chip",
-      "refersTo": "chip-verified",
-      "description": "Explicit semantic label and redundant dot.",
-      "html": "<span class=\"ds-pill\">Verified</span>",
-      "css": ".ds-pill{font-family:'Geist Variable',sans-serif;font-size:13px;display:inline-flex;align-items:center;gap:5px;border:1px solid transparent;padding:1px 7px;border-radius:9999px;font-size:12px;font-weight:500;line-height:18px;background:var(--status-verified-soft);color:var(--status-verified-fg);white-space:nowrap;} .ds-pill::before{content:\"\";width:5px;height:5px;border-radius:50%;background:currentColor;}"
+      "name": "Verified status text",
+      "kind": "custom",
+      "refersTo": "status-verified",
+      "description": "Plain semantic status text in the queue; no pill or header badge.",
+      "html": "<span class=\"ds-status\">Verified</span>",
+      "css": ".ds-status{font-family:Geist Variable,sans-serif;font-size:12px;font-weight:500;line-height:18px;color:var(--status-verified-fg);}"
     },
     {
-      "name": "Work section",
-      "kind": "card",
+      "name": "Open work section",
+      "kind": "custom",
       "refersTo": "work-section",
-      "description": "Flat surface for records and supporting evidence.",
+      "description": "Transparent document section with a top rule.",
       "html": "<section class=\"ds-section\"><h2>Receipt queue</h2><p>Inspect a receipt and its supporting evidence.</p></section>",
-      "css": ".ds-section{font-family:'Geist Variable',sans-serif;font-size:13px;padding:24px;background:var(--card);color:var(--card-foreground);border:0;border-radius:12px;} .ds-section h2{font-size:17px;font-weight:550;letter-spacing:-.025em;margin:0 0 18px;} .ds-section p{font-size:13px;color:var(--muted-foreground);margin:0;}"
+      "css": ".ds-section{font-family:'Geist Variable',sans-serif;font-size:13px;padding:26px 0 0;background:transparent;color:var(--foreground);border:0;border-top:1px solid var(--border);border-radius:0;} .ds-section h2{font-size:17px;font-weight:550;letter-spacing:-.025em;margin:0 0 18px;} .ds-section p{font-size:13px;color:var(--muted-foreground);margin:0;}"
     },
     {
-      "name": "Variance bridge",
+      "name": "Open variance bridge",
       "kind": "custom",
       "refersTo": "balance-panel",
       "description": "Preview proportions are illustrative; application widths are calculated from actual explained and held paise.",
       "html": "<section class=\"ds-balance\"><h2>Reconciliation overview</h2><div class=\"ds-bridge-labels\"><span>Explained</span><span>Held for review</span></div><div class=\"ds-bridge\" role=\"img\" aria-label=\"Illustrative explained and held proportions\"><span></span><span></span></div></section>",
-      "css": ".ds-balance{padding:25px 28px 19px;border-radius:12px;background:var(--balance-ground);color:var(--balance-ink);font-family:Geist Variable,sans-serif;} .ds-balance h2{font-family:Instrument Serif,Georgia,serif;font-size:26px;line-height:1;font-weight:400;margin:0 0 22px;} .ds-bridge-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--balance-muted);margin-bottom:8px;} .ds-bridge{display:flex;gap:4px;height:10px;} .ds-bridge span{border-radius:2px;transition:width 300ms cubic-bezier(.16,1,.3,1);} .ds-bridge span:first-child{width:65%;background:var(--balance-explained);} .ds-bridge span:last-child{width:35%;background:var(--balance-held);} @media(prefers-reduced-motion:reduce){.ds-bridge span{transition-duration:.01ms;}}"
+      "css": ".ds-balance{padding:0;border-radius:0;background:transparent;color:var(--foreground);font-family:Geist Variable,sans-serif;} .ds-balance h2{font-family:Instrument Serif,Georgia,serif;font-size:26px;line-height:1;font-weight:400;margin:0 0 22px;} .ds-bridge-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted-foreground);margin-bottom:8px;} .ds-bridge{display:flex;gap:4px;height:10px;} .ds-bridge span{border-radius:2px;transition:width 300ms cubic-bezier(.16,1,.3,1);} .ds-bridge span:first-child{width:65%;background:var(--status-verified);} .ds-bridge span:last-child{width:35%;background:var(--primary);} @media(prefers-reduced-motion:reduce){.ds-bridge span{transition-duration:.01ms;}}"
     },
     {
       "name": "Readable evidence relationships",
@@ -964,51 +977,52 @@
   ],
   "narrative": {
     "northStar": "The Annual Report",
-    "overview": "Artemis takes its hierarchy from an annual report: deep ink navigation frames a cool paper canvas, cobalt marks actions, and expressive serif titles distinguish interpretation from the figures beneath them. The composition is asymmetric and deliberate, with white working surfaces and quiet rules.\n\nInstrument Serif supplies the editorial voice; Geist keeps records and numbers precise. A navy reconciliation panel turns actual explained and held paise into a split variance bridge. Data is the visual material, and semantic statuses retain their established meanings.",
+    "overview": "Artemis uses the hierarchy of an annual report: deep ink navigation, a cool paper canvas, cobalt actions, Instrument Serif headings and precise Geist figures. Open document sections, whitespace and thin rules carry the composition.\n\nReceipts, variance closure and evidence share the page without repeated card containers. The variance bridge uses actual explained and held paise; meaningful status and provenance appear as plain text. Enclosed surfaces are reserved for controls and interactions that require containment.",
     "keyCharacteristics": [
-      "Deep navy navigation and cobalt actions.",
-      "Self-hosted Instrument Serif headings with Geist body and figures.",
-      "Live variance bridge beside an asymmetric white outcome index.",
-      "Cool paper, generous surface corners and quiet table rules."
+      "Open document sections and column separators.",
+      "Deep navy navigation, cobalt actions and cool paper.",
+      "Self-hosted Instrument Serif titles with Geist records and tabular figures.",
+      "Actual variance proportions and plain-language review evidence."
     ],
     "rules": [
       {
-        "name": "The Status Meaning Rule",
-        "body": "Verified is green, Probable amber, Insufficient grey, Conflicting red and Auto-closed blue. Preserve explicit status text; color supplements the label.",
-        "section": "colors"
+        "name": "The Open Document Rule",
+        "body": "Use whitespace, top rules and column separators for working sections. Do not wrap each region in a rounded card.",
+        "section": "elevation"
       },
       {
         "name": "The Two Voices Rule",
-        "body": "Use Instrument Serif for editorial headings and the sidebar statement; keep records, controls and financial figures in Geist.",
+        "body": "Use Instrument Serif for editorial headings and Geist for records, controls and financial figures.",
         "section": "typography"
       },
       {
         "name": "The Data Is Material Rule",
-        "body": "Draw the variance bridge from actual explained and held paise. Global overview totals remain stable when the queue is filtered.",
+        "body": "Draw the variance bridge from actual explained and held paise. Keep global totals independent of queue filters.",
         "section": "layout"
       },
       {
-        "name": "The Flat Record Rule",
-        "body": "Separate records with surface tone and quiet rules; reserve shadows for temporary overlapping controls.",
-        "section": "elevation"
+        "name": "The Status Meaning Rule",
+        "body": "Verified is green, Probable amber, Insufficient grey, Conflicting red and Auto-closed blue. Keep written states; color supplements text.",
+        "section": "colors"
       }
     ],
     "dos": [
-      "Do use shared semantic colors from web/src/design/tokens.css and final visual rules from web/src/design/editorial.css.",
+      "Do use open document sections, whitespace and thin rules as the default.",
+      "Do retain containment for the evidence graph viewport, floating guide, form fields and confirmation dialogs.",
+      "Do keep meaningful queue status, review state, mode and narrative provenance as plain text.",
+      "Do retain synthetic-data disclosure in the footer and explicitly label synthetic benchmark results.",
       "Do keep global financial totals independent of queue filters.",
-      "Do align financial figures and preserve explicit status labels.",
       "Do preserve integer paise and format amounts only through web/src/lib/format.ts.",
-      "Do explicitly label synthetic data and synthetic benchmark results.",
-      "Do preserve policy limits, reviewer identity, required comments, reset confirmation and status meanings.",
-      "Do support keyboard focus, reduced motion and mobile receipt inspection."
+      "Do preserve policy limits, named reviewer decisions, required comments, reset confirmation and status meanings.",
+      "Do support keyboard focus, reduced motion and readable tablet/mobile receipt rows."
     ],
     "donts": [
-      "Don't replace Instrument Serif headings with generic sans-serif titles.",
-      "Don't reintroduce the superseded achromatic olive identity.",
-      "Don't invent performance figures or substitute a decorative split for actual paise data.",
-      "Don't make Probable amber read as a red error.",
-      "Don't add remote font dependencies or shipping raster imagery.",
-      "Don't imply configured tax rules are tax advice or synthetic accuracy is production accuracy."
+      "Don't repeat rounded card containers across dashboard, welcome, comparison, evidence and review sections.",
+      "Don't add case-header Verified, Pending approval or Demo agent badges.",
+      "Don't restore the Synthetic environment topbar label or Receivables workspace / INR sidebar strip.",
+      "Don't invent figures or turn Probable amber into a red error.",
+      "Don't add remote fonts or shipping raster imagery.",
+      "Don't present configured tax rules as advice or synthetic accuracy as production accuracy."
     ]
   }
 }

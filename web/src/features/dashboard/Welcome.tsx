@@ -38,7 +38,6 @@ export function Welcome({ onHide }: { onHide: () => void }) {
     <section id="welcome" className="welcome" aria-labelledby="welcome-title">
       <button type="button" className="welcome-close" onClick={onHide} aria-label="Hide this introduction"><X size={16} /></button>
       <div className="welcome-lead">
-        <p className="welcome-kicker"><Landmark size={14} />Accounts receivable, explained</p>
         <h2 id="welcome-title">Money arrives. The invoice doesn’t match. Someone has to find out why.</h2>
         <p>Customers rarely pay exactly what the invoice says. They withhold tax, agree credit notes by email, or settle three invoices with one transfer.
           Finance teams spend hours working out each difference. Artemis investigates every mismatch, shows the evidence, and leaves the decision to a named person.</p>

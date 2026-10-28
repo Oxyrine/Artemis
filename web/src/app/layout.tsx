@@ -31,8 +31,6 @@ function Shell() {
             <svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M5 25 16 5l11 20M10 17h12M8 25l8-8 8 8" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" /></svg>
             <span>artemis<span className="brand-period">.</span></span>
           </NavLink>
-          <div className="workspace-scope"><span className="scope-dot" />Receivables workspace<span className="scope-unit">INR</span></div>
-          <div className="nav-group-label">Workspace</div>
           <nav aria-label="Main" onClick={() => setMenuOpen(false)}>
             <NavLink to="/" end className={link}><Files size={17} />Reconciliation<ArrowUpRight className="nav-arrow" size={14} /></NavLink>
             <NavLink to="/compare" className={link}><GitCompareArrows size={17} />Agent paths<ArrowUpRight className="nav-arrow" size={14} /></NavLink>
@@ -50,7 +48,7 @@ function Shell() {
           </div></div>
       </aside>
       <div className="workspace-canvas">
-        <header className="workspace-topbar"><Button className="mobile-menu" variant="ghost" size="icon" aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} aria-expanded={menuOpen} aria-controls="workspace-navigation" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <PanelLeftClose /> : <PanelLeftOpen />}</Button><span className="breadcrumb-root">Workspace</span><span className="breadcrumb-divider">/</span><span>{page}</span><span className="environment-label"><span />Synthetic environment</span></header>
+        <header className="workspace-topbar"><Button className="mobile-menu" variant="ghost" size="icon" aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} aria-expanded={menuOpen} aria-controls="workspace-navigation" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <PanelLeftClose /> : <PanelLeftOpen />}</Button><span className="breadcrumb-root">Workspace</span><span className="breadcrumb-divider">/</span><span>{page}</span></header>
         <main id="main" className="workspace-main" tabIndex={-1}><Outlet /></main>
         <footer className="workspace-footer"><span><BookOpen size={14} />Synthetic benchmark data</span><p>Tax rules are configured, not advised. Check against Income Tax Department guidance.</p><span>Artemis · INR</span></footer>
       </div>
