@@ -1,5 +1,6 @@
 import { Download, RotateCcw, ShieldCheck, ShieldAlert } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { AUDIT_PAGE } from '@/api/client'
 import { useAudit, useReset, useTamper, useVerify } from '@/api/hooks'
 import type { VerifyResult } from '@/api/types'
 import { Button, buttonVariants } from '@/components/ui/button'
@@ -63,6 +64,7 @@ export function AuditPage() {
       <Section title="Events" aside={
         <Input aria-label="Filter by case id" placeholder="Filter by case, e.g. CASE-0007" className="h-9 w-full sm:w-64" value={caseId} onChange={(e) => setCaseId(e.target.value)} />}>
         <ErrorBanner error={events.error} />
+        {!caseId.trim() && (events.data?.events.length ?? 0) >= AUDIT_PAGE && <p className="mb-3 text-xs text-muted-foreground">Showing the latest {AUDIT_PAGE} events. Filter by case to see that case’s full history.</p>}
         {events.isLoading ? <Skeleton className="h-64 w-full" /> : <AuditTable brokenSeq={broken} events={[...(events.data?.events ?? [])].reverse()} />}
       </Section>
     </div>

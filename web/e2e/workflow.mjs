@@ -75,10 +75,14 @@ await step('guided demo: Show me scrolls to the explainer', async () => {
   await page.locator('#welcome').waitFor()
 })
 
-await step('guided demo: Run it for me investigates every exception', async () => {
+await step('guided demo: Run it for me investigates every exception (within the time budget)', async () => {
   await page.getByRole('button', { name: /Next/ }).click()
+  const started = Date.now()
   await page.getByRole('button', { name: /Run it for me/ }).click()
   await page.getByText(/Done: \d+ of \d+ investigated/).waitFor({ timeout: 180_000 })
+  const seconds = (Date.now() - started) / 1000
+  console.log(`      batch took ${seconds.toFixed(1)} s`)
+  check(seconds < Number(process.env.BATCH_BUDGET_S ?? 20), `the batch took ${seconds.toFixed(1)} s (budget ${process.env.BATCH_BUDGET_S ?? 20} s)`)
 })
 
 await step('batch result matches the answer key: 10 / 16 / 6 / 4 / 4', async () => {

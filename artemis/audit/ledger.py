@@ -69,14 +69,17 @@ class SqlAudit:
         payload = _refs_only(json.loads(json.dumps(payload, default=str)))  # JSON-safe, then shrunk
         with self.db.tx() as s:
             if s.bind.dialect.name == "postgresql":
+                # Two statements on purpose. Under READ COMMITTED a statement's snapshot is taken when it STARTS, so lock and
+                # read in one statement would read the tip as it was before waiting for the lock, and two writers would
+                # pick the same seq. The read must begin after the lock is held.
                 s.execute(text("SELECT pg_advisory_xact_lock(:k)"), {"k": _ADVISORY_KEY})
             last = s.execute(select(AuditEvent.seq, AuditEvent.hash).order_by(AuditEvent.seq.desc()).limit(1)).first()
             seq, prev = (last.seq + 1, last.hash) if last else (1, GENESIS)
             created = _now()
-            s.add(AuditEvent(seq=seq, case_id=case_id, event_type=event_type, actor=actor,
-                             payload_json=canonical(payload), prev_hash=prev, created_at=created,
-                             hash=_digest(prev, seq, case_id, event_type, actor, payload, created)))
-            s.flush()
+            # a plain INSERT: no ORM unit of work for a row that is never read back through the session
+            s.execute(AuditEvent.__table__.insert().values(
+                seq=seq, case_id=case_id, event_type=event_type, actor=actor, payload_json=canonical(payload), prev_hash=prev,
+                created_at=created, hash=_digest(prev, seq, case_id, event_type, actor, payload, created)))
         return seq
 
     # ---- reading

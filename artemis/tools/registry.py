@@ -1,6 +1,8 @@
 """Tool registry. execute() never raises: every failure comes back as {"error": ..., "detail": ...}."""
 from __future__ import annotations
 
+from functools import cache
+
 from pydantic import ValidationError
 
 from artemis.models import CoreError
@@ -23,8 +25,10 @@ def _slim(node):
     return [_slim(v) for v in node] if isinstance(node, list) else node
 
 
+@cache
 def schemas() -> list[dict]:
-    """OpenAI-style tool schemas generated from the Pydantic input models (no drift possible)."""
+    """OpenAI-style tool schemas generated from the Pydantic input models (no drift possible). Generated once: the loop asks
+    on every step, and regenerating twelve schemas each time was a third of a batch's CPU. Callers must not mutate it."""
     return [{"type": "function", "function": {"name": t.name, "description": t.description,
                                               "parameters": _slim(t.input.model_json_schema())}}
             for t in TOOLS.values()]

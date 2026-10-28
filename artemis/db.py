@@ -179,7 +179,17 @@ def make_engine(url: str | None = None) -> Engine:
 
 
 def reset(engine: Engine) -> None:
-    """Drop and recreate every table (the whole migration story until a hosted DB holds data to keep)."""
+    """Empty every table. On Postgres with the schema already in place that is one TRUNCATE (it does not fire the ledger's
+    row-level append-only triggers, and it replaces ~20 DDL statements, which are slow on a small hosted database);
+    otherwise drop and recreate."""
+    from sqlalchemy import inspect
+    import artemis.audit.models  # noqa: F401  (registers the ledger tables: a reset must empty them too)
+    if engine.dialect.name == "postgresql":
+        names = [t.name for t in Base.metadata.sorted_tables]
+        if set(names) <= set(inspect(engine).get_table_names()):
+            with engine.begin() as conn:
+                conn.exec_driver_sql("TRUNCATE " + ", ".join(names) + " RESTART IDENTITY CASCADE")
+            return
     Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
 
@@ -189,15 +199,17 @@ def session_factory(engine: Engine) -> sessionmaker[Session]:
 
 
 class Db:
-    """Engine + sessions behind one process-wide lock (the batch runs cases on threads and the in-memory test
-    DB shares a single connection). ponytail: one lock; per-call sessions on a real pool once Postgres is live."""
+    """Engine + sessions. SQLite (a file, or the one shared in-memory connection the tests use) is serialised behind a
+    process-wide lock. A server database has a connection pool and its own concurrency control, so there threads stay
+    free to overlap: while one waits on the network round trip, the others work."""
 
     def __init__(self, url: str | None = None):
         import threading
+        from contextlib import nullcontext
         from contextvars import ContextVar
         self.engine = make_engine(url)
         self._sessions = session_factory(self.engine)
-        self.lock = threading.RLock()
+        self.lock = threading.RLock() if self.engine.dialect.name == "sqlite" else nullcontext()
         self._ambient: ContextVar[Session | None] = ContextVar(f"db-session-{id(self)}", default=None)
 
     def tx(self):

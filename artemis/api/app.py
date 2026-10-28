@@ -14,6 +14,7 @@ from pathlib import Path
 from fastapi import APIRouter, Depends, FastAPI, Header, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import FileResponse, JSONResponse
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy import select
 
@@ -99,6 +100,9 @@ def create_app(deps: Deps | None = None, *, static_dir: Path | str | None = None
     app = FastAPI(title="Artemis", docs_url=None, redoc_url=None, openapi_url="/api/openapi.json")
     app.state.deps, app.state.limiter = deps, RateLimiter()
     app.state.current = {"batch_id": None}
+    # gzip goes in first so it sits INSIDE the security middleware and still sees each response's size (outside it, every
+    # response is a stream of unknown length and even a one-line health check would be compressed)
+    app.add_middleware(GZipMiddleware, minimum_size=800)
     app.add_middleware(SecurityMiddleware)
 
     @app.exception_handler(ApiError)
@@ -175,7 +179,8 @@ def create_app(deps: Deps | None = None, *, static_dir: Path | str | None = None
                 d.store.save(runs / f"latest-{mode}.json")
                 persist_run_records(d)
 
-        bid = start_batch(d, factory, replay_of=replay_of, on_done=finished, mode=mode)
+        # the demo and replay agents make no LLM calls, so there is no rate limit to respect: use the spec's four workers
+        bid = start_batch(d, factory, replay_of=replay_of, on_done=finished, mode=mode, concurrency=4 if mode != "live" else None)
         app.state.current["batch_id"] = bid
         return BatchStarted(batch_id=bid, mode=mode)
 

@@ -1,5 +1,5 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ApiError, api } from './client'
+import { ApiError, AUDIT_PAGE, api } from './client'
 import type { AuditList, BatchStatus, CaseDetail, CaseList, Decision, EvidenceGraph, MetricsReport, Modes, ReviewResult,
   ReviewerView, RunMode, TamperResult, TraceView, VerifyResult } from './types'
 
@@ -12,7 +12,9 @@ export const useReviewers = () => useQuery({ queryKey: ['reviewers'], queryFn: (
 
 export function useCases(filter: { status?: string; state?: string } = {}) {
   const qs = new URLSearchParams(Object.entries(filter).filter(([, v]) => v) as [string, string][]).toString()
-  return useQuery({ queryKey: [...keys.cases, filter], queryFn: () => api<CaseList>(`/cases${qs ? `?${qs}` : ''}`), placeholderData: keepPreviousData })
+  // empty filters are dropped from the key, so "no filter" and "filters left blank" are the same query: one request, not two
+  const active = { status: filter.status || undefined, state: filter.state || undefined }
+  return useQuery({ queryKey: [...keys.cases, active], queryFn: () => api<CaseList>(`/cases${qs ? `?${qs}` : ''}`), placeholderData: keepPreviousData })
 }
 export const useCase = (id: string) => useQuery({ queryKey: keys.case(id), queryFn: () => api<CaseDetail>(`/cases/${id}`) })
 export const useGraph = (id: string) => useQuery({ queryKey: ['graph', id], queryFn: () => api<EvidenceGraph>(`/cases/${id}/graph`) })
@@ -21,7 +23,7 @@ export const useTrace = (id: string, enabled = true) =>
   useQuery({ queryKey: ['trace', id], queryFn: () => api<TraceView>(`/cases/${id}/trace`), retry: false, enabled })
 export const useMetrics = () => useQuery({ queryKey: ['metrics'], queryFn: () => api<MetricsReport>('/metrics'), retry: false })
 export const useAudit = (caseId?: string) =>
-  useQuery({ queryKey: keys.audit(caseId), queryFn: () => api<AuditList>(`/audit${caseId ? `?case_id=${caseId}` : ''}`) })
+  useQuery({ queryKey: keys.audit(caseId), queryFn: () => api<AuditList>(`/audit${caseId ? `?case_id=${caseId}` : `?limit=${AUDIT_PAGE}`}`) })
 
 /** Polls once a second while the batch is running (the spec's progress bar), then refreshes everything that depends on it. */
 export function useBatch(id: string | null) {

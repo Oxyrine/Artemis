@@ -1,3 +1,6 @@
+/** The global audit list asks for the newest events only (the page shows newest first); one case's history is always complete. */
+export const AUDIT_PAGE = 100
+
 export class ApiError extends Error {
   status: number
   code: string
