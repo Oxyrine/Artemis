@@ -40,6 +40,9 @@
 .guide-head span { display: flex; align-items: center; gap: 6px; }
 .guide-head button { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 6px; }
 .guide-head button:hover { background: var(--accent); }
+.guide-head-actions { display: flex; gap: 4px; }
+.guide-resume { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; padding: 12px 0 2px; font-size: 14px; font-weight: 550; }
+.guide-panel { max-height: calc(100dvh - 32px); overflow-y: auto; }
 .guide-dots { display: flex; gap: 4px; margin: 10px 0 12px; }
 .guide-dots i { flex: 1; height: 3px; border-radius: 2px; background: var(--border); }
 .guide-dots i.on { background: var(--brand-ink); }

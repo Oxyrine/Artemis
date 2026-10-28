@@ -47,7 +47,7 @@ describe('RunBar', () => {
     await userEvent.click(screen.getByRole('button', { name: /Run batch/ }))
     batchResult = { error: new Error('no batch BATCH-0001') } // the server restarted and no longer knows it
     rerender(<QueryClientProvider client={new QueryClient()}><BatchProvider><RunBar /></BatchProvider></QueryClientProvider>)
-    expect(await screen.findByText(/server restarted while the batch was running/)).toBeInTheDocument()
+    expect(await screen.findByText(/Could not continue tracking this batch/)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Run batch/ })).toBeEnabled() // and offers to carry on
   })
 
@@ -55,6 +55,6 @@ describe('RunBar', () => {
     states = ['NEW']
     batchResult = { error: new Error('no batch BATCH-0001') } // nothing was started in this session
     page()
-    expect(screen.queryByText(/server restarted/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Could not continue tracking this batch/)).not.toBeInTheDocument()
   })
 })

@@ -1,9 +1,11 @@
-import { ArrowRight, ChevronLeft, ChevronRight, Compass, X } from 'lucide-react'
+import { ArrowRight, ChevronLeft, ChevronRight, Compass, Minus, X } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { GUIDE_STEPS, WELCOME_EVENT, type GuideLink } from '@/lib/guide'
 import { useBatchRunner } from '../dashboard/BatchProvider'
 import { useGuide } from './GuideProvider'
+import { ErrorBanner } from '@/ui/primitives'
 
 const scrollTo = (id: string) => window.setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150)
 
@@ -12,6 +14,8 @@ export function DemoGuide() {
   const g = useGuide()
   const navigate = useNavigate()
   const batch = useBatchRunner()
+  const [minimized, setMinimized] = useState(false)
+  useEffect(() => { setMinimized(false) }, [g.active, g.step])
   if (!g.active) return null
   const step = GUIDE_STEPS[g.step]
   const last = g.step === GUIDE_STEPS.length - 1
@@ -19,6 +23,8 @@ export function DemoGuide() {
 
   function follow(link: GuideLink) {
     navigate(link.to)
+    const hash = link.to.split('#')[1]
+    if (hash) scrollTo(hash)
     if (link.action === 'show-welcome') {
       window.dispatchEvent(new Event(WELCOME_EVENT)) // reopen the explainer if it was dismissed, then bring it into view
       window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -38,8 +44,12 @@ export function DemoGuide() {
     <aside className="guide-panel" aria-label="Guided demo">
       <div className="guide-head">
         <span><Compass size={14} />Guided demo · step {g.step + 1} of {GUIDE_STEPS.length}</span>
-        <button type="button" onClick={g.stop} aria-label="Close the guided demo"><X size={15} /></button>
+        <div className="guide-head-actions">
+          {!minimized && <button type="button" onClick={() => setMinimized(true)} aria-label="Minimize the guided demo" title="Minimize to use the page underneath"><Minus size={15} /></button>}
+          <button type="button" onClick={g.stop} aria-label="Close the guided demo"><X size={15} /></button>
+        </div>
       </div>
+      {minimized ? <button type="button" className="guide-resume" aria-label="Expand the guided demo" onClick={() => setMinimized(false)}>{step.title}<ChevronRight size={15} /></button> : <>
       <div className="guide-dots" aria-hidden="true">{GUIDE_STEPS.map((s, i) => <i key={s.id} className={i <= g.step ? 'on' : ''} />)}</div>
       <h2>{step.title}</h2>
       <p>{step.body}</p>
@@ -52,6 +62,12 @@ export function DemoGuide() {
             : `Investigating ${batch.status.done} of ${batch.status.total} cases…`}
         </p>
       )}
+      {step.id === 'batch' && <>
+        <ErrorBanner error={batch.runError ?? batch.resetError} className="mt-3" />
+        {batch.lost && <p role="alert">Could not continue tracking the batch. It may still be running. Refresh to check its status before retrying.</p>}
+        {batch.status && Object.keys(batch.status.errors).length > 0 && <ErrorBanner error={new Error(`${Object.keys(batch.status.errors).length} investigations failed and were sent for review.`)} />}
+      </>}
+      </>}
       <div className="guide-nav">
         <Button variant="ghost" size="sm" disabled={g.step === 0} onClick={() => g.go(g.step - 1)}><ChevronLeft size={14} />Back</Button>
         {last ? <Button variant="ghost" size="sm" onClick={g.stop}>Finish</Button>

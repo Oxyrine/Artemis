@@ -12,8 +12,9 @@ const run = vi.fn()
 const reset = vi.fn()
 let states: string[] = []
 let batchData: unknown
+let runError: Error | null
 vi.mock('@/api/hooks', () => ({
-  useRunBatch: () => ({ mutate: run, isPending: false, error: null }),
+  useRunBatch: () => ({ mutate: run, isPending: false, error: runError }),
   useReset: () => ({ mutate: reset, isPending: false, error: null }),
   useBatch: () => ({ data: batchData }),
   useCases: () => ({ data: { cases: states.map((state) => ({ state })) } }),
@@ -24,9 +25,35 @@ const Start = () => <button onClick={useGuide().start}>start</button>
 const setup = () => render(<QueryClientProvider client={new QueryClient()}><MemoryRouter><GuideProvider><BatchProvider><Start /><DemoGuide /><Where /></BatchProvider></GuideProvider></MemoryRouter></QueryClientProvider>)
 const toStep = async (n: number) => { await userEvent.click(screen.getByText('start')); for (let i = 0; i < n; i++) await userEvent.click(screen.getByRole('button', { name: /Next/ })) }
 
-beforeEach(() => { sessionStorage.clear(); vi.clearAllMocks(); states = ['NEW', 'AUTO_CLOSED']; batchData = undefined; Element.prototype.scrollIntoView = vi.fn(); window.scrollTo = vi.fn() })
+beforeEach(() => { sessionStorage.clear(); vi.clearAllMocks(); states = ['NEW', 'AUTO_CLOSED']; batchData = undefined; runError = null; Element.prototype.scrollIntoView = vi.fn(); window.scrollTo = vi.fn() })
 
 describe('Guided demo', () => {
+  it('shows a failed batch request inside the guide instead of silently returning to Run it for me', async () => {
+    runError = new Error('The investigation service is temporarily unavailable. Wait a moment, then retry.')
+    setup()
+    await toStep(1)
+    expect(screen.getByRole('alert')).toHaveTextContent('investigation service is temporarily unavailable')
+  })
+
+  it('brings metrics into view on every click, including when the route has not changed', async () => {
+    document.body.insertAdjacentHTML('beforeend', '<section id="metrics"></section>')
+    setup()
+    await toStep(GUIDE_STEPS.length - 1)
+    await userEvent.click(screen.getByRole('button', { name: 'See the metrics' }))
+    await vi.waitFor(() => expect(Element.prototype.scrollIntoView).toHaveBeenCalledTimes(1))
+    await userEvent.click(screen.getByRole('button', { name: 'See the metrics' }))
+    await vi.waitFor(() => expect(Element.prototype.scrollIntoView).toHaveBeenCalledTimes(2))
+    document.getElementById('metrics')!.remove()
+  })
+
+  it('can minimize the panel to reach the page underneath and resume at the same step', async () => {
+    setup()
+    await toStep(2)
+    await userEvent.click(screen.getByRole('button', { name: 'Minimize the guided demo' }))
+    expect(screen.queryByRole('heading', { name: GUIDE_STEPS[2].title })).not.toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: 'Expand the guided demo' }))
+    expect(screen.getByRole('heading', { name: GUIDE_STEPS[2].title })).toBeInTheDocument()
+  })
   it('is closed until started, then walks the script forwards and backwards', async () => {
     setup()
     expect(screen.queryByRole('complementary', { name: 'Guided demo' })).not.toBeInTheDocument()

@@ -30,7 +30,7 @@ export function DashboardPage() {
   const filtered = !!(search || status || state)
   const welcome = useWelcome()
   const { hash } = useLocation()
-  useEffect(() => { if (hash) document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'smooth' }) }, [hash])
+  useEffect(() => { if (hash && !cases.isLoading) document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'smooth' }) }, [hash, cases.isLoading])
 
   return (
     <div className="dashboard-page flex flex-col gap-6">

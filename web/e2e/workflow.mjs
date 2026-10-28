@@ -236,6 +236,25 @@ await step('guided demo finishes: later steps navigate', async () => {
   check((await page.getByRole('complementary', { name: 'Guided demo' }).count()) === 0, 'guide closed')
 })
 
+await step('guided demo: metrics can be revisited without changing routes', async () => {
+  await page.getByRole('button', { name: 'Guided demo', exact: true }).click()
+  for (let i = 0; i < 6; i++) await page.getByRole('button', { name: 'Next', exact: true }).click()
+  await page.getByRole('button', { name: 'See the metrics' }).click()
+  await page.waitForFunction(() => document.getElementById('metrics').getBoundingClientRect().top < innerHeight - 100)
+  await page.keyboard.press('Control+Home')
+  await page.waitForFunction(() => scrollY < 3)
+  await page.getByRole('button', { name: 'See the metrics' }).click()
+  await page.waitForFunction(() => document.getElementById('metrics').getBoundingClientRect().top < innerHeight - 100)
+})
+
+await step('guided demo: minimize and resume preserve the current step', async () => {
+  await page.getByRole('button', { name: 'Minimize the guided demo' }).click()
+  check(!(await page.getByRole('heading', { name: 'The scoreboard' }).count()), 'expanded guide content is hidden')
+  await page.getByRole('button', { name: 'Expand the guided demo' }).click()
+  await page.getByRole('heading', { name: 'The scoreboard' }).waitFor()
+  await page.getByRole('button', { name: 'Finish', exact: true }).click()
+})
+
 await step('unknown routes and cases fail politely', async () => {
   expected = ['404']
   await page.goto(`${BASE}/cases/CASE-9999`)
