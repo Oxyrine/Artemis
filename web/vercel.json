@@ -4,7 +4,7 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "rewrites": [
-    { "source": "/api/:path*", "destination": "https://artemis-api-z04i.onrender.com/api/:path*" },
+    { "source": "/api/:path*", "destination": "https://artemis-api-sg.onrender.com/api/:path*" },
     { "source": "/((?!api/|assets/).*)", "destination": "/index.html" }
   ],
   "headers": [
